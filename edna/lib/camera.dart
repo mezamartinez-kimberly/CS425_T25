@@ -46,10 +46,14 @@ class _CameraState extends State<Camera> {
   @override
   Widget build(BuildContext context) {
     if (cameraController.value.isInitialized) {
-      return Scaffold();
-      else{
-        
-      }
+      return Scaffold(
+          body: Stack(
+        children: [
+          CameraPreview(cameraController),
+        ],
+      ));
+    } else {
+      return const SizedBox();
     }
   }
 }
