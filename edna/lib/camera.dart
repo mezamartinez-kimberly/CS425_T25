@@ -45,6 +45,15 @@ class _CameraState extends State<Camera> {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< Updated upstream
     return const Scaffold();
+=======
+    if (cameraController.value.isInitialized) {
+      return Scaffold();
+      else{
+        
+      }
+    }
+>>>>>>> Stashed changes
   }
 }
