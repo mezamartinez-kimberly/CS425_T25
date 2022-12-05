@@ -1,18 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:camera/camera.dart';
 import 'homepage.dart';
 import 'camera.dart';
 
-void main() {
-  runApp(const MyApp());
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final cameras = await availableCameras();
+  runApp(MyApp(cameras: cameras));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({required this.cameras, Key? key}) : super(key: key);
+  final List<CameraDescription> cameras;
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< Updated upstream
     return const MaterialApp(
       home: HomePage(),
+=======
+    return MaterialApp(
+      home: Scaffold(
+        body: Camera(cameras: cameras),
+      ),
+>>>>>>> Stashed changes
     );
   }
 }

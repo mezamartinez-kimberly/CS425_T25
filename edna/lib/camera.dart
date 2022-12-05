@@ -1,50 +1,33 @@
-import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+
+late List<CameraDescription> cameras;
 
 class Camera extends StatefulWidget {
-  const Camera({Key? key}) : super(key: key);
+  const Camera({required this.cameras, Key? key}) : super(key: key);
+  final List<CameraDescription> cameras;
 
   @override
-  State<Camera> createState() => _CameraState();
+  _CameraState createState() => _CameraState();
 }
 
 class _CameraState extends State<Camera> {
-  late List<CameraDescription> cameras;
-  late CameraController cameraController;
+  late CameraController _cameraController;
+
+  late Future<void> cameraValue;
 
   @override
   void initState() {
-    startCamera();
+    // TODO: implement initState
     super.initState();
-  }
-
-  void startCamera() async {
-    cameras = await availableCameras();
-
-    cameraController = CameraController(
-      cameras[0],
-      ResolutionPreset.high,
-      enableAudio: false,
-    );
-
-    await cameraController.initialize().then((value) {
-      if (!mounted) {
-        return;
-      }
-      setState(() {}); // to refresh state
-    }).catchError((e) {
-      print(e);
-    });
-  }
-
-  @override
-  void dispose() {
-    cameraController.dispose();
-    super.dispose();
+    _cameraController =
+        CameraController(widget.cameras[0], ResolutionPreset.high);
+    cameraValue = _cameraController.initialize();
   }
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< Updated upstream
 <<<<<<< Updated upstream
     return const Scaffold();
 =======
@@ -54,6 +37,25 @@ class _CameraState extends State<Camera> {
         
       }
     }
+>>>>>>> Stashed changes
+=======
+    return Scaffold(
+      body: Stack(
+        children: [
+          FutureBuilder(
+              future: cameraValue,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return CameraPreview(_cameraController);
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              })
+        ],
+      ),
+    );
 >>>>>>> Stashed changes
   }
 }
