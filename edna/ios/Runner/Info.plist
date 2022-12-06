@@ -2,26 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-<<<<<<< HEAD
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Edna</string>
-=======
-	<!-- my additions -->
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Upload images for screen background</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Upload image from camera for screen background</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Post videos to profile</string>
-
-	<!-- default -->
-	<key>CFBundleDevelopmentRegion</key>
-	<string>$(DEVELOPMENT_LANGUAGE)</string>
-	<key>CFBundleDisplayName</key>
-	<string>Flutter Application 1</string>
->>>>>>> Julian-Dev
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
