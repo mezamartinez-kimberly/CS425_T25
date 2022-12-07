@@ -1,8 +1,10 @@
+// todo: put inside "screens" folder so we only need one import statement
 import 'package:edna/camera.dart';
 import 'package:edna/pantry.dart';
 import 'package:edna/calendar.dart';
 import 'package:edna/statistics.dart';
 import 'package:edna/profile.dart';
+
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -26,16 +28,16 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // move to page at selected index
       body: Center(
-        child: _pageOptions.elementAt(_selectedIndex), //New
+        child: _pageOptions
+            .elementAt(_selectedIndex), // move to page at selected index
       ),
       bottomNavigationBar: GNav(
         haptic: true, // haptic feedback
         gap: 8,
         iconSize: 24,
         padding: const EdgeInsets.symmetric(
-            horizontal: 5, vertical: 20), // navigation bar padding
+            horizontal: 15, vertical: 20), // navigation bar padding
         tabs: [
           GButton(
             icon: Icons.camera_alt_rounded,
@@ -62,7 +64,7 @@ class _HomePageState extends State<HomePage> {
             backgroundColor: Colors.purple.withOpacity(0.2),
           ),
           GButton(
-            icon: Icons.person,
+            icon: Icons.account_circle,
             text: 'Profile',
             iconActiveColor: Colors.grey,
             backgroundColor: Colors.grey.withOpacity(0.2),

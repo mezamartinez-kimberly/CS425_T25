@@ -124,6 +124,7 @@ class CameraPageState extends State<CameraPage> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue, // Background color
+                            fixedSize: const Size(200, 50),
                           ),
                           onPressed: () {
                             getFromGallery();
@@ -136,6 +137,7 @@ class CameraPageState extends State<CameraPage> {
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue, // Background color
+                            fixedSize: const Size(200, 50),
                           ),
                           onPressed: () {
                             getFromCamera();
