@@ -1,26 +1,47 @@
+// ignore_for_file: avoid_print
+
+/* 
+==============================
+*    Title: camera.dart
+*    Author: Julian Fliegler
+*    Date: Dec 2022
+==============================
+*/
+
+/* Referenced code:
+ - https://medium.com/@brenda.wong/optical-character-recognition-and-how-you-can-use-it-in-your-flutter-app-c79e12ee1bf5
+ - https://medium.com/unitechie/flutter-tutorial-image-picker-from-camera-gallery-c27af5490b74
+ - https://educity.app/flutter/how-to-pick-an-image-from-gallery-and-display-it-in-flutter
+*/
+
 import 'dart:io'; // File type
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-import 'dart:developer'; // log statements
+//import 'dart:developer'; // log statements
+import 'package:edna/pantry.dart'; // pantry.dart
+import 'package:flutter/services.dart'; // PlatformException
 
 void main() {
-  // any preprocessing can be done here, such as determining a device location
-  //
   // runApp is a Flutter function that runs your Flutter app
-  runApp(MaterialApp(home: CameraPage()));
+  runApp(const MaterialApp(home: CameraPage()));
 }
 
 class CameraPage extends StatefulWidget {
+  const CameraPage({super.key});
+
   @override
-  _CameraPageState createState() => _CameraPageState();
+  CameraPageState createState() => CameraPageState();
 }
 
-class _CameraPageState extends State<CameraPage> {
+class CameraPageState extends State<CameraPage> {
   // Variables
   String result = '';
   var imageFile;
   ImagePicker? imagePicker;
+  //bool _isLoading = false;
+
+  parseText(String result) {}
 
   performImageLabeling() async {
     // convert from File to InputImage (processImage() only works with InputImage)
@@ -34,42 +55,53 @@ class _CameraPageState extends State<CameraPage> {
 
     setState(() {
       for (TextBlock block in recognizedText.blocks) {
-        final String? txt = block.text;
-
         for (TextLine line in block.lines) {
           for (TextElement element in line.elements) {
-            result += element.text + " ";
+            result += "${element.text} ";
           }
         }
+        // todo: add loading indicator
         result += "\n\n";
+        //_isLoading = false;
       }
-      log('result: $result');
+      parseText(result);
     });
   }
 
   // get from gallery
-  getFromGallery() async {
-    PickedFile? pickedFile =
-        await imagePicker!.getImage(source: ImageSource.gallery);
+  Future getFromGallery() async {
+    try {
+      final image = await imagePicker!.pickImage(source: ImageSource.gallery);
 
-    if (pickedFile != null) {
+      if (image == null) return;
+      final imageTemp = File(image.path);
+
       setState(() {
-        imageFile = File(pickedFile.path);
+        imageFile = imageTemp;
+        //_isLoading = true;
         performImageLabeling();
       });
+    } on PlatformException catch (e) {
+      // todo: display error to screen
+      // https://api.flutter.dev/flutter/material/AlertDialog-class.html
+      print('Failed to pick image: $e');
     }
   }
 
-  // get from camera
-  getFromCamera() async {
-    PickedFile? pickedFile =
-        await imagePicker!.getImage(source: ImageSource.camera);
+  Future getFromCamera() async {
+    try {
+      final image = await imagePicker!.pickImage(source: ImageSource.camera);
 
-    if (pickedFile != null) {
+      if (image == null) return;
+      final imageTemp = File(image.path);
       setState(() {
-        imageFile = File(pickedFile.path);
+        imageFile = imageTemp;
+        //_isLoading = true;
         performImageLabeling();
       });
+    } on PlatformException catch (e) {
+      // todo: display error to screen
+      print('Failed to pick image: $e');
     }
   }
 
@@ -84,17 +116,20 @@ class _CameraPageState extends State<CameraPage> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Image Picker"),
+          title: const Text("Camera View"),
         ),
         body: Container(
             child: imageFile == null
-                ? Container(
+                ? // if no image selected, display buttons
+                Container(
                     alignment: Alignment.center,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         ElevatedButton(
-                          //color: Colors.greenAccent,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue, // Background color
+                          ),
                           onPressed: () {
                             getFromGallery();
                           },
@@ -104,7 +139,9 @@ class _CameraPageState extends State<CameraPage> {
                           height: 40.0,
                         ),
                         ElevatedButton(
-                          //color: Colors.lightGreenAccent,
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue, // Background color
+                          ),
                           onPressed: () {
                             getFromCamera();
                           },
@@ -113,10 +150,78 @@ class _CameraPageState extends State<CameraPage> {
                       ],
                     ),
                   )
-                : Container(
-                    child: Image.file(
-                      imageFile,
-                      fit: BoxFit.cover,
+                : // if image selected, display text read
+                Center(
+                    child: Card(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          const ListTile(
+                            //leading: Icon(Icons.album),
+                            title: Text(
+                              'RESULT OF SCAN',
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          // align children in vert array
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              // not working, doesn't see if value for isLoading changes during runtime
+                              // Center(
+                              //   child: _isLoading
+                              //       ? const Text("Loading Complete")
+                              //       : const CircularProgressIndicator(),
+                              // ),
+                              // box containing read text
+                              SizedBox(
+                                width: 300,
+                                height: 400,
+                                // make scrollable
+                                child: Scrollbar(
+                                    child: SingleChildScrollView(
+                                        // todo: make scrollbar always visible
+                                        child: Text(
+                                  // prints the read text
+                                  result,
+                                  style: const TextStyle(fontSize: 20),
+                                ))),
+                              ),
+                              // box containing "accept" button
+                              Padding(
+                                  // Even Padding On All Sides
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: SizedBox(
+                                    width: 300,
+                                    height: 40,
+                                    child: TextButton(
+                                      onPressed: () {
+                                        /* go to pantry */
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  const PantryPage()),
+                                        );
+                                      },
+                                      style: const ButtonStyle(
+                                          // ERR: not centering
+                                          alignment: Alignment.center,
+                                          backgroundColor:
+                                              MaterialStatePropertyAll(
+                                                  Colors.lightBlue)),
+                                      child: const Text(
+                                        'Accept All',
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 20),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ))
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   )));
   }
