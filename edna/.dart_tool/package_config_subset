@@ -58,6 +58,10 @@ google_mlkit_text_recognition
 2.16
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/google_mlkit_text_recognition-0.5.0/
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/google_mlkit_text_recognition-0.5.0/lib/
+google_nav_bar
+2.12
+file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/google_nav_bar-5.0.6/
+file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/google_nav_bar-5.0.6/lib/
 http
 2.14
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/http-0.13.5/
@@ -86,6 +90,10 @@ image_picker_platform_interface
 2.12
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/image_picker_platform_interface-2.6.2/
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/image_picker_platform_interface-2.6.2/lib/
+intl
+2.12
+file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0/
+file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0/lib/
 js
 2.16
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.4/
@@ -122,6 +130,10 @@ quiver
 2.12
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/quiver-3.1.0/
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/quiver-3.1.0/lib/
+simple_gesture_detector
+2.12
+file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/simple_gesture_detector-0.2.0/
+file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/simple_gesture_detector-0.2.0/lib/
 source_span
 2.14
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/source_span-1.9.0/
@@ -142,6 +154,10 @@ string_scanner
 2.12
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.1/
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.1/lib/
+table_calendar
+2.12
+file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/table_calendar-3.0.8/
+file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/table_calendar-3.0.8/lib/
 term_glyph
 2.12
 file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/term_glyph-1.2.1/
