@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:edna/homepage.dart';
 
 // create a class for login page
 
@@ -184,7 +185,16 @@ class _LoginPageState extends State<LoginPage> {
                 borderRadius: BorderRadius.circular(30.0),
               ),
             ),
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return const HomePage();
+                  },
+                ),
+                (_) => false,
+              );
+            },
             child: Text(
               "Login",
               style: GoogleFonts.notoSerif(

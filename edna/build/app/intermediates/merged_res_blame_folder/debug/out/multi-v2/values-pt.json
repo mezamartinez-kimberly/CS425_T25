@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/johnwatson/Library/CloudStorage/GoogleDrive-john.watson3091@gmail.com/Other computers/My Computer/Current School/Flutter/CS425_T25/edna/build/app/intermediates/incremental/mergeDebugResources/merged.dir/values-pt/values-pt.xml",
+            "outputFile": "C:\\Users\\17752\\Documents\\GitHub\\CS425\\CS425_T25\\edna\\build\\app\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-pt\\values-pt.xml",
             "map": [
                 {
-                    "source": "/Users/johnwatson/.gradle/caches/transforms-3/acbce933e4b464a5224ed377a62db1f5/transformed/core-1.6.0/res/values-pt/values-pt.xml",
+                    "source": "C:\\Users\\17752\\.gradle\\caches\\transforms-3\\d363e3b5616f580c766e3e2b3c05f27d\\transformed\\core-1.8.0\\res\\values-pt\\values-pt.xml",
                     "from": {
                         "startLines": "2",
                         "startColumns": "4",

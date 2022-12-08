@@ -1,11 +1,3 @@
-/* 
-==============================
-*    Title: pantry.dart
-*    Author: Julian Fliegler
-*    Date: Dec 2022
-==============================
-*/
-
 import 'package:flutter/material.dart';
 
 class StatsPage extends StatefulWidget {
