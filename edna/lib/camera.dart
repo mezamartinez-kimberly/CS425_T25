@@ -193,13 +193,24 @@ class CameraPageState extends State<CameraPage> {
                                     height: 40,
                                     child: TextButton(
                                       onPressed: () {
-                                        /* go to pantry */
-                                        Navigator.push(
-                                          context,
+                                        // go to pantry page
+                                        Navigator.of(context,
+                                                rootNavigator: true)
+                                            .pushAndRemoveUntil(
                                           MaterialPageRoute(
-                                              builder: (context) =>
-                                                  const PantryPage()),
+                                            builder: (BuildContext context) {
+                                              return const PantryPage();
+                                            },
+                                          ),
+                                          (_) => false,
                                         );
+
+                                        // Navigator.push(
+                                        //   context,
+                                        //   MaterialPageRoute(
+                                        //       builder: (context) =>
+                                        //           const PantryPage()),
+                                        // );
                                       },
                                       style: const ButtonStyle(
                                           // ERR: not centering
