@@ -80,8 +80,8 @@
       "languageVersion": "2.17"
     },
     {
-      "name": "font_awesome_flutter",
-      "rootUri": "file:///Users/johnwatson/Library/flutter/.pub-cache/hosted/pub.dartlang.org/font_awesome_flutter-10.3.0",
+      "name": "flutter_test",
+      "rootUri": "file:///C:/src/flutter/packages/flutter_test",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -94,6 +94,18 @@
     {
       "name": "google_nav_bar",
       "rootUri": "file:///Users/johnwatson/Library/flutter/.pub-cache/hosted/pub.dartlang.org/google_nav_bar-5.0.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "google_nav_bar",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/google_nav_bar-5.0.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "google_nav_bar",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/google_nav_bar-5.0.6",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -146,8 +158,14 @@
       "languageVersion": "2.14"
     },
     {
-      "name": "path_provider_android",
-      "rootUri": "file:///Users/johnwatson/Library/flutter/.pub-cache/hosted/pub.dartlang.org/path_provider_android-2.0.22",
+      "name": "intl",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/intl-0.17.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "js",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/js-0.6.4",
       "packageUri": "lib/",
       "languageVersion": "2.14"
     },
@@ -200,6 +218,18 @@
       "languageVersion": "2.14"
     },
     {
+      "name": "simple_gesture_detector",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/simple_gesture_detector-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "simple_gesture_detector",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/simple_gesture_detector-0.2.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "sky_engine",
       "rootUri": "file:///Users/johnwatson/Library/flutter/bin/cache/pkg/sky_engine",
       "packageUri": "lib/",
@@ -226,6 +256,18 @@
     {
       "name": "string_scanner",
       "rootUri": "file:///Users/johnwatson/Library/flutter/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "string_scanner",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/string_scanner-1.1.1",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "table_calendar",
+      "rootUri": "file:///C:/src/flutter/.pub-cache/hosted/pub.dartlang.org/table_calendar-3.0.8",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -272,7 +314,7 @@
       "languageVersion": "2.18"
     }
   ],
-  "generated": "2022-12-07T19:55:57.706576Z",
+  "generated": "2022-12-07T12:50:37.290695Z",
   "generator": "pub",
   "generatorVersion": "2.18.5"
 }
