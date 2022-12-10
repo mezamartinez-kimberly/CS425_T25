@@ -21,7 +21,7 @@ class PantryPage extends StatefulWidget {
 
 class PantryPageState extends State<PantryPage> {
   // todo: populate with actual data
-  final List<String> entries = List<String>.filled(15, 'item');
+  final List<String> entries = List<String>.filled(15, 'Item');
 
   @override
   Widget build(BuildContext context) {

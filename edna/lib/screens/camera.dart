@@ -14,12 +14,11 @@
  - https://educity.app/flutter/how-to-pick-an-image-from-gallery-and-display-it-in-flutter
 */
 
-import 'dart:io'; // File type
+import 'dart:io'; // File data type
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
-//import 'dart:developer'; // log statements
-import 'package:edna/pantry.dart'; // pantry.dart
+import 'package:edna/screens/all.dart'; // all screens
+import 'package:image_picker/image_picker.dart'; // gallery, camera
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart'; // ocr
 import 'package:flutter/services.dart'; // PlatformException
 
 class CameraPage extends StatefulWidget {
@@ -34,7 +33,6 @@ class CameraPageState extends State<CameraPage> {
   String result = '';
   var imageFile;
   ImagePicker? imagePicker;
-  //bool _isLoading = false;
 
   parseText(String result) {}
 
@@ -57,7 +55,6 @@ class CameraPageState extends State<CameraPage> {
         }
         // todo: add loading indicator
         result += "\n";
-        //_isLoading = false;
       }
       parseText(result);
     });
@@ -66,6 +63,7 @@ class CameraPageState extends State<CameraPage> {
   // get from gallery
   Future getFromGallery() async {
     try {
+      imagePicker = ImagePicker();
       final image = await imagePicker!.pickImage(source: ImageSource.gallery);
 
       if (image == null) return;
@@ -73,7 +71,6 @@ class CameraPageState extends State<CameraPage> {
 
       setState(() {
         imageFile = imageTemp;
-        //_isLoading = true;
         performImageLabeling();
       });
     } on PlatformException catch (e) {
@@ -91,7 +88,6 @@ class CameraPageState extends State<CameraPage> {
       final imageTemp = File(image.path);
       setState(() {
         imageFile = imageTemp;
-        //_isLoading = true;
         performImageLabeling();
       });
     } on PlatformException catch (e) {
@@ -103,6 +99,7 @@ class CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
+    // init image picker to be able to use gallery, camera
     imagePicker = ImagePicker();
   }
 
@@ -194,17 +191,6 @@ class CameraPageState extends State<CameraPage> {
                                     child: TextButton(
                                       onPressed: () {
                                         // go to pantry page
-                                        Navigator.of(context,
-                                                rootNavigator: true)
-                                            .pushAndRemoveUntil(
-                                          MaterialPageRoute(
-                                            builder: (BuildContext context) {
-                                              return const PantryPage();
-                                            },
-                                          ),
-                                          (_) => false,
-                                        );
-
                                         // Navigator.push(
                                         //   context,
                                         //   MaterialPageRoute(

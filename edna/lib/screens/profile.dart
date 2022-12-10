@@ -8,6 +8,10 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart'; // icons
+import 'package:edna/screens/all.dart'; // all screens
+import 'package:image_picker/image_picker.dart'; // gallery, camera
+import 'package:flutter/services.dart'; // PlatformException
+import 'dart:io'; // File data type
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -17,6 +21,30 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
+  // vars to use gallery function
+  var imageFile;
+  ImagePicker imagePicker = ImagePicker();
+
+  // get from gallery
+  Future getFromGallery() async {
+    try {
+      imagePicker = ImagePicker();
+      final image = await imagePicker!.pickImage(source: ImageSource.gallery);
+
+      if (image == null) return;
+      final imageTemp = File(image.path);
+
+      setState(() {
+        imageFile = imageTemp;
+        print("update display");
+      });
+    } on PlatformException catch (e) {
+      // todo: display error to screen
+      // https://api.flutter.dev/flutter/material/AlertDialog-class.html
+      print('Failed to pick image: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -52,7 +80,11 @@ class ProfilePageState extends State<ProfilePage> {
                       GestureDetector(
                         onTap: () {
                           {
-                            print("Change icon");
+                            imageFile == null
+                                ? getFromGallery()
+                                : print("display selected image");
+                            // final InputImage inputImage = InputImage.fromFile(imageFile);
+
                           }
                         },
                         child: Row(

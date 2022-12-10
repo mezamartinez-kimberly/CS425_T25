@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:edna/screens/all.dart'; // all screens
 
 class StatsPage extends StatefulWidget {
   const StatsPage({super.key});

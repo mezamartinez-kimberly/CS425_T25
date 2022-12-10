@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:edna/screens/all.dart'; // all screens
 import 'package:table_calendar/table_calendar.dart';
-import './utils.dart';
+import '../utils.dart';
 
 //import '../utils.dart'; //says doesnt exist
 
