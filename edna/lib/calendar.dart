@@ -1,8 +1,22 @@
+/* 
+==============================
+*    Title: calendar.dart
+*    Author: Kimberly Meza Martinez
+*    Date: Dec 2022
+==============================
+*/
+
+/* Referenced code:
+* https://github.com/aleksanderwozniak/table_calendar/blob/master/example/lib/pages/events_example.dart 
+*/
+
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
+import 'package:google_fonts/google_fonts.dart';
 import './utils.dart';
 
-//import '../utils.dart'; //says doesnt exist
+<<<<<<< Updated upstream
+//import '../utils.dart'; //says doesnt exist 
 
 class CalendarClass extends StatefulWidget {
   //can also turn off prefer_const_constructor under rules and put false so that you dont need these
@@ -13,7 +27,19 @@ class CalendarClass extends StatefulWidget {
 }
 
 //if first letter is lowercase it has _ before it
+class CalendarClassState extends State<CalendarClass>{
+=======
+
+class CalendarClass extends StatefulWidget {
+  //can also turn off prefer_const_constructor under rules and put false so that you dont need these
+  const CalendarClass(
+      {super.key});
+  @override
+  CalendarClassState createState() => CalendarClassState();
+}
+
 class CalendarClassState extends State<CalendarClass> {
+>>>>>>> Stashed changes
   late final ValueNotifier<List<Event>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month; //format is by month
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
@@ -88,7 +114,8 @@ class CalendarClassState extends State<CalendarClass> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Expiration Calendar'),
+        title: Text('Expiration Calendar', style: GoogleFonts.notoSerif(fontSize: 31,
+              color: Colors.black,), textAlign: TextAlign.center)
       ),
       body: Column(
         children: [
