@@ -1,3 +1,15 @@
+/* 
+==============================
+*    Title: utils.dart
+*    Author: Kimberly Meza Martinez
+*    Date: Dec 2022
+==============================
+*/
+
+/* Referenced code:
+* https://github.com/aleksanderwozniak/table_calendar/blob/master/example/lib/utils.dart 
+*/
+
 import 'dart:collection';
 import 'package:table_calendar/table_calendar.dart';
 /// Example event class.

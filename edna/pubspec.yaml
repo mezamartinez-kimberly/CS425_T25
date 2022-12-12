@@ -42,6 +42,8 @@ dependencies:
   table_calendar: ^3.0.8
   #detects swipe/tap gestures/config gesture recognition for calendar
   simple_gesture_detector: ^0.2.0
+  #package for charts 
+  syncfusion_flutter_charts: ^20.3.60
 
 dev_dependencies:
   flutter_test:
