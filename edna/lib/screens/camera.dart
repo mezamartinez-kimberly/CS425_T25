@@ -207,7 +207,7 @@ class CameraPageState extends State<CameraPage> {
                                             //           const PantryPage()),
                                             // );
                                           },
-                                          style: ButtonStyle(
+                                          style: const ButtonStyle(
                                               backgroundColor:
                                                   MaterialStatePropertyAll(
                                                       Colors.blue)),
