@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart'; // all screens
+import 'package:google_fonts/google_fonts.dart'; // fonts
 import 'package:table_calendar/table_calendar.dart';
 import '../utils.dart';
 
@@ -87,73 +88,81 @@ class CalendarClassState extends State<CalendarClass> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Expiration Calendar'),
-      ),
-      body: Column(
-        children: [
-          TableCalendar<Event>(
-            //basic setup
-            firstDay: kFirstDay, //first available day, can't access before it
-            lastDay: kLastDay, //last available day, cant access after it
-            focusedDay:
-                _focusedDay, //current target day, use to detemine which month is currently visible
-            selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
-            rangeStartDay: _rangeStart,
-            rangeEndDay: _rangeEnd,
-            calendarFormat: _calendarFormat,
-            rangeSelectionMode: _rangeSelectionMode,
-            eventLoader: _getEventsForDay,
-            startingDayOfWeek: StartingDayOfWeek.monday,
-            calendarStyle: CalendarStyle(
-              // Use `CalendarStyle` to customize the UI
-              outsideDaysVisible: false,
-            ),
-            onDaySelected: _onDaySelected,
-            onRangeSelected: _onRangeSelected,
-            onFormatChanged: (format) {
-              if (_calendarFormat != format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              }
-            },
-            onPageChanged: (focusedDay) {
-              //no set state for when rebuilding
-              _focusedDay =
-                  focusedDay; //sets focusedDay to static value so that when it rebuilds it uses that specific day
-            },
+    return MaterialApp(
+        title: 'Camera Page',
+        theme: ThemeData(
+          primarySwatch: Colors.orange,
+          textTheme:
+              GoogleFonts.notoSerifTextTheme(Theme.of(context).textTheme),
+        ),
+        home: Scaffold(
+          appBar: AppBar(
+            title: const Text('Expiration Calendar'),
           ),
-          const SizedBox(height: 8.0),
-          Expanded(
-            child: ValueListenableBuilder<List<Event>>(
-              valueListenable: _selectedEvents,
-              builder: (context, value, _) {
-                return ListView.builder(
-                  itemCount: value.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 4.0,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: ListTile(
-                        onTap: () => print('${value[index]}'),
-                        title: Text('${value[index]}'),
-                      ),
+          body: Column(
+            children: [
+              TableCalendar<Event>(
+                //basic setup
+                firstDay:
+                    kFirstDay, //first available day, can't access before it
+                lastDay: kLastDay, //last available day, cant access after it
+                focusedDay:
+                    _focusedDay, //current target day, use to detemine which month is currently visible
+                selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+                rangeStartDay: _rangeStart,
+                rangeEndDay: _rangeEnd,
+                calendarFormat: _calendarFormat,
+                rangeSelectionMode: _rangeSelectionMode,
+                eventLoader: _getEventsForDay,
+                startingDayOfWeek: StartingDayOfWeek.monday,
+                calendarStyle: CalendarStyle(
+                  // Use `CalendarStyle` to customize the UI
+                  outsideDaysVisible: false,
+                ),
+                onDaySelected: _onDaySelected,
+                onRangeSelected: _onRangeSelected,
+                onFormatChanged: (format) {
+                  if (_calendarFormat != format) {
+                    setState(() {
+                      _calendarFormat = format;
+                    });
+                  }
+                },
+                onPageChanged: (focusedDay) {
+                  //no set state for when rebuilding
+                  _focusedDay =
+                      focusedDay; //sets focusedDay to static value so that when it rebuilds it uses that specific day
+                },
+              ),
+              const SizedBox(height: 8.0),
+              Expanded(
+                child: ValueListenableBuilder<List<Event>>(
+                  valueListenable: _selectedEvents,
+                  builder: (context, value, _) {
+                    return ListView.builder(
+                      itemCount: value.length,
+                      itemBuilder: (context, index) {
+                        return Container(
+                          margin: const EdgeInsets.symmetric(
+                            horizontal: 12.0,
+                            vertical: 4.0,
+                          ),
+                          decoration: BoxDecoration(
+                            border: Border.all(),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          child: ListTile(
+                            onTap: () => print('${value[index]}'),
+                            title: Text('${value[index]}'),
+                          ),
+                        );
+                      },
                     );
                   },
-                );
-              },
-            ),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
-    );
+        ));
   }
 }

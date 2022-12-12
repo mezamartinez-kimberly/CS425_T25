@@ -1,6 +1,4 @@
-// ignore_for_file: avoid_print
-
-/* 
+/*
 ==============================
 *    Title: camera.dart
 *    Author: Julian Fliegler
@@ -20,6 +18,7 @@ import 'package:edna/screens/all.dart'; // all screens
 import 'package:image_picker/image_picker.dart'; // gallery, camera
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart'; // ocr
 import 'package:flutter/services.dart'; // PlatformException
+import 'package:google_fonts/google_fonts.dart'; // fonts
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -29,17 +28,17 @@ class CameraPage extends StatefulWidget {
 }
 
 class CameraPageState extends State<CameraPage> {
-  // Variables
-  String result = '';
+  // variables
+  String result = ''; // result of OCR scan
   var imageFile;
-  ImagePicker? imagePicker;
-
+  ImagePicker? imagePicker; // ? = nullable
+  // todo: parse result of scan
   parseText(String result) {}
 
-  performImageLabeling() async {
-    // convert from File to InputImage (processImage() only works with InputImage)
-    final InputImage inputImage = InputImage.fromFile(imageFile);
-
+  // read text from image
+  performTextRecognition() async {
+    final InputImage inputImage = InputImage.fromFile(
+        imageFile); // convert from File to InputImage -- processImage() only works with InputImage
     final textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
     final RecognizedText recognizedText =
         await textRecognizer.processImage(inputImage);
@@ -60,18 +59,19 @@ class CameraPageState extends State<CameraPage> {
     });
   }
 
-  // get from gallery
+  // pick image from gallery
+  // Future = can run func async; can only be either completed or uncompleted
   Future getFromGallery() async {
     try {
-      imagePicker = ImagePicker();
+      // final = runtime constant; must be initialized, and that is the only time it can be assigned to
+      // await = make async func appear sync; line won't be executed until pickImage returns value
       final image = await imagePicker!.pickImage(source: ImageSource.gallery);
 
       if (image == null) return;
       final imageTemp = File(image.path);
-
       setState(() {
         imageFile = imageTemp;
-        performImageLabeling();
+        performTextRecognition();
       });
     } on PlatformException catch (e) {
       // todo: display error to screen
@@ -80,6 +80,7 @@ class CameraPageState extends State<CameraPage> {
     }
   }
 
+  // pick image from camera
   Future getFromCamera() async {
     try {
       final image = await imagePicker!.pickImage(source: ImageSource.camera);
@@ -88,7 +89,7 @@ class CameraPageState extends State<CameraPage> {
       final imageTemp = File(image.path);
       setState(() {
         imageFile = imageTemp;
-        performImageLabeling();
+        performTextRecognition();
       });
     } on PlatformException catch (e) {
       // todo: display error to screen
@@ -99,124 +100,131 @@ class CameraPageState extends State<CameraPage> {
   @override
   void initState() {
     super.initState();
-    // init image picker to be able to use gallery, camera
+    // must init image picker to be able to use gallery, camera
     imagePicker = ImagePicker();
   }
 
-  // Widget
+  // widget UI
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text("Camera View"),
+    return MaterialApp(
+        title: 'Camera Page',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+          textTheme:
+              GoogleFonts.notoSerifTextTheme(Theme.of(context).textTheme),
         ),
-        body: Container(
-            child: imageFile == null
-                ? // if no image selected, display buttons
-                Container(
-                    alignment: Alignment.center,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue, // Background color
-                            fixedSize: const Size(200, 50),
-                          ),
-                          onPressed: () {
-                            getFromGallery();
-                          },
-                          child: const Text("PICK FROM GALLERY"),
-                        ),
-                        Container(
-                          height: 40.0,
-                        ),
-                        ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.blue, // Background color
-                            fixedSize: const Size(200, 50),
-                          ),
-                          onPressed: () {
-                            getFromCamera();
-                          },
-                          child: const Text("PICK FROM CAMERA"),
-                        )
-                      ],
-                    ),
-                  )
-                : // if image selected, display text read
-                Center(
-                    child: Card(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: <Widget>[
-                          const ListTile(
-                            //leading: Icon(Icons.album),
-                            title: Text(
-                              'RESULT OF SCAN',
-                              textAlign: TextAlign.center,
+        home: Scaffold(
+            appBar: AppBar(
+              title: const Text("Camera View"),
+            ),
+            body: Container(
+                child: imageFile == null
+                    ? // if no image selected, display buttons
+                    Container(
+                        alignment: Alignment.center,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.blue,
+                                  fixedSize: const Size(200, 50),
+                                ),
+                                onPressed: () {
+                                  getFromGallery();
+                                },
+                                child: const Text("PICK FROM GALLERY")),
+                            Container(
+                              height: 40.0,
                             ),
-                          ),
-                          // align children in vert array
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              // not working, doesn't see if value for isLoading changes during runtime
-                              // Center(
-                              //   child: _isLoading
-                              //       ? const Text("Loading Complete")
-                              //       : const CircularProgressIndicator(),
-                              // ),
-                              // box containing read text
-                              SizedBox(
-                                width: 300,
-                                height: 400,
-                                // make scrollable
-                                child: Scrollbar(
-                                    child: SingleChildScrollView(
-                                        // todo: make scrollbar always visible
-                                        child: Text(
-                                  // prints the read text
-                                  result,
-                                  style: const TextStyle(fontSize: 20),
-                                ))),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blue,
+                                fixedSize: const Size(200, 50),
                               ),
-                              // box containing "accept" button
-                              Padding(
-                                  // Even Padding On All Sides
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: SizedBox(
+                              onPressed: () {
+                                getFromCamera();
+                              },
+                              child: const Text("PICK FROM CAMERA"),
+                            )
+                          ],
+                        ),
+                      )
+                    : // if image selected, display text read
+                    Center(
+                        child: Card(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              const ListTile(
+                                leading: Icon(Icons.camera),
+                                title: Text(
+                                  'RESULT OF SCAN',
+                                  textAlign: TextAlign.center,
+                                ),
+                                trailing: Icon(Icons.more_vert),
+                              ),
+                              // align in vert array
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  // not working, doesn't see if value for isLoading changes during runtime
+                                  // Center(
+                                  //   child: _isLoading
+                                  //       ? const Text("Loading Complete")
+                                  //       : const CircularProgressIndicator(),
+                                  // ),
+                                  // box containing read text
+                                  SizedBox(
                                     width: 300,
-                                    height: 40,
-                                    child: TextButton(
-                                      onPressed: () {
-                                        // go to pantry page
-                                        // Navigator.push(
-                                        //   context,
-                                        //   MaterialPageRoute(
-                                        //       builder: (context) =>
-                                        //           const PantryPage()),
-                                        // );
-                                      },
-                                      style: const ButtonStyle(
-                                          // ERR: not centering
-                                          alignment: Alignment.center,
-                                          backgroundColor:
-                                              MaterialStatePropertyAll(
-                                                  Colors.lightBlue)),
-                                      child: const Text(
-                                        'Accept All',
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 20),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ))
+                                    height: 400,
+                                    // make scrollable
+                                    child: Scrollbar(
+                                        child: SingleChildScrollView(
+                                            // todo: make scrollbar always visible
+                                            child: Text(
+                                      // prints the read text
+                                      result,
+                                      style: const TextStyle(fontSize: 20),
+                                    ))),
+                                  ),
+                                  // box containing "accept" button
+                                  Padding(
+                                      // even Padding On All Sides
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: SizedBox(
+                                        width: 300,
+                                        height: 40,
+                                        // Accept All button
+                                        child: TextButton(
+                                          onPressed: () {
+                                            // go to pantry page
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(
+                                            //       builder: (context) =>
+                                            //           const PantryPage()),
+                                            // );
+                                          },
+                                          style: ButtonStyle(
+                                              backgroundColor:
+                                                  MaterialStatePropertyAll(
+                                                      Colors.blue)),
+                                          child: const Text(
+                                            'Accept All',
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 20),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ))
+                                ],
+                              ),
                             ],
                           ),
-                        ],
-                      ),
-                    ),
-                  )));
+                        ),
+                      ))));
   }
 }
