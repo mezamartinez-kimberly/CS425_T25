@@ -1,20 +1,27 @@
-import 'package:flutter/material.dart';
-import 'package:edna/screens/all.dart'; // all screens
-import 'package:google_fonts/google_fonts.dart'; // fonts
-import 'package:table_calendar/table_calendar.dart';
-import '../utils.dart';
+/* 
+==============================
+*    Title: calendar.dart
+*    Author: Kimberly Meza Martinez
+*    Date: Dec 2022
+==============================
+*/
 
-//import '../utils.dart'; //says doesnt exist
+/* Referenced code:
+* https://github.com/aleksanderwozniak/table_calendar/blob/master/example/lib/pages/events_example.dart 
+*/
+
+import 'package:flutter/material.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:edna/utils.dart';
 
 class CalendarClass extends StatefulWidget {
   //can also turn off prefer_const_constructor under rules and put false so that you dont need these
-  const CalendarClass(
-      {super.key}); //could also be const CalendarClass({Key? key}) : super(key: key); if it doesnt work
+  const CalendarClass({super.key});
   @override
   CalendarClassState createState() => CalendarClassState();
 }
 
-//if first letter is lowercase it has _ before it
 class CalendarClassState extends State<CalendarClass> {
   late final ValueNotifier<List<Event>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month; //format is by month
@@ -89,7 +96,7 @@ class CalendarClassState extends State<CalendarClass> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Camera Page',
+        title: 'Expiration Calendar',
         theme: ThemeData(
           primarySwatch: Colors.orange,
           textTheme:
@@ -97,8 +104,12 @@ class CalendarClassState extends State<CalendarClass> {
         ),
         home: Scaffold(
           appBar: AppBar(
-            title: const Text('Expiration Calendar'),
-          ),
+              title: Text('Expiration Calendar',
+                  style: GoogleFonts.notoSerif(
+                    fontSize: 31,
+                    color: Colors.black,
+                  ),
+                  textAlign: TextAlign.center)),
           body: Column(
             children: [
               TableCalendar<Event>(
