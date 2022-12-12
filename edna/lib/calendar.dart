@@ -15,20 +15,6 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import './utils.dart';
 
-<<<<<<< Updated upstream
-//import '../utils.dart'; //says doesnt exist 
-
-class CalendarClass extends StatefulWidget {
-  //can also turn off prefer_const_constructor under rules and put false so that you dont need these
-  const CalendarClass(
-      {super.key}); //could also be const CalendarClass({Key? key}) : super(key: key); if it doesnt work
-  @override
-  CalendarClassState createState() => CalendarClassState();
-}
-
-//if first letter is lowercase it has _ before it
-class CalendarClassState extends State<CalendarClass>{
-=======
 
 class CalendarClass extends StatefulWidget {
   //can also turn off prefer_const_constructor under rules and put false so that you dont need these
@@ -39,7 +25,6 @@ class CalendarClass extends StatefulWidget {
 }
 
 class CalendarClassState extends State<CalendarClass> {
->>>>>>> Stashed changes
   late final ValueNotifier<List<Event>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month; //format is by month
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
