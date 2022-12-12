@@ -1,10 +1,4 @@
-// todo: put inside "screens" folder so we only need one import statement
-import 'package:edna/camera.dart';
-import 'package:edna/pantry.dart';
-import 'package:edna/calendar.dart';
-import 'package:edna/statistics.dart';
-import 'package:edna/profile.dart';
-
+import 'package:edna/screens/all.dart'; // all screens
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 

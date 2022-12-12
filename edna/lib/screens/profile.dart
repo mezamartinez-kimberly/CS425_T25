@@ -1,4 +1,4 @@
-/* 
+/*
 ==============================
 *    Title: profile.dart
 *    Author: Julian Fliegler
@@ -8,6 +8,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart'; // icons
+import 'package:edna/screens/all.dart'; // all screens
+import 'package:google_fonts/google_fonts.dart'; // fonts
+import 'package:image_picker/image_picker.dart'; // gallery, camera
+import 'package:flutter/services.dart'; // PlatformException
+import 'dart:io'; // File data type
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -17,19 +22,49 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
+  // vars to use gallery function
+  var imageFile;
+  ImagePicker imagePicker = ImagePicker();
+  // color theme
+  MyTheme myTheme = const MyTheme();
+  late MaterialColor myBlue =
+      myTheme.createMaterialColor(const Color(0xFF69B9BB));
+
+  // get from gallery
+  Future getFromGallery() async {
+    try {
+      final image = await imagePicker.pickImage(source: ImageSource.gallery);
+
+      if (image == null) return;
+      final imageTemp = File(image.path);
+
+      setState(() {
+        imageFile = imageTemp;
+        print("update display");
+      });
+    } on PlatformException catch (e) {
+      // todo: display error to screen
+      // https://api.flutter.dev/flutter/material/AlertDialog-class.html
+      print('Failed to pick image: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         title: 'Profile Page',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          primarySwatch: Colors.grey,
+          textTheme:
+              GoogleFonts.notoSerifTextTheme(Theme.of(context).textTheme),
           // create standard theme for buttons
           cardTheme: CardTheme(
             shape: RoundedRectangleBorder(
-              side: const BorderSide(
-                color: Color.fromARGB(255, 5, 47, 53),
-                width: 3,
-              ),
+              // no outline for now
+              // side: const BorderSide(
+              //   color: Color.fromARGB(255, 0, 91, 105),
+              //   width: 3,
+              // ),
               borderRadius: BorderRadius.circular(20.0),
             ),
           ),
@@ -47,37 +82,43 @@ class ProfilePageState extends State<ProfilePage> {
                     mainAxisAlignment: MainAxisAlignment
                         .end, // sticks list of buttons to bottom of screen
                     children: [
-                      // gesture detector = respond when clicked
+                      // InkWell = responds to touch
                       // photo and user name
-                      GestureDetector(
-                        onTap: () {
-                          {
-                            print("Change icon");
-                          }
-                        },
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: const [
-                              // align icon to left
-                              Align(
-                                alignment: Alignment
-                                    .centerLeft, // doesn't seem to be working
-                                child: Icon(Icons.add_a_photo_outlined,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          // photo icon
+                          // align icon to left
+                          Align(
+                              alignment: Alignment
+                                  .centerLeft, // doesn't seem to be working
+                              child: InkWell(
+                                onTap: () {
+                                  {
+                                    imageFile == null
+                                        ? getFromGallery()
+                                        : print("display selected image");
+                                  }
+                                },
+                                child: const Icon(Icons.add_a_photo_outlined,
                                     size: 60.0),
-                              ),
-                              // put user name in flexible fitted box so resizes dynamically
-                              Flexible(
-                                  child: FittedBox(
-                                      fit: BoxFit.fill,
-                                      child: Text('FirstName LastName',
-                                          style: TextStyle(
-                                              fontSize: 25,
-                                              color: Colors.black)))),
-                            ]),
+                              )),
+
+                          // put user name in flexible fitted box so resizes dynamically
+                          const Flexible(
+                              child: FittedBox(
+                                  fit: BoxFit.fill,
+                                  child: Text('FirstName LastName',
+                                      style: TextStyle(
+                                          fontSize: 25, color: Colors.black)))),
+                        ],
                       ),
+                      // user email
                       const Text('username@email.com'),
-                      const SizedBox(height: 70), // space in between widgets
-                      GestureDetector(
+                      // space in between widgets
+                      const SizedBox(height: 50),
+                      // begin list of buttons
+                      InkWell(
                           onTap: () {
                             {
                               print("Login");
@@ -85,7 +126,7 @@ class ProfilePageState extends State<ProfilePage> {
                           },
                           // each button is a card that is sized using "sized box"
                           child: Card(
-                            color: Color.fromARGB(255, 165, 253, 239),
+                            color: myBlue,
                             child: SizedBox(
                                 height: 70,
                                 child: Center(
@@ -100,14 +141,14 @@ class ProfilePageState extends State<ProfilePage> {
                                   ],
                                 ))),
                           )),
-                      GestureDetector(
+                      InkWell(
                           onTap: () {
                             {
                               print("Premium");
                             }
                           },
                           child: Card(
-                            color: Color.fromARGB(255, 165, 253, 239),
+                            color: myBlue,
                             child: SizedBox(
                                 height: 70,
                                 child: Center(
@@ -121,14 +162,14 @@ class ProfilePageState extends State<ProfilePage> {
                                   ],
                                 ))),
                           )),
-                      GestureDetector(
+                      InkWell(
                           onTap: () {
                             {
                               print("Appearance");
                             }
                           },
                           child: Card(
-                            color: Color.fromARGB(255, 165, 253, 239),
+                            color: myBlue,
                             child: SizedBox(
                                 height: 70,
                                 child: Center(
@@ -142,14 +183,14 @@ class ProfilePageState extends State<ProfilePage> {
                                   ],
                                 ))),
                           )),
-                      GestureDetector(
+                      InkWell(
                           onTap: () {
                             {
                               print("Notifs");
                             }
                           },
                           child: Card(
-                            color: Color.fromARGB(255, 165, 253, 239),
+                            color: myBlue,
                             child: SizedBox(
                                 height: 70,
                                 child: Center(
@@ -163,14 +204,14 @@ class ProfilePageState extends State<ProfilePage> {
                                   ],
                                 ))),
                           )),
-                      GestureDetector(
+                      InkWell(
                           onTap: () {
                             {
                               print("Support");
                             }
                           },
                           child: Card(
-                            color: Color.fromARGB(255, 165, 253, 239),
+                            color: myBlue,
                             child: SizedBox(
                                 height: 70,
                                 child: Center(
@@ -184,7 +225,7 @@ class ProfilePageState extends State<ProfilePage> {
                                   ],
                                 ))),
                           )),
-                      const SizedBox(height: 10), // add padding at bottom
+                      const SizedBox(height: 30), // add padding at bottom
                     ],
                   ),
                 ))));

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login.dart';
-// import 'homepage.dart';
+import 'package:edna/screens/all.dart'; // all screens
 
 void main() {
   runApp(const MyApp());
