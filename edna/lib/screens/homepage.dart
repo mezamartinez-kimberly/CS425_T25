@@ -1,3 +1,11 @@
+/* 
+==============================
+*    Title: homepage.dart
+*    Author: John Watson
+*    Date: Dec 2022
+==============================
+*/
+
 import 'package:edna/screens/all.dart'; // all screens
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
@@ -18,6 +26,9 @@ class _HomePageState extends State<HomePage> {
     const StatsPage(),
     const ProfilePage()
   ];
+
+// Following the basic structure of the tutorial at:
+// https://pub.dev/packages/google_nav_bar
 
   @override
   Widget build(BuildContext context) {
