@@ -32,8 +32,25 @@ class CameraPageState extends State<CameraPage> {
   String result = ''; // result of OCR scan
   var imageFile;
   ImagePicker? imagePicker; // ? = nullable
+
+  // for debugging
+  void printYellow(String text) {
+    print('\x1B[33m$text\x1B[0m');
+  }
+
   // todo: parse result of scan
-  parseText(String result) {}
+  parseText(TextLine text) {
+    printYellow(text.boundingBox.bottom.toString());
+    // using maps
+    // key - bottom bounding box #
+    // value - string for that bottom #
+
+    // check if current bottom value is within 5 of all keys already in map
+    // if yes, append to end of associated string value
+    // if no, add new map entry
+
+    // is there a better way to handle searching ?
+  }
 
   // read text from image
   performTextRecognition() async {
@@ -48,14 +65,16 @@ class CameraPageState extends State<CameraPage> {
     setState(() {
       for (TextBlock block in recognizedText.blocks) {
         for (TextLine line in block.lines) {
+          // printWarning(line.text);
+          // print(line.boundingBox);
+          parseText(line);
           for (TextElement element in line.elements) {
-            result += "${element.text} ";
+            //result += "${element.text} ";
           }
         }
         // todo: add loading indicator
-        result += "\n";
+        //result += "\n";
       }
-      parseText(result);
     });
   }
 
