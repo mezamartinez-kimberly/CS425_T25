@@ -4,18 +4,80 @@ import pandas as pd
 import numpy as np
 import re
 
+# Declare the normalization function:
+def normalize(text):
+    # Normalize the data so that all the time data is in !! DAYS !!
+    # Search the string for 'day', 'week', 'month', 'year' as well as plural versions
 
-url_list = [['https://www.stilltasty.com/searchitems/index/26?page=', 'Fruits', 9],
+    # if the string contains 'day' or 'days'
+    if re.search('day|days', text):
+        # split the string on 'day' or 'days'
+        text = text.split('day')[0]
+        
+        # most of the data is in the form x-y days so we need to see if x or y is a range and if so take the average
+        #     if the string contains '-'
+        if re.search('-', text):
+            # split the string on '-'
+            text = text.split('-')
+            # convert to int
+            text = [int(i) for i in text]
+            # take the average
+            text = sum(text)/len(text)
+        # if the string does not contain '-'
+        else:
+            # convert to int
+            text = int(text)
+        # convert to int
+        text = int(text)
+    # do the same for 'week' or 'weeks'
+    elif re.search('week|weeks', text):
+        text = text.split('week')[0]
+        if re.search('-', text):
+            text = text.split('-')
+            text = [int(i) for i in text]
+            text = sum(text)/len(text)
+        else:
+            text = int(text)
+        text = int(text) * 7
+    # do the same for 'month' or 'months'
+    elif re.search('month|months', text):
+        text = text.split('month')[0]
+        if re.search('-', text):
+            text = text.split('-')
+            text = [int(i) for i in text]
+            text = sum(text)/len(text)
+        else:
+            text = int(text)
+        text = int(text) * 30
+    # do the same for 'year' or 'years'
+    elif re.search('year|years', text):
+        text = text.split('year')[0]
+        if re.search('-', text):
+            text = text.split('-')
+            text = [int(i) for i in text]
+            text = sum(text)/len(text)
+        else:
+            text = int(text)
+        text = int(text) * 365
+    # if the string does not contain 'day', 'week', 'month', 'year' or their plural versions
+    else:
+        # set the value to Nan
+        text = np.nan
+
+    return text
+
+url_list = [['https://www.stilltasty.com/searchitems/index/26?page=', 'Fruits', 9 ], 
             ['https://www.stilltasty.com/searchitems/index/25?page=', 'Vegetables', 14],
             ['https://www.stilltasty.com/searchitems/index/9?page=', 'Dairy & Eggs', 8],
-            ['https://www.stilltasty.com/searchitems/index/10?page=', 'Meat & Poultry', 14],
+            ['https://www.stilltasty.com/searchitems/index/27?page=', 'Meat & Poultry', 14],
             ['https://www.stilltasty.com/searchitems/index/7?page=', 'Fish & Shellfish', 8],
             ['https://www.stilltasty.com/searchitems/index/28?page=', 'Nuts, Grains & Pasta', 10],
-            ['https://www.stilltasty.com/searchitems/index/6?page=', 'Baking & Spices', 8],
-            ['https://www.stilltasty.com/searchitems/index/8?page=', 'Snacks and Baked Goods', 15],
+            ['https://www.stilltasty.com/searchitems/index/6?page=', 'Condiments & Oils', 8],
+            ['https://www.stilltasty.com/searchitems/index/31?page=', 'Snacks and Baked Goods', 15],
             ['https://www.stilltasty.com/searchitems/index/30?page=', 'Herbs & Spices', 6],
-            ['https://www.stilltasty.com/searchitems/index/31?page=', 'Beverages', 6],
+            ['https://www.stilltasty.com/searchitems/index/5?page=', 'Beverages', 6],
             ]
+
 
 # define a list to store the dataframes
 df_list = []
@@ -113,6 +175,12 @@ for df in df_list:
             # strip the white space
             freezer = freezer.strip()
 
+        
+        # Normalize the expiration infomation so that they are all in a day format
+        pantry = normalize(str(pantry))
+        fridge = normalize(str(fridge))
+        freezer = normalize(str(freezer))
+        
 
         # add the data to it respective column in the dataframe
         df.loc[df['Link'] == url, 'Pantry'] = pantry
