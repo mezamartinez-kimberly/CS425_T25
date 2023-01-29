@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart'; // all screens
+import 'package:edna/utils/database_helper.dart'; // database helper
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
