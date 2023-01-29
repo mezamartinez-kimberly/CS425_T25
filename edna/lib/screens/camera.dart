@@ -10,6 +10,8 @@
  - https://medium.com/@brenda.wong/optical-character-recognition-and-how-you-can-use-it-in-your-flutter-app-c79e12ee1bf5
  - https://medium.com/unitechie/flutter-tutorial-image-picker-from-camera-gallery-c27af5490b74
  - https://educity.app/flutter/how-to-pick-an-image-from-gallery-and-display-it-in-flutter
+
+ https://stackoverflow.com/questions/58655810/dart-range-operator
 */
 
 import 'dart:io'; // File data type
@@ -19,6 +21,36 @@ import 'package:image_picker/image_picker.dart'; // gallery, camera
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart'; // ocr
 import 'package:flutter/services.dart'; // PlatformException
 import 'package:google_fonts/google_fonts.dart'; // fonts
+import 'dart:developer'; // debugging, "inspect"
+import 'package:collection/src/iterable_extensions.dart'; // firstWhereOrNull
+
+/* Ref: https://dart.academy/creating-objects-and-classes-in-dart-and-flutter/ */
+class ReceiptLine {
+  //List<dynamic> idRange;
+  int id;
+  String line;
+  String item;
+  String price;
+
+  ReceiptLine({this.id = 0, this.line = "", this.item = "", this.price = ""});
+}
+
+void parseText(List<ReceiptLine> receiptLines) {
+  for (var line in receiptLines) {
+    // separate prices from products
+    RegExp exp = RegExp(r'\d{1,2}\.\d{2}');
+    var match = exp.firstMatch(line.line);
+    // if the line contains a price
+    if (match != null) {
+      line.price = match.group(0)!;
+      line.item = line.line.replaceFirst(line.price, '').trim();
+      // remove strings of numbers from item var
+      RegExp exp2 = RegExp(r'\d+(\.\d+)?');
+      line.item = line.item.replaceAll(exp2, '').trim();
+    }
+    print("\n" + line.line); // debugging
+  }
+}
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -29,27 +61,42 @@ class CameraPage extends StatefulWidget {
 
 class CameraPageState extends State<CameraPage> {
   // variables
-  String result = ''; // result of OCR scan
+  // dynamic wholeReceipt; // result of OCR scan
+  // String result = '';
   var imageFile;
   ImagePicker? imagePicker; // ? = nullable
+  List<ReceiptLine> allLines = [];
 
   // for debugging
   void printYellow(String text) {
     print('\x1B[33m$text\x1B[0m');
   }
 
-  // todo: parse result of scan
-  parseText(TextLine text) {
-    printYellow(text.boundingBox.bottom.toString());
-    // using maps
-    // key - bottom bounding box #
-    // value - string for that bottom #
+  // ref: https://stackoverflow.com/questions/59920284/how-to-find-an-element-in-a-dart-list
+  matchLinesHorizontally(TextLine thisText) {
+    // new receipt line object
+    final recLine = ReceiptLine();
 
-    // check if current bottom value is within 5 of all keys already in map
-    // if yes, append to end of associated string value
-    // if no, add new map entry
+    // get id of this line
+    recLine.id = thisText.boundingBox.center.dy.toInt(); // vertical center
+    int thisID = recLine.id;
 
-    // is there a better way to handle searching ?
+    // try to match IDs
+    var index = allLines.indexWhere(
+        (line) => (line.id - thisID).abs() <= 10); // within 10 of each other
+
+    // if no match
+    if (index == -1) {
+      // create new string in obj
+      recLine.line = thisText.text.trim();
+      // append to list of all lines
+      allLines.add(recLine);
+    }
+    // if match found
+    else {
+      // append existing obj
+      allLines[index].line += thisText.text.trim();
+    }
   }
 
   // read text from image
@@ -60,21 +107,14 @@ class CameraPageState extends State<CameraPage> {
     final RecognizedText recognizedText =
         await textRecognizer.processImage(inputImage);
 
-    result = '';
-
     setState(() {
       for (TextBlock block in recognizedText.blocks) {
         for (TextLine line in block.lines) {
-          // printWarning(line.text);
-          // print(line.boundingBox);
-          parseText(line);
-          for (TextElement element in line.elements) {
-            //result += "${element.text} ";
-          }
+          matchLinesHorizontally(line); // matches items to prices
         }
-        // todo: add loading indicator
-        //result += "\n";
       }
+      parseText(
+          allLines); // separates items from prices, removes all other text
     });
   }
 
@@ -188,26 +228,42 @@ class CameraPageState extends State<CameraPage> {
                               Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
                                 children: <Widget>[
-                                  // not working, doesn't see if value for isLoading changes during runtime
-                                  // Center(
-                                  //   child: _isLoading
-                                  //       ? const Text("Loading Complete")
-                                  //       : const CircularProgressIndicator(),
-                                  // ),
-                                  // box containing read text
                                   SizedBox(
-                                    width: 300,
-                                    height: 400,
-                                    // make scrollable
-                                    child: Scrollbar(
-                                        child: SingleChildScrollView(
-                                            // todo: make scrollbar always visible
-                                            child: Text(
-                                      // prints the read text
-                                      result,
-                                      style: const TextStyle(fontSize: 20),
-                                    ))),
-                                  ),
+                                      width: 300,
+                                      height: 400,
+                                      // make scrollable
+                                      child: Scrollbar(
+                                          child: ListView.builder(
+                                        itemCount: allLines.length,
+                                        itemBuilder: (context, index) {
+                                          // don't print empty space
+                                          if (allLines[index].item.isNotEmpty &&
+                                              allLines[index]
+                                                  .price
+                                                  .isNotEmpty) {
+                                            return Row(
+                                              children: <Widget>[
+                                                // left align item
+                                                Expanded(
+                                                  child: Text(
+                                                    allLines[index].item,
+                                                    textAlign: TextAlign.left,
+                                                  ),
+                                                ),
+                                                // right align price
+                                                Expanded(
+                                                  child: Text(
+                                                    allLines[index].price,
+                                                    textAlign: TextAlign.right,
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          }
+                                          return Container();
+                                        },
+                                      ))),
+
                                   // box containing "accept" button
                                   Padding(
                                       // even Padding On All Sides
@@ -218,13 +274,17 @@ class CameraPageState extends State<CameraPage> {
                                         // Accept All button
                                         child: TextButton(
                                           onPressed: () {
-                                            // go to pantry page
-                                            // Navigator.push(
-                                            //   context,
-                                            //   MaterialPageRoute(
-                                            //       builder: (context) =>
-                                            //           const PantryPage()),
-                                            // );
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    PantryPage(
+                                                  bottomNavigationBar:
+                                                      const HomePage()
+                                                          .bottomNavigationBar,
+                                                ),
+                                              ),
+                                            );
                                           },
                                           style: const ButtonStyle(
                                               backgroundColor:
