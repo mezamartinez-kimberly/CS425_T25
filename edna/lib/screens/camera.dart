@@ -83,7 +83,7 @@ class CameraPageState extends State<CameraPage> {
 
     // try to match IDs
     var index = allLines.indexWhere(
-        (line) => (line.id - thisID).abs() <= 30); // within 10 of each other
+        (line) => (line.id - thisID).abs() <= 10); // within 10 of each other
 
     // if no match
     if (index == -1) {
