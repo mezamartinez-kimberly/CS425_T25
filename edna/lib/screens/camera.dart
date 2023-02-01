@@ -16,6 +16,7 @@
 
 import 'dart:async';
 import 'dart:io'; // File data type
+import 'dart:math'; // Point class
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart'; // all screens
 import 'package:image_picker/image_picker.dart'; // gallery, camera
@@ -70,7 +71,7 @@ void parseText(List<ReceiptLine> receiptLines) {
     // get items
     var itemMatch = itemExp.firstMatch(eachLine.line)?.group(0);
 
-    // if line contains an item and a price
+    // if line item and a price
     if (priceMatch != null && itemMatch != null) {
       // set vars in each line obj
       eachLine.item = itemMatch;
@@ -108,7 +109,7 @@ class CameraPageState extends State<CameraPage> {
 
     // try to match IDs
     var index = allLines.indexWhere(
-        (line) => (line.id - thisID).abs() <= 10); // within 10 of each other
+        (line) => (line.id - thisID).abs() <= 1); // within 10 of each other
 
     // if no match
     if (index == -1) {
@@ -136,12 +137,38 @@ class CameraPageState extends State<CameraPage> {
 
     setState(() {
       for (TextBlock block in recognizedText.blocks) {
+        // Check if the block is skewed
+        if (block.cornerPoints.any((point) => point.x <= 0 || point.y <= 0)) {
+          // Reorient the block
+          List<Point<int>> newCornerPoints = block.cornerPoints
+              .map((point) => Point(max(0, point.x), max(0, point.y)))
+              .toList();
+
+          // Create a new block with the reoriented corner points
+          TextBlock newBlock = TextBlock(
+            text: block.text,
+            lines: block.lines,
+            boundingBox: block.boundingBox,
+            recognizedLanguages: block.recognizedLanguages,
+            cornerPoints: newCornerPoints,
+          );
+
+          // Extract the text from the reoriented block
+          String text = newBlock.text;
+          // Do something with the text
+
+        } else {
+          // Extract the text from the block
+          String text = block.text;
+          // Do something with the text
+
+        }
         for (TextLine line in block.lines) {
           matchLinesHorizontally(line); // matches items to prices
         }
       }
-      parseText(
-          allLines); // separates items from prices, removes all other text
+      // separates items from prices, removes all other text
+      parseText(allLines);
     });
   }
 
