@@ -36,19 +36,27 @@ class ReceiptLine {
 }
 
 void parseText(List<ReceiptLine> receiptLines) {
-  for (var line in receiptLines) {
+  for (var eachLine in receiptLines) {
     // separate prices from products
     RegExp exp = RegExp(r'\d{1,2}\.\d{2}');
-    var match = exp.firstMatch(line.line);
+    var match = exp.firstMatch(eachLine.line);
     // if the line contains a price
     if (match != null) {
-      line.price = match.group(0)!;
-      line.item = line.line.replaceFirst(line.price, '').trim();
-      // remove strings of numbers from item var
-      RegExp exp2 = RegExp(r'\d+(\.\d+)?');
-      line.item = line.item.replaceAll(exp2, '').trim();
+      eachLine.price = match.group(0)!; // just gets price
     }
-    print("\n" + line.line); // debugging
+    RegExp exp2 = RegExp(r"^[a-zA-Z\s]+");
+    var match2 = exp2.firstMatch(eachLine.line)?.group(0);
+    // var result = match2!.group(1);
+    // RegExp exp2 = RegExp(r'\d+(\.\d+)?');
+    if (match != null && match2 != null) {
+      print(match2);
+      eachLine.item = match2;
+      //eachLine.item = eachLine.line.replaceFirst(eachLine.price, '').trim();
+      // remove strings of numbers from item var
+
+      //eachLine.item = eachLine.item.replaceAll(exp2, '').trim();
+    }
+    //print("\n" + line.line); // debugging
   }
 }
 
@@ -81,7 +89,7 @@ class CameraPageState extends State<CameraPage> {
 
     // try to match IDs
     var index = allLines.indexWhere(
-        (line) => (line.id - thisID).abs() <= 30); // within 10 of each other
+        (line) => (line.id - thisID).abs() <= 10); // within 10 of each other
 
     // if no match
     if (index == -1) {
