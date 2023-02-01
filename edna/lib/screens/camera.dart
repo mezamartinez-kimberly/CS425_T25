@@ -36,21 +36,44 @@ class ReceiptLine {
 }
 
 void parseText(List<ReceiptLine> receiptLines) {
+  // move prices for bulk items to correct line
   for (var eachLine in receiptLines) {
-    // separate prices from products
-    RegExp exp = RegExp(r'\d{1,2}\.\d{2}');
-    var match = exp.firstMatch(eachLine.line);
-    // if the line contains a price
-    if (match != null) {
-      eachLine.price = match.group(0)!; // just gets price
+    // if line starts with a number (bulk items)
+    if (eachLine.line.startsWith(RegExp(r'\d'))) {
+      // get price
+      // prices start with 1 or 2 digits, followed by decimal, follow by 2 digits
+      RegExp exp = RegExp(r'\d{1,2}\.\d{2}');
+      var match = exp.firstMatch(eachLine.line)?.group(0);
+
+      // if the line contains a price
+      if (match != null) {
+        // take price off end
+        var tempPrice = match;
+        // delete line
+        eachLine.line = eachLine.line.replaceFirst(eachLine.line, '').trim();
+        // append price to prev line
+        receiptLines[receiptLines.indexOf(eachLine) - 1].line += " $tempPrice";
+      }
     }
+  }
+
+  for (var eachLine in receiptLines) {
+    // redo matching to account for moving price to prev line
+    print(eachLine.line);
+    RegExp exp = RegExp(r'\d{1,2}\.\d{2}');
+    var match = exp.firstMatch(eachLine.line)?.group(0);
+
+    // get just letters and whitespace at beginning of line
     RegExp exp2 = RegExp(r"^[a-zA-Z\s]+");
     var match2 = exp2.firstMatch(eachLine.line)?.group(0);
+
     // var result = match2!.group(1);
     // RegExp exp2 = RegExp(r'\d+(\.\d+)?');
+
     if (match != null && match2 != null) {
-      print(match2);
-      eachLine.item = match2;
+      // print(match2);
+      eachLine.item = match2; // get item
+      eachLine.price = match; // get price
       //eachLine.item = eachLine.line.replaceFirst(eachLine.price, '').trim();
       // remove strings of numbers from item var
 
@@ -89,7 +112,7 @@ class CameraPageState extends State<CameraPage> {
 
     // try to match IDs
     var index = allLines.indexWhere(
-        (line) => (line.id - thisID).abs() <= 10); // within 10 of each other
+        (line) => (line.id - thisID).abs() <= 30); // within 10 of each other
 
     // if no match
     if (index == -1) {
