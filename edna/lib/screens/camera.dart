@@ -14,6 +14,7 @@
  https://stackoverflow.com/questions/58655810/dart-range-operator
 */
 
+import 'dart:async';
 import 'dart:io'; // File data type
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart'; // all screens
@@ -35,20 +36,25 @@ class ReceiptLine {
   ReceiptLine({this.id = 0, this.line = "", this.item = "", this.price = ""});
 }
 
+RegExp priceExp = RegExp(r'\d{1,2}\.\d{2}'); // price regex
+RegExp itemExp = RegExp(r"^[a-zA-Z\s]+"); // item regex
+
 void parseText(List<ReceiptLine> receiptLines) {
   // move prices for bulk items to correct line
   for (var eachLine in receiptLines) {
-    // if line starts with a number (bulk items)
-    if (eachLine.line.startsWith(RegExp(r'\d'))) {
+    print(eachLine.line); // debug
+
+    // if line starts with a number and isn't followed by a character (bulk items)
+    if (eachLine.line.startsWith(RegExp(r'^\d(?![a-zA-Z])'))) {
       // get price
       // prices start with 1 or 2 digits, followed by decimal, follow by 2 digits
-      RegExp exp = RegExp(r'\d{1,2}\.\d{2}');
-      var match = exp.firstMatch(eachLine.line)?.group(0);
+      priceExp = RegExp(r'\d{1,2}\.\d{2}');
+      var priceMatch = priceExp.firstMatch(eachLine.line)?.group(0);
 
       // if the line contains a price
-      if (match != null) {
-        // take price off end
-        var tempPrice = match;
+      if (priceMatch != null) {
+        // take price off end of line
+        var tempPrice = priceMatch;
         // delete line
         eachLine.line = eachLine.line.replaceFirst(eachLine.line, '').trim();
         // append price to prev line
@@ -57,29 +63,19 @@ void parseText(List<ReceiptLine> receiptLines) {
     }
   }
 
+  // separate items and price into diff vars
   for (var eachLine in receiptLines) {
-    // redo matching to account for moving price to prev line
-    print(eachLine.line);
-    RegExp exp = RegExp(r'\d{1,2}\.\d{2}');
-    var match = exp.firstMatch(eachLine.line)?.group(0);
+    // get prices
+    var priceMatch = priceExp.firstMatch(eachLine.line)?.group(0);
+    // get items
+    var itemMatch = itemExp.firstMatch(eachLine.line)?.group(0);
 
-    // get just letters and whitespace at beginning of line
-    RegExp exp2 = RegExp(r"^[a-zA-Z\s]+");
-    var match2 = exp2.firstMatch(eachLine.line)?.group(0);
-
-    // var result = match2!.group(1);
-    // RegExp exp2 = RegExp(r'\d+(\.\d+)?');
-
-    if (match != null && match2 != null) {
-      // print(match2);
-      eachLine.item = match2; // get item
-      eachLine.price = match; // get price
-      //eachLine.item = eachLine.line.replaceFirst(eachLine.price, '').trim();
-      // remove strings of numbers from item var
-
-      //eachLine.item = eachLine.item.replaceAll(exp2, '').trim();
+    // if line contains an item and a price
+    if (priceMatch != null && itemMatch != null) {
+      // set vars in each line obj
+      eachLine.item = itemMatch;
+      eachLine.price = priceMatch;
     }
-    //print("\n" + line.line); // debugging
   }
 }
 
@@ -112,7 +108,7 @@ class CameraPageState extends State<CameraPage> {
 
     // try to match IDs
     var index = allLines.indexWhere(
-        (line) => (line.id - thisID).abs() <= 30); // within 10 of each other
+        (line) => (line.id - thisID).abs() <= 10); // within 10 of each other
 
     // if no match
     if (index == -1) {
