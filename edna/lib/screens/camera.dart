@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart'; // all screens
 import 'package:image_picker/image_picker.dart'; // gallery, camera
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart'; // ocr
+import 'package:edge_detection/edge_detection.dart'; // edge detection
 import 'package:flutter/services.dart'; // PlatformException
 import 'package:google_fonts/google_fonts.dart'; // fonts
 import 'dart:developer'; // debugging, "inspect"
@@ -43,7 +44,7 @@ RegExp itemExp = RegExp(r"^[a-zA-Z\s]+"); // item regex
 void parseText(List<ReceiptLine> receiptLines) {
   // move prices for bulk items to correct line
   for (var eachLine in receiptLines) {
-    print(eachLine.line); // debug
+    //print(eachLine.line); // debug
 
     // if line starts with a number and isn't followed by a character (bulk items)
     if (eachLine.line.startsWith(RegExp(r'^\d(?![a-zA-Z])'))) {
@@ -106,10 +107,11 @@ class CameraPageState extends State<CameraPage> {
     // get id of this line
     recLine.id = thisText.boundingBox.center.dy.toInt(); // vertical center
     int thisID = recLine.id;
+    print("$thisID: ${thisText.text}");
 
     // try to match IDs
     var index = allLines.indexWhere(
-        (line) => (line.id - thisID).abs() <= 1); // within 10 of each other
+        (line) => (line.id - thisID).abs() <= 10); // within 10 of each other
 
     // if no match
     if (index == -1) {
@@ -138,6 +140,8 @@ class CameraPageState extends State<CameraPage> {
     setState(() {
       for (TextBlock block in recognizedText.blocks) {
         // Check if the block is skewed
+        // print(block.text);
+        // print(block.cornerPoints);
         if (block.cornerPoints.any((point) => point.x <= 0 || point.y <= 0)) {
           // Reorient the block
           List<Point<int>> newCornerPoints = block.cornerPoints
@@ -164,7 +168,33 @@ class CameraPageState extends State<CameraPage> {
 
         }
         for (TextLine line in block.lines) {
-          matchLinesHorizontally(line); // matches items to prices
+          // if line skewed
+          List<Point<int>> newCornerPoints = line.cornerPoints;
+
+          if (line.cornerPoints[0].y - line.cornerPoints[1].y > 0) {
+            var yComponent = line.cornerPoints[1].y;
+            newCornerPoints[0] = Point(line.cornerPoints[0].x, yComponent);
+            newCornerPoints[1] = Point(line.cornerPoints[1].x, yComponent);
+          }
+          if (line.cornerPoints[3].y - line.cornerPoints[2].y > 0) {
+            var yComponent = line.cornerPoints[2].y;
+            newCornerPoints[2] = Point(line.cornerPoints[2].x, yComponent);
+            newCornerPoints[3] = Point(line.cornerPoints[3].x, yComponent);
+          }
+
+          // Create a new line with the reoriented corner points
+          TextLine newLine = TextLine(
+            text: line.text,
+            elements: line.elements,
+            boundingBox: line.boundingBox,
+            recognizedLanguages: line.recognizedLanguages,
+            cornerPoints: newCornerPoints,
+          );
+
+          // print(newLine.text);
+          // print(newLine.cornerPoints);
+          //print(line.cornerPoints[0]);
+          matchLinesHorizontally(newLine); // matches items to prices
         }
       }
       // separates items from prices, removes all other text
