@@ -61,8 +61,6 @@ class CameraPage extends StatefulWidget {
 
 class CameraPageState extends State<CameraPage> {
   // variables
-  // dynamic wholeReceipt; // result of OCR scan
-  // String result = '';
   var imageFile;
   ImagePicker? imagePicker; // ? = nullable
   List<ReceiptLine> allLines = [];
@@ -83,7 +81,7 @@ class CameraPageState extends State<CameraPage> {
 
     // try to match IDs
     var index = allLines.indexWhere(
-        (line) => (line.id - thisID).abs() <= 10); // within 10 of each other
+        (line) => (line.id - thisID).abs() <= 30); // within 10 of each other
 
     // if no match
     if (index == -1) {
@@ -91,6 +89,8 @@ class CameraPageState extends State<CameraPage> {
       recLine.line = thisText.text.trim();
       // append to list of all lines
       allLines.add(recLine);
+      // sort by id (ascending)
+      allLines.sort((a, b) => a.id.compareTo(b.id));
     }
     // if match found
     else {
@@ -278,11 +278,7 @@ class CameraPageState extends State<CameraPage> {
                                               context,
                                               MaterialPageRoute(
                                                 builder: (context) =>
-                                                    PantryPage(
-                                                  bottomNavigationBar:
-                                                      const HomePage()
-                                                          .bottomNavigationBar,
-                                                ),
+                                                    PantryPage(),
                                               ),
                                             );
                                           },
