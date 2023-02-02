@@ -97,4 +97,17 @@ void main() async {
     final db = await database;
     return db.delete('Food', where: 'id = ?', whereArgs: [id]);
   }
+
+  // create a default food object
+  Food apple = Food(
+    id: 0,
+    name: 'Apple',
+    foodGroup: 'Fruit',
+    expirationDate: DateTime.now(),
+  );
+
+  // insert a food object into the database
+  await insertFood(apple);
+
+  print(await getAllFoods());
 }
