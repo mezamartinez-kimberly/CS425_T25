@@ -19,9 +19,11 @@ import 'dart:io'; // File data type
 import 'dart:math'; // Point class
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart'; // all screens
+import 'package:path/path.dart'; // join()
 import 'package:image_picker/image_picker.dart'; // gallery, camera
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart'; // ocr
 import 'package:edge_detection/edge_detection.dart'; // edge detection
+import 'package:path_provider/path_provider.dart'; // getApplicationSupportDirectory
 import 'package:flutter/services.dart'; // PlatformException
 import 'package:google_fonts/google_fonts.dart'; // fonts
 import 'dart:developer'; // debugging, "inspect"
@@ -139,62 +141,8 @@ class CameraPageState extends State<CameraPage> {
 
     setState(() {
       for (TextBlock block in recognizedText.blocks) {
-        // Check if the block is skewed
-        // print(block.text);
-        // print(block.cornerPoints);
-        if (block.cornerPoints.any((point) => point.x <= 0 || point.y <= 0)) {
-          // Reorient the block
-          List<Point<int>> newCornerPoints = block.cornerPoints
-              .map((point) => Point(max(0, point.x), max(0, point.y)))
-              .toList();
-
-          // Create a new block with the reoriented corner points
-          TextBlock newBlock = TextBlock(
-            text: block.text,
-            lines: block.lines,
-            boundingBox: block.boundingBox,
-            recognizedLanguages: block.recognizedLanguages,
-            cornerPoints: newCornerPoints,
-          );
-
-          // Extract the text from the reoriented block
-          String text = newBlock.text;
-          // Do something with the text
-
-        } else {
-          // Extract the text from the block
-          String text = block.text;
-          // Do something with the text
-
-        }
         for (TextLine line in block.lines) {
-          // if line skewed
-          List<Point<int>> newCornerPoints = line.cornerPoints;
-
-          if (line.cornerPoints[0].y - line.cornerPoints[1].y > 0) {
-            var yComponent = line.cornerPoints[1].y;
-            newCornerPoints[0] = Point(line.cornerPoints[0].x, yComponent);
-            newCornerPoints[1] = Point(line.cornerPoints[1].x, yComponent);
-          }
-          if (line.cornerPoints[3].y - line.cornerPoints[2].y > 0) {
-            var yComponent = line.cornerPoints[2].y;
-            newCornerPoints[2] = Point(line.cornerPoints[2].x, yComponent);
-            newCornerPoints[3] = Point(line.cornerPoints[3].x, yComponent);
-          }
-
-          // Create a new line with the reoriented corner points
-          TextLine newLine = TextLine(
-            text: line.text,
-            elements: line.elements,
-            boundingBox: line.boundingBox,
-            recognizedLanguages: line.recognizedLanguages,
-            cornerPoints: newCornerPoints,
-          );
-
-          // print(newLine.text);
-          // print(newLine.cornerPoints);
-          //print(line.cornerPoints[0]);
-          matchLinesHorizontally(newLine); // matches items to prices
+          matchLinesHorizontally(line); // matches items to prices
         }
       }
       // separates items from prices, removes all other text
@@ -205,22 +153,51 @@ class CameraPageState extends State<CameraPage> {
   // pick image from gallery
   // Future = can run func async; can only be either completed or uncompleted
   Future getFromGallery() async {
+    // Generate filepath for saving
     try {
-      // final = runtime constant; must be initialized, and that is the only time it can be assigned to
-      // await = make async func appear sync; line won't be executed until pickImage returns value
       final image = await imagePicker!.pickImage(source: ImageSource.gallery);
-
       if (image == null) return;
-      final imageTemp = File(image.path);
+      //  final imageTemp = File(image.path);
+
+      //String imagePath = image.path;
+      // Generate filepath for saving
+      String newImagePath = join((await getApplicationSupportDirectory()).path,
+          "${(DateTime.now().millisecondsSinceEpoch / 1000).round()}.jpeg");
+
+      // //Make sure to await the call to detectEdgeFromGallery.
+      // bool success = await EdgeDetection.detectEdgeFromGallery(
+      //   newImagePath,
+      //   androidCropTitle: 'Crop', // use custom localizations for android
+      //   androidCropBlackWhiteTitle: 'Black White',
+      //   androidCropReset: 'Reset',
+      // );
+
       setState(() {
-        imageFile = imageTemp;
+        imageFile = File(image.path);
         performTextRecognition();
       });
-    } on PlatformException catch (e) {
-      // todo: display error to screen
-      // https://api.flutter.dev/flutter/material/AlertDialog-class.html
-      print('Failed to pick image: $e');
+      
+    } catch (e) {
+      printYellow("EXCEPTION OCCURRED");
+      print(e);
     }
+
+    // try {
+    //   // final = runtime constant; must be initialized, and that is the only time it can be assigned to
+    //   // await = make async func appear sync; line won't be executed until pickImage returns value
+    //   final image = await imagePicker!.pickImage(source: ImageSource.gallery);
+
+    //   if (image == null) return;
+    //   final imageTemp = File(image.path);
+    //   setState(() {
+    //     imageFile = imageTemp;
+    //     performTextRecognition();
+    //   });
+    // } on PlatformException catch (e) {
+    //   // todo: display error to screen
+    //   // https://api.flutter.dev/flutter/material/AlertDialog-class.html
+    //   print('Failed to pick image: $e');
+    // }
   }
 
   // pick image from camera
