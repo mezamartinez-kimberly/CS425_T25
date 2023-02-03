@@ -66,18 +66,18 @@ def normalize(text):
 
     return text
 
-
-url_list = [['https://www.stilltasty.com/searchitems/index/26?page=', 'Fruits', 9 ], 
-            ['https://www.stilltasty.com/searchitems/index/25?page=', 'Vegetables', 14],
-            ['https://www.stilltasty.com/searchitems/index/9?page=', 'Dairy & Eggs', 8],
-            ['https://www.stilltasty.com/searchitems/index/27?page=', 'Meat & Poultry', 14],
-            ['https://www.stilltasty.com/searchitems/index/7?page=', 'Fish & Shellfish', 8],
-            ['https://www.stilltasty.com/searchitems/index/28?page=', 'Nuts, Grains & Pasta', 10],
-            ['https://www.stilltasty.com/searchitems/index/6?page=', 'Condiments & Oils', 8],
-            ['https://www.stilltasty.com/searchitems/index/31?page=', 'Snacks and Baked Goods', 15],
-            ['https://www.stilltasty.com/searchitems/index/30?page=', 'Herbs & Spices', 6],
-            ['https://www.stilltasty.com/searchitems/index/5?page=', 'Beverages', 6],
+url_list = [
+            ['https://www.stilltasty.com/searchitems/index/26?page=', 'Fruits', 9 ], 
+            # ['https://www.stilltasty.com/searchitems/index/9?page=', 'Dairy & Eggs', 8],
+            # ['https://www.stilltasty.com/searchitems/index/27?page=', 'Meat & Poultry', 14],
+            # ['https://www.stilltasty.com/searchitems/index/7?page=', 'Fish & Shellfish', 8],
+            # ['https://www.stilltasty.com/searchitems/index/28?page=', 'Nuts, Grains & Pasta', 10],
+            # ['https://www.stilltasty.com/searchitems/index/6?page=', 'Condiments & Oils', 8],
+            # ['https://www.stilltasty.com/searchitems/index/31?page=', 'Snacks and Baked Goods', 15],
+            # ['https://www.stilltasty.com/searchitems/index/30?page=', 'Herbs & Spices', 6],
+            # ['https://www.stilltasty.com/searchitems/index/5?page=', 'Beverages', 6],
             ]
+
 
 # define a list to store the dataframes
 df_list = []
@@ -90,7 +90,7 @@ for url in url_list:
     max_page = url[2]
 
     # create a dataframe to store the entire food group
-    df = pd.DataFrame(columns = ['Name','isOpened','Food_Group','Link','Fridge', 'Freezer', 'Pantry'])
+    df = pd.DataFrame(columns = ['Label', 'Link','Fridge', 'Freezer', 'Pantry'])
     
 
     # loop through the pages
@@ -116,50 +116,17 @@ for url in url_list:
         # extract the href from the links
         link_href = [link.get('href') for link in links]
 
+        # concat the data to the dataframe
+        df = pd.concat([df, pd.DataFrame({'Label': link_text, 'Link': link_href})])
 
-        for link in link_text:
-            #NOTE OMFG ok so there's this thing called a DASH and something called a HYPHEN and they're not the same thing
-            # its causeing so many erros 
-            # the dash looks like this: - and the hyphen looks like this: - !!!!! WTF
-
-            # detect whether the link contains a DASH or a HYPHEN
-            if re.search('-', link):
-                # if it contains a DASH split the link on the DASH
-                temp = link.split('-')
-                # the first element is the food name
-                name = temp[0]
-                # the second element is the IsOpened
-                if re.search("^\s*OPENED\s*$", temp[1]):
-                    IsOpened = 1
-                elif re.search("^\s*UNOPENED\s*$", temp[1]):
-                    IsOpened = 0
-                else:
-                    IsOpened = np.nan
-            elif re.search('–', link):
-                # if it contains a HYPHEN split the link on the HYPHEN
-                temp = link.split('–')
-                # the first element is the food name
-                name = temp[0]
-                # the second element is the IsOpened
-                if re.search("^\s*OPENED\s*$", temp[1]):
-                    IsOpened = 1
-                elif re.search("^\s*UNOPENED\s*$", temp[1]):
-                    IsOpened = 0
-                else:
-                    IsOpened = np.nan
-            else:
-                # if it contains neither a DASH or a HYPHEN set the name to the link and IsOpened to Nan
-                name = link
-                IsOpened = np.nan
-
-            # add name, isopened, food_group_name, link_href to the dataframe
-            df = df.append({'Name': name, 'isOpened': IsOpened, 'Food_Group': food_group_name, 'Link': link_href[link_text.index(link)]}, ignore_index = True)
+        print(df)
 
     # append the dataframe to the df_list
     df_list.append(df)
 
 
 # Next Step is getting the food infomation from the links
+
 # loop through every dataframe in the df_list
 for df in df_list:
     # loop through every url in the dataframe
@@ -215,6 +182,7 @@ for df in df_list:
         pantry = normalize(str(pantry))
         fridge = normalize(str(fridge))
         freezer = normalize(str(freezer))
+        
 
         # add the data to it respective column in the dataframe
         df.loc[df['Link'] == url, 'Pantry'] = pantry
@@ -225,12 +193,7 @@ for df in df_list:
 # print the first dataframe
 print(df_list[0].head())
 
-
 # export each data frame to a csv file with the filename being the name of the food group from the url list
 for i in range(0, len(df_list)):
     df_list[i].to_csv(url_list[i][1] + '.csv', index = False, encoding = 'utf-8')
 
-
-# export all the datframes as one csv file
-df = pd.concat(df_list)
-df.to_csv('All_Food.csv', index = False, encoding = 'utf-8')
