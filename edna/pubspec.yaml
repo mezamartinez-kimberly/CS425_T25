@@ -35,11 +35,7 @@ dependencies:
   camera: ^0.8.1+7
   # choose image from gallery/camera
   image_picker: ^0.8.6
-  # ocr
-  google_mlkit_text_recognition: ^0.5.0
-  edge_detection: ^1.1.1
-  # for select image from gallery
-  path_provider: ^2.0.12
+  flutter_barcode_scanner: ^2.0.0
   # bottom nav bar
   google_nav_bar: ^5.0.6
   #packages for calendar
