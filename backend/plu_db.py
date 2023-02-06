@@ -41,15 +41,15 @@ try:
     # load file
     file_name = os.getcwd() + "\\PLU Parsing\\Output\\PLU.csv"
     # read csv into dataframe
-    df = pd.read_csv(file_name, on_bad_lines='skip', usecols=['PLU ID', 'PLU Code', 'Food ID'])
+    df = pd.read_csv(file_name, on_bad_lines='skip', skiprows=[1], usecols=['PLU ID', 'PLU Code', 'Food ID'])
     # rename columns
     df.rename(columns={'PLU ID': 'plu_id', 'PLU Code': 'plu_code', 'Food ID': 'food_id'}, inplace=True)
     # convert dataframe to sql, connect to sqlalchemy db
-    df.to_sql(PLU.__tablename__, con=engine,  if_exists='replace')
+    df.to_sql(PLU.__tablename__, con=engine,  index=False, if_exists='replace')
     # commit changes
     s.commit()
 
-except:
+except Exception as e:
     print(e)
     # rollback changes on error
     s.rollback() 

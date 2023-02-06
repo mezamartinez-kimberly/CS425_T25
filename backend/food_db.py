@@ -46,7 +46,7 @@ try:
     # load file
     file_name = os.getcwd() + "\\PLU Parsing\\Output\\Food.csv"
     # read csv into dataframe
-    df = pd.read_csv(file_name, on_bad_lines='skip', usecols=['Food ID','Food Name','Expiration Pantry','Expiration Fridge','Expiration Freezer'])
+    df = pd.read_csv(file_name, on_bad_lines='skip', skiprows=[1], usecols=['Food ID','Food Name','Expiration Pantry','Expiration Fridge','Expiration Freezer'])
     # rename columns
     df.rename(columns={'Food ID': 'food_id', 'Food Name': 'food_name','Expiration Pantry': 'expiration_pantry','Expiration Fridge': 'expiration_fridge','Expiration Freezer': 'expiration_freezer'}, inplace=True)
     # convert dataframe to sql, connect to sqlalchemy db
@@ -54,7 +54,7 @@ try:
     # commit changes
     s.commit()
 
-except:
+except Exception as e:
     print(e)
     # rollback changes on error
     s.rollback() 
