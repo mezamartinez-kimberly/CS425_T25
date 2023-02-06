@@ -6,19 +6,6 @@ from sqlalchemy.orm import sessionmaker
 import os
 import pandas as pd
 
-# debug
-# import linecache
-# import sys
-# def PrintException():
-#     exc_type, exc_obj, tb = sys.exc_info()
-#     f = tb.tb_frame
-#     lineno = tb.tb_lineno
-#     filename = f.f_code.co_filename
-#     linecache.checkcache(filename)
-#     line = linecache.getline(filename, lineno, f.f_globals)
-#     print(filename, lineno, line.strip(), exc_obj)
-
-
 # ref: https://www.youtube.com/watch?v=NuDSWGOcvtg
 
 # create and connect to database
@@ -58,11 +45,6 @@ s = Session()
 try:
     # load file
     file_name = os.getcwd() + "\\PLU Parsing\\Output\\Food.csv"
-
-    if(os.path.isfile(file_name)):
-        print("file exists")
-    else:
-        print("file does not exist")
     # read csv into dataframe
     df = pd.read_csv(file_name, on_bad_lines='skip', usecols=['Food ID','Food Name','Expiration Pantry','Expiration Fridge','Expiration Freezer'])
     # rename columns
@@ -73,7 +55,6 @@ try:
     s.commit()
 
 except:
-    #PrintException()
     print(e)
     # rollback changes on error
     s.rollback() 
