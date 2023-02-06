@@ -181,7 +181,7 @@ class CameraPageState extends State<CameraPage> {
                           ElevatedButton(
                               onPressed: () => scanBarcodeNormal(),
                               child: const Text('Start barcode scan')),
-                          Text('PLU Code : $_scanBarcode\n',
+                          Text('UPC Code: $_scanBarcode\n',
                               style: TextStyle(fontSize: 20)),
                           // ref: https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter
                           TextField(
@@ -193,8 +193,10 @@ class CameraPageState extends State<CameraPage> {
                                 InputDecoration(labelText: "Enter PLU Code"),
                             keyboardType: TextInputType.number,
                             inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.digitsOnly, // only allow nums
-                              LengthLimitingTextInputFormatter(4), // only allow 4 nums
+                              FilteringTextInputFormatter
+                                  .digitsOnly, // only allow nums
+                              LengthLimitingTextInputFormatter(
+                                  4), // only allow 4 nums
                             ],
                           ),
                           // Text('PLU Code : $_pluCode\n',
