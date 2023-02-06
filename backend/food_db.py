@@ -57,18 +57,18 @@ s = Session()
 # ref: https://stackoverflow.com/questions/31394998/using-sqlalchemy-to-load-csv-file-into-a-database
 try:
     # load file
-    file_name = os.getcwd() + "\\PLU Parsing\\Output\\PLU.csv"
+    file_name = os.getcwd() + "\\PLU Parsing\\Output\\Food.csv"
 
     if(os.path.isfile(file_name)):
         print("file exists")
     else:
         print("file does not exist")
     # read csv into dataframe
-    df = pd.read_csv(file_name, on_bad_lines='skip', usecols=['PLU ID', 'PLU Code', 'Food ID'])
+    df = pd.read_csv(file_name, on_bad_lines='skip', usecols=['Food ID','Food Name','Expiration Pantry','Expiration Fridge','Expiration Freezer'])
     # rename columns
-    df.rename(columns={'PLU ID': 'plu_id', 'PLU Code': 'plu_code', 'Food ID': 'food_id'}, inplace=True)
+    df.rename(columns={'Food ID': 'food_id', 'Food Name': 'food_name','Expiration Pantry': 'expiration_pantry','Expiration Fridge': 'expiration_fridge','Expiration Freezer': 'expiration_freezer'}, inplace=True)
     # convert dataframe to sql, connect to sqlalchemy db
-    df.to_sql(PLU.__tablename__, con=engine, index=True, index_label='index', if_exists='replace')
+    df.to_sql(Food.__tablename__, con=engine, index=False, if_exists='replace')
     # commit changes
     s.commit()
 
