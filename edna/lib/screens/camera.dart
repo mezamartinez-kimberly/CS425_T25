@@ -40,6 +40,7 @@ class CameraPageState extends State<CameraPage> {
   // var imageFile;
   // ImagePicker? imagePicker; // ? = nullable
   String _scanBarcode = 'Unknown';
+  String _pluCode = "null";
 
   @override
   void initState() {
@@ -48,11 +49,12 @@ class CameraPageState extends State<CameraPage> {
     // imagePicker = ImagePicker();
   }
 
-  Future<void> startBarcodeScanStream() async {
-    FlutterBarcodeScanner.getBarcodeStreamReceiver(
-            '#ff6666', 'Cancel', true, ScanMode.BARCODE)!
-        .listen((barcode) => print(barcode));
-  }
+  // continuous scan
+  // Future<void> startBarcodeScanStream() async {
+  //   FlutterBarcodeScanner.getBarcodeStreamReceiver(
+  //           '#ff6666', 'Cancel', true, ScanMode.BARCODE)!
+  //       .listen((barcode) => print(barcode));
+  // }
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> scanBarcodeNormal() async {
@@ -75,6 +77,10 @@ class CameraPageState extends State<CameraPage> {
     setState(() {
       _scanBarcode = barcodeScanRes;
     });
+  }
+
+  Future<void> queryPLU() async {
+    //print(_pluCode);
   }
 
   // Future<void> scanBarcodeFromImage() async {
@@ -166,34 +172,34 @@ class CameraPageState extends State<CameraPage> {
           body: Builder(builder: (BuildContext context) {
             return Container(
                 alignment: Alignment.center,
-                // child: imageFile == null
-                //     ? // if no image selected, display buttons,
-
-                child: Flex(
-                    direction: Axis.vertical,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      // ElevatedButton(
-                      //     onPressed: () {
-                      //       getFromGallery();
-                      //     },
-                      //     child: const Text("PICK FROM GALLERY")),
-                      ElevatedButton(
-                          onPressed: () => scanBarcodeNormal(),
-                          child: const Text('Start barcode scan')),
-                      // continuous scan, will scan w/o closing camera
-                      // ElevatedButton(
-                      //     onPressed: () => startBarcodeScanStream(),
-                      //     child: Text('Start barcode scan stream')),
-                      Text('UPC Code : $_scanBarcode\n',
-                          style: TextStyle(fontSize: 20))
-                    ])
-                //:
-                // Expanded(
-                //     child: Text('Scan result : $_scanBarcode\n',
-                //         style: TextStyle(fontSize: 20)),
-                //   ),
-                );
+                child: Padding(
+                    padding: EdgeInsets.all(50),
+                    child: Flex(
+                        direction: Axis.vertical,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          ElevatedButton(
+                              onPressed: () => scanBarcodeNormal(),
+                              child: const Text('Start barcode scan')),
+                          Text('PLU Code : $_scanBarcode\n',
+                              style: TextStyle(fontSize: 20)),
+                          // ref: https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter
+                          TextField(
+                            onChanged: (text) {
+                              // get numbers user entered
+                              _pluCode = text;
+                            },
+                            decoration:
+                                InputDecoration(labelText: "Enter PLU Code"),
+                            keyboardType: TextInputType.number,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.digitsOnly, // only allow nums
+                              LengthLimitingTextInputFormatter(4), // only allow 4 nums
+                            ],
+                          ),
+                          // Text('PLU Code : $_pluCode\n',
+                          //     style: TextStyle(fontSize: 20))
+                        ])));
           }),
         )); // if image selected, display text read
   }
