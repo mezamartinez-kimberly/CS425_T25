@@ -45,8 +45,8 @@ class Users(db.Model):
     isFirstLogin = db.Column(db.Boolean, nullable=False)
 
     # define the relationships
-    expiration_data = db.relationship('ExpirationData', backref='user', lazy=True)
-    products = db.relationship('Products', backref='user', lazy=True)
+    expiration_data_child = db.relationship("ExpirationData", back_populates="user_parent_2")    
+    products_child = db.relationship("Products", back_populates="user_parent_1")
 
     # define the constructor
     def __init__(self, username, password, email, isFirstLogin):
@@ -68,7 +68,7 @@ class Products(db.Model):
     # uselist = False means that there is only one ExpirationData object per Product
     # https://docs.sqlalchemy.org/en/14/orm/basic_relationships.html 
     expiration_data = db.relationship('ExpirationData', uselist=False, backref='product', lazy=True)
-
+    user_parent_1 = db.relationship("Users", back_populates="products_child")
 
     # define the constructor
     def __init__(self, user_id,name, upc, plu):
@@ -86,6 +86,9 @@ class ExpirationData(db.Model):
     expiration_date_pantry = db.Column(db.Integer)
     expiration_date_fridge = db.Column(db.Integer)
     expiration_date_freezer = db.Column(db.Integer)
+
+    #define the relationship
+    user_parent_2 = db.relationship("Users", back_populates="expiration_data_child")
 
     # define the constructor
     def __init__(self, product_id, user_id, expiration_date_pantry, expiration_date_fridge, expiration_date_freezer):
