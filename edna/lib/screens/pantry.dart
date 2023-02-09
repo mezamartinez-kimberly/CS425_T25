@@ -82,24 +82,6 @@ class PantryPageState extends State<PantryPage> {
                               },
                               child: PantryItem(
                                 pantryItem: item,
-                                onEdit: (bool value) {
-                                  setState(() {
-                                    // edit item
-                                  });
-                                },
-                                // child: Card(
-                                //   child: ListTile(
-                                //     onLongPress: // delete item
-                                //         () {
-                                //       PantryDatabase.instance.delete(item.id!);
-                                //       setState(() {
-                                //         snapshot.data!.removeAt(index);
-                                //       });
-                                //     },
-                                //     title: Text(item.name),
-                                //     //subtitle: Text(expirationDate),
-                                //   ),
-                                // ),
                               ));
                         },
                       );
