@@ -30,17 +30,12 @@ class CameraPage extends StatefulWidget {
 
 // ref: https://pub.dev/packages/flutter_barcode_scanner/example
 class CameraPageState extends State<CameraPage> {
-  // variables
-  // var imageFile;
-  // ImagePicker? imagePicker; // ? = nullable
   String _scanBarcode = 'Unknown';
   String _pluCode = "null";
 
   @override
   void initState() {
     super.initState();
-    // must init image picker to be able to use gallery, camera
-    // imagePicker = ImagePicker();
   }
 
   // continuous scan
@@ -77,76 +72,10 @@ class CameraPageState extends State<CameraPage> {
     //print(_pluCode);
   }
 
-  // Future<void> scanBarcodeFromImage() async {
-  //   String barcodeScanRes;
-  //   // Platform messages may fail, so we use a try/catch PlatformException.
-  //   try {
-  //     barcodeScanRes = await FlutterBarcodeScanner.scanBarcode(
-  //         '#ff6666', 'Cancel', true, ScanMode.BARCODE);
-  //     print(barcodeScanRes);
-  //     // look up scanned code
-  //   } on PlatformException {
-  //     barcodeScanRes = 'Failed to get platform version.';
-  //   }
-
-  //   // If the widget was removed from the tree while the asynchronous platform
-  //   // message was in flight, we want to discard the reply rather than calling
-  //   // setState to update our non-existent appearance.
-  //   if (!mounted) return;
-
-  //   setState(() {
-  //     _scanBarcode = barcodeScanRes;
-  //   });
-  // }
-
   // for debugging
   void printYellow(String text) {
     print('\x1B[33m$text\x1B[0m');
   }
-
-  // pick image from gallery
-  // Future = can run func async; can only be either completed or uncompleted
-  // Future getFromGallery() async {
-  //   try {
-  //     // final = runtime constant; must be initialized, and that is the only time it can be assigned to
-  //     // await = make async func appear sync; line won't be executed until pickImage returns value
-  //     final image = await imagePicker!.pickImage(source: ImageSource.gallery);
-
-  //     if (image == null) return;
-  //     final imageTemp = File(image.path);
-  //     setState(() {
-  //       imageFile = imageTemp;
-  //       scanBarcodeFromImage();
-  //     });
-  //   } on PlatformException catch (e) {
-  //     // todo: display error to screen
-  //     // https://api.flutter.dev/flutter/material/AlertDialog-class.html
-  //     print('Failed to pick image: $e');
-  //   }
-  // }
-
-  // pick image from camera
-  // Future getFromCamera() async {
-  //   try {
-  //     final image = await imagePicker!.pickImage(source: ImageSource.camera);
-
-  //     if (image == null) return;
-  //     final imageTemp = File(image.path);
-  //     setState(() {
-  //       imageFile = imageTemp;
-  //     });
-  //   } on PlatformException catch (e) {
-  //     // todo: display error to screen
-  //     print('Failed to pick image: $e');
-  //   }
-  // }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   // must init image picker to be able to use gallery, camera
-  //   imagePicker = ImagePicker();
-  // }
 
   // widget UI
   @override
@@ -180,7 +109,7 @@ class CameraPageState extends State<CameraPage> {
                           child: const Text('Start barcode scan')),
                       // upc text output
                       Text('UPC Code: $_scanBarcode\n',
-                          style: TextStyle(fontSize: 20)),
+                          style: const TextStyle(fontSize: 20)),
                       // ref: https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter
                       // plu text entry
                       TextField(
@@ -204,6 +133,6 @@ class CameraPageState extends State<CameraPage> {
               ),
             );
           }),
-        )); // if image selected, display text read
+        ));
   }
 }

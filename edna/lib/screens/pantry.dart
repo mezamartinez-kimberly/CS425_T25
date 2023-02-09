@@ -18,7 +18,7 @@ import 'package:edna/utils/pantry_db.dart';
 main() {
   WidgetsFlutterBinding.ensureInitialized();
 
-  runApp(PantryPage());
+  runApp(const PantryPage());
 }
 
 class PantryPage extends StatefulWidget {
