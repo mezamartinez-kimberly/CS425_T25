@@ -33,8 +33,6 @@ class PantryPageState extends State<PantryPage> {
   MyTheme myTheme = const MyTheme();
   late MaterialColor myBlue =
       myTheme.createMaterialColor(const Color(0xFF69B9BB));
-  // for editing items
-  int? selectedId;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +40,7 @@ class PantryPageState extends State<PantryPage> {
         debugShowCheckedModeBanner: false,
         title: 'Pantry Page',
         theme: ThemeData(
-          primarySwatch: Colors.red,
+          primarySwatch: myBlue,
           textTheme:
               GoogleFonts.notoSerifTextTheme(Theme.of(context).textTheme),
         ),
@@ -81,23 +79,18 @@ class PantryPageState extends State<PantryPage> {
                                 snapshot.data!.removeAt(index);
                               });
                             },
-                            child: ListTile(
-                              onTap: // update item
-                                  // todo: open edit item page
-                                  () {
-                                setState(() {
-                                  selectedId = item.id;
-                                });
-                              },
-                              onLongPress: // delete item
-                                  () {
-                                PantryDatabase.instance.delete(item.id!);
-                                setState(() {
-                                  snapshot.data!.removeAt(index);
-                                });
-                              },
-                              title: Text(item.name),
-                              //subtitle: Text(expirationDate),
+                            child: Card(
+                              child: ListTile(
+                                onLongPress: // delete item
+                                    () {
+                                  PantryDatabase.instance.delete(item.id!);
+                                  setState(() {
+                                    snapshot.data!.removeAt(index);
+                                  });
+                                },
+                                title: Text(item.name),
+                                //subtitle: Text(expirationDate),
+                              ),
                             ),
                           );
                         },
@@ -111,17 +104,14 @@ class PantryPageState extends State<PantryPage> {
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               onPressed: () async {
-                selectedId != null
-                    ? await PantryDatabase.instance.update(
-                        Pantry(id: selectedId, name: 'update'),
-                      )
-                    : await PantryDatabase.instance.insert(
-                        Pantry(name: 'test', dateAdded: DateTime.now()),
-                      );
+                await PantryDatabase.instance.insert(
+                  Pantry(
+                      name: 'test',
+                      dateAdded: DateTime.now(),
+                      storageLocation: 1),
+                );
                 // refresh list
-                setState(() {
-                  selectedId = null;
-                });
+                setState(() {});
               },
               elevation: 2.0,
               child: const Icon(

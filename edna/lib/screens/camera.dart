@@ -15,17 +15,11 @@
 */
 
 import 'dart:async';
-import 'dart:io'; // File data type
-import 'dart:math'; // Point class
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart'; // all screens
-import 'package:path/path.dart'; // join()
-import 'package:image_picker/image_picker.dart'; // gallery, camera
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart'; // barcode scanner
 import 'package:flutter/services.dart'; // PlatformException
 import 'package:google_fonts/google_fonts.dart'; // fonts
-import 'dart:developer'; // debugging, "inspect"
-import 'package:collection/src/iterable_extensions.dart'; // firstWhereOrNull
 
 class CameraPage extends StatefulWidget {
   const CameraPage({super.key});
@@ -171,38 +165,44 @@ class CameraPageState extends State<CameraPage> {
           ),
           // builder = stateless utility widget
           body: Builder(builder: (BuildContext context) {
-            return Container(
+            return Padding(
+              // left, right padding
+              padding: const EdgeInsets.symmetric(horizontal: 50.0),
+              child: Container(
                 alignment: Alignment.center,
-                child: Padding(
-                    padding: EdgeInsets.all(50),
-                    child: Flex(
-                        direction: Axis.vertical,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          ElevatedButton(
-                              onPressed: () => scanBarcodeNormal(),
-                              child: const Text('Start barcode scan')),
-                          Text('UPC Code: $_scanBarcode\n',
-                              style: TextStyle(fontSize: 20)),
-                          // ref: https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter
-                          TextField(
-                            onChanged: (text) {
-                              // get numbers user entered
-                              _pluCode = text;
-                            },
-                            decoration:
-                                InputDecoration(labelText: "Enter PLU Code"),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter
-                                  .digitsOnly, // only allow nums
-                              LengthLimitingTextInputFormatter(
-                                  4), // only allow 4 nums
-                            ],
-                          ),
-                          // Text('PLU Code : $_pluCode\n',
-                          //     style: TextStyle(fontSize: 20))
-                        ])));
+                child: Flex(
+                    direction: Axis.vertical,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      // barcode button
+                      ElevatedButton(
+                          onPressed: () => scanBarcodeNormal(),
+                          child: const Text('Start barcode scan')),
+                      // upc text output
+                      Text('UPC Code: $_scanBarcode\n',
+                          style: TextStyle(fontSize: 20)),
+                      // ref: https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter
+                      // plu text entry
+                      TextField(
+                        onChanged: (text) {
+                          // get numbers user entered
+                          _pluCode = text;
+                        },
+                        decoration:
+                            const InputDecoration(labelText: "Enter PLU Code"),
+                        keyboardType: TextInputType.number,
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter
+                              .digitsOnly, // only allow nums
+                          LengthLimitingTextInputFormatter(
+                              4), // only allow 4 nums
+                        ],
+                      ),
+                      // Text('PLU Code : $_pluCode\n',
+                      //     style: TextStyle(fontSize: 20))
+                    ]),
+              ),
+            );
           }),
         )); // if image selected, display text read
   }
