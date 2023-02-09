@@ -13,7 +13,8 @@
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart';
 import 'package:google_fonts/google_fonts.dart'; // fonts
-import 'package:edna/utils/pantry_db.dart';
+import 'package:edna/dbs/pantry_db.dart';
+import 'package:edna/widgets/pantry_item.dart'; // pantry item widget
 
 main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -71,28 +72,35 @@ class PantryPageState extends State<PantryPage> {
                         itemBuilder: (BuildContext context, int index) {
                           Pantry item = snapshot.data![index];
                           return Dismissible(
-                            key: UniqueKey(),
-                            background: Container(color: Colors.red),
-                            onDismissed: (direction) {
-                              PantryDatabase.instance.delete(item.id!);
-                              setState(() {
-                                snapshot.data!.removeAt(index);
-                              });
-                            },
-                            child: Card(
-                              child: ListTile(
-                                onLongPress: // delete item
-                                    () {
-                                  PantryDatabase.instance.delete(item.id!);
+                              key: UniqueKey(),
+                              background: Container(color: Colors.red),
+                              onDismissed: (direction) {
+                                PantryDatabase.instance.delete(item.id!);
+                                setState(() {
+                                  snapshot.data!.removeAt(index);
+                                });
+                              },
+                              child: PantryItem(
+                                pantryItem: item,
+                                onEdit: (bool value) {
                                   setState(() {
-                                    snapshot.data!.removeAt(index);
+                                    // edit item
                                   });
                                 },
-                                title: Text(item.name),
-                                //subtitle: Text(expirationDate),
-                              ),
-                            ),
-                          );
+                                // child: Card(
+                                //   child: ListTile(
+                                //     onLongPress: // delete item
+                                //         () {
+                                //       PantryDatabase.instance.delete(item.id!);
+                                //       setState(() {
+                                //         snapshot.data!.removeAt(index);
+                                //       });
+                                //     },
+                                //     title: Text(item.name),
+                                //     //subtitle: Text(expirationDate),
+                                //   ),
+                                // ),
+                              ));
                         },
                       );
               },
