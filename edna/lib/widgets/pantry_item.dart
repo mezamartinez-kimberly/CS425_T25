@@ -6,6 +6,7 @@ class PantryItem extends StatefulWidget {
   _PantryItemState createState() => _PantryItemState();
 
   final Pantry pantryItem;
+  int quantity;
   bool isEditing;
   bool enableCheckbox;
   String? notes;
@@ -15,6 +16,7 @@ class PantryItem extends StatefulWidget {
   PantryItem({
     Key? key,
     required this.pantryItem,
+    this.quantity = 1,
     this.isEditing = false,
     this.enableCheckbox = true, // enabled by default
     this.notes,
@@ -63,45 +65,62 @@ class _PantryItemState extends State<PantryItem> {
       onPressed: () {
         widget.isEditing = true; // is editing
         // display dialog box
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Edit Item'),
-                content: TextField(
+        _buildEditDialogBox();
+      },
+    );
+  }
+
+  _buildEditDialogBox() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('Edit Item'),
+            content: Column(
+              children: [
+                // name
+                TextField(
                   controller: TextEditingController()
                     ..text = widget.pantryItem.name,
                   onChanged: (value) {
                     widget.pantryItem.name = value;
                   },
                 ),
-                actions: [
-                  TextButton(
-                    child: const Text('Cancel'),
-                    onPressed: () {
-                      // is not editing
-                      widget.isEditing = false;
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                  TextButton(
-                    child: const Text('Save'),
-                    onPressed: () {
-                      // is not editing
-                      widget.isEditing = false;
-                      // update pantry item
-                      PantryDatabase.instance.update(widget.pantryItem);
-                      // re-set state
-                      setState(() {});
-                      // close dialog box
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              );
-            });
-      },
-    );
+                // notes
+                TextField(
+                  controller: TextEditingController()
+                    ..text = widget.notes ?? "Notes",
+                  onChanged: (value) {
+                    widget.notes = value;
+                  },
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
+                  // set is not editing
+                  widget.isEditing = false;
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: const Text('Save'),
+                onPressed: () {
+                  // is not editing
+                  widget.isEditing = false;
+                  // update pantry item
+                  PantryDatabase.instance.update(widget.pantryItem);
+                  // re-set state
+                  setState(() {});
+                  // close dialog box
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Container _buildCheckBox(bool enableCheckbox) {
