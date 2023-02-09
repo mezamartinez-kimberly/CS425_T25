@@ -91,6 +91,8 @@ class _PantryItemState extends State<PantryItem> {
                       widget.isEditing = false;
                       // update pantry item
                       PantryDatabase.instance.update(widget.pantryItem);
+                      // re-set state
+                      setState(() {});
                       // close dialog box
                       Navigator.of(context).pop();
                     },
