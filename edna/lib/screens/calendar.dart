@@ -96,6 +96,7 @@ class CalendarClassState extends State<CalendarClass> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Expiration Calendar',
         theme: ThemeData(
           primarySwatch: Colors.orange,

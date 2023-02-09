@@ -52,6 +52,7 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Profile Page',
         theme: ThemeData(
           primarySwatch: Colors.grey,

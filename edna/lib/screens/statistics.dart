@@ -24,38 +24,45 @@ class StatsPage extends StatefulWidget {
 }
 
 class StatsPageState extends State<StatsPage> {
-
-  late List<FoodGroupData> _chartData;   //where we get our data from
+  late List<FoodGroupData> _chartData; //where we get our data from
 
   @override
   void initState() {
     _chartData = getChartData();
-    super.initState();    //forwards default implementation to State<T> base class of widget
+    super
+        .initState(); //forwards default implementation to State<T> base class of widget
   }
-
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(    //where the graph will load
+    return SafeArea(
+        //where the graph will load
+
         child: Scaffold(
-            body: SfCircularChart(    //type of chart
-      title:
-          ChartTitle(text: 'Statistics for Food Groups', textStyle: GoogleFonts.notoSerif(fontSize: 31,
-              color: Colors.black,)),   
-      legend:
-          Legend(isVisible: true, overflowMode: LegendItemOverflowMode.wrap),   //legendis visible and wraps to show on page size
+            body: SfCircularChart(
+      //type of chart
+      title: ChartTitle(
+          text: 'Statistics for Food Groups',
+          textStyle: GoogleFonts.notoSerif(
+            fontSize: 31,
+            color: Colors.black,
+          )),
+      legend: Legend(
+          isVisible: true,
+          overflowMode: LegendItemOverflowMode
+              .wrap), //legendis visible and wraps to show on page size
       series: <CircularSeries>[
         DoughnutSeries<FoodGroupData, String>(
             dataSource: _chartData,
-            xValueMapper: (FoodGroupData data, _) => data.foodType,   //maps
+            xValueMapper: (FoodGroupData data, _) => data.foodType, //maps
             yValueMapper: (FoodGroupData data, _) => data.percent,
-            dataLabelSettings: DataLabelSettings(isVisible: true)
-            )
+            dataLabelSettings: DataLabelSettings(isVisible: true))
       ],
     )));
   }
 
-  List<FoodGroupData> getChartData() {    //list containing our info, later info will be from our database containing our items
+  List<FoodGroupData> getChartData() {
+    //list containing our info, later info will be from our database containing our items
     final List<FoodGroupData> chartData = [
       FoodGroupData('Grain', 7),
       FoodGroupData('Fruits', 20),
@@ -67,8 +74,8 @@ class StatsPageState extends State<StatsPage> {
   }
 }
 
-
-class FoodGroupData {   //class containing the types 
+class FoodGroupData {
+  //class containing the types
   FoodGroupData(this.foodType, this.percent);
   final String foodType;
   final int percent;

@@ -158,6 +158,7 @@ class CameraPageState extends State<CameraPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Camera Page',
         theme: ThemeData(
           primarySwatch: Colors.blue,
