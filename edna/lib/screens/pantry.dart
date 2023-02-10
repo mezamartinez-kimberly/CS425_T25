@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart';
 import 'package:google_fonts/google_fonts.dart'; // fonts
 import 'package:edna/dbs/pantry_db.dart';
-import 'package:edna/widgets/pantry_item.dart'; // pantry item widget
+import 'package:edna/widgets/product_widget.dart'; // pantry item widget
 
 main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -80,7 +80,7 @@ class PantryPageState extends State<PantryPage> {
                                   snapshot.data!.removeAt(index);
                                 });
                               },
-                              child: PantryItem(
+                              child: ProductWidget(
                                 pantryItem: item,
                               ));
                         },

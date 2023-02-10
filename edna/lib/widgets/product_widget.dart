@@ -1,9 +1,10 @@
 import 'package:edna/dbs/pantry_db.dart';
+import 'package:edna/widgets/edit_widget.dart';
 import 'package:flutter/material.dart';
 
-class PantryItem extends StatefulWidget {
+class ProductWidget extends StatefulWidget {
   @override
-  _PantryItemState createState() => _PantryItemState();
+  _ProductWidgetState createState() => _ProductWidgetState();
 
   final Pantry pantryItem;
   int quantity;
@@ -13,7 +14,7 @@ class PantryItem extends StatefulWidget {
   bool? isDeleted;
 
   // constructor
-  PantryItem({
+  ProductWidget({
     Key? key,
     required this.pantryItem,
     this.quantity = 1,
@@ -24,8 +25,9 @@ class PantryItem extends StatefulWidget {
   }) : super(key: key);
 }
 
-class _PantryItemState extends State<PantryItem> {
+class _ProductWidgetState extends State<ProductWidget> {
   bool _isChecked = false;
+  final EditWidget editWidget = EditWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -65,62 +67,9 @@ class _PantryItemState extends State<PantryItem> {
       onPressed: () {
         widget.isEditing = true; // is editing
         // display dialog box
-        _buildEditDialogBox();
+        editWidget.buildEdit(widget, context);
       },
     );
-  }
-
-  _buildEditDialogBox() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Edit Item'),
-            content: Column(
-              children: [
-                // name
-                TextField(
-                  controller: TextEditingController()
-                    ..text = widget.pantryItem.name,
-                  onChanged: (value) {
-                    widget.pantryItem.name = value;
-                  },
-                ),
-                // notes
-                TextField(
-                  controller: TextEditingController()
-                    ..text = widget.notes ?? "Notes",
-                  onChanged: (value) {
-                    widget.notes = value;
-                  },
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  // set is not editing
-                  widget.isEditing = false;
-                  Navigator.of(context).pop();
-                },
-              ),
-              TextButton(
-                child: const Text('Save'),
-                onPressed: () {
-                  // is not editing
-                  widget.isEditing = false;
-                  // update pantry item
-                  PantryDatabase.instance.update(widget.pantryItem);
-                  // re-set state
-                  setState(() {});
-                  // close dialog box
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        });
   }
 
   Container _buildCheckBox(bool enableCheckbox) {
