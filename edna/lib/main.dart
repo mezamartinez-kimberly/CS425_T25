@@ -13,12 +13,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-<<<<<<< HEAD
       debugShowCheckedModeBanner: false,
       home: LoginPage(),
-=======
-      home: RegisterPage(),
->>>>>>> John-Dev
     );
   }
 }
