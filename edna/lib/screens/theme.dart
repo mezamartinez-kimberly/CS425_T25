@@ -33,7 +33,6 @@ class MyTheme extends StatelessWidget {
         1,
       );
     }
-    ;
     return MaterialColor(color.value, swatch);
   }
 

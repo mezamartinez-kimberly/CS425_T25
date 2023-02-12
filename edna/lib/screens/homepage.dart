@@ -33,6 +33,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      
       body: Center(
         child: _pageOptions
             .elementAt(_selectedIndex), // move to page at selected index

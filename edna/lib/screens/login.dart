@@ -24,6 +24,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   late String email, password;
   Widget _buildLogo() {
+    
     // This creates a row widget for the Login Title
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,

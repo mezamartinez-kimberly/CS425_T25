@@ -13,6 +13,14 @@
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart';
 import 'package:google_fonts/google_fonts.dart'; // fonts
+import 'package:edna/dbs/pantry_db.dart';
+import 'package:edna/widgets/product_widget.dart'; // pantry item widget
+
+main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  runApp(const PantryPage());
+}
 
 class PantryPage extends StatefulWidget {
   const PantryPage({super.key});
@@ -22,8 +30,6 @@ class PantryPage extends StatefulWidget {
 }
 
 class PantryPageState extends State<PantryPage> {
-  // todo: populate with actual data
-  final List<String> entries = List<String>.filled(15, 'Item');
   // color theme
   MyTheme myTheme = const MyTheme();
   late MaterialColor myBlue =
@@ -32,34 +38,78 @@ class PantryPageState extends State<PantryPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Camera Page',
+        debugShowCheckedModeBanner: false,
+        title: 'Pantry Page',
         theme: ThemeData(
-          primarySwatch: Colors.red,
+          primarySwatch: myBlue,
           textTheme:
               GoogleFonts.notoSerifTextTheme(Theme.of(context).textTheme),
         ),
-        home: Scaffold(
-            appBar: AppBar(
-              title: const Text('Pantry'),
-            ),
-            body: ListView.separated(
-              // equal padding alla round
-              padding: const EdgeInsets.all(10),
-              itemCount: entries.length,
-              itemBuilder: (BuildContext context, int index) {
-                // use column so can add food categories later
-                return Column(
-                  children: <Widget>[
-                    Container(
-                        alignment: Alignment.center,
-                        height: 50,
-                        color: Color.fromARGB(255, 227, 227, 227),
-                        child: Text('${entries[index]} $index')),
-                  ],
-                );
+        home: SafeArea(
+            child: Scaffold(
+                body: Column(children: [
+          Padding(
+            padding: const EdgeInsets.all(15),
+            child: Text('Pantry',
+                style:
+                    GoogleFonts.notoSerif(fontSize: 35, color: Colors.black)),
+          ),
+          Center(
+            child: FutureBuilder<List<Pantry>>(
+              future: PantryDatabase.instance.getAllPantry(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<Pantry>> snapshot) {
+                if (!snapshot.hasData) {
+                  return const CircularProgressIndicator();
+                }
+                return snapshot.data!.isEmpty
+                    ? const Center(
+                        child: Text('No items in pantry',
+                            style: TextStyle(fontSize: 20)))
+                    : ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          Pantry item = snapshot.data![index];
+                          return Dismissible(
+                              key: UniqueKey(),
+                              background: Container(color: Colors.red),
+                              onDismissed: (direction) {
+                                PantryDatabase.instance.delete(item.id!);
+                                setState(() {
+                                  snapshot.data!.removeAt(index);
+                                });
+                              },
+                              child: ProductWidget(
+                                pantryItem: item,
+                              ));
+                        },
+                      );
               },
-              separatorBuilder: (BuildContext context, int index) =>
-                  const Divider(),
-            )));
+            ),
+          ),
+          Container(
+            padding:
+                const EdgeInsets.only(left: 0, bottom: 20, right: 5, top: 10),
+            alignment: Alignment.bottomRight,
+            child: FloatingActionButton(
+              onPressed: () async {
+                await PantryDatabase.instance.insert(
+                  Pantry(
+                      name: 'test',
+                      dateAdded: DateTime.now(),
+                      storageLocation: 1),
+                );
+                // refresh list
+                setState(() {});
+              },
+              elevation: 2.0,
+              child: const Icon(
+                Icons.add,
+                size: 35.0,
+              ),
+            ),
+          )
+        ]))));
   }
 }
