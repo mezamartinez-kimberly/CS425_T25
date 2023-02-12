@@ -42,12 +42,19 @@ dependencies:
   table_calendar: ^3.0.8
   #detects swipe/tap gestures/config gesture recognition for calendar
   simple_gesture_detector: ^0.2.0
-  #package for charts 
+  #package for charts
   syncfusion_flutter_charts: ^20.3.60
-  #database 
+  #database
   sqflite: ^2.2.3
   # find commonly used locations on filesystem
   path_provider: ^2.0.12
+  #csv parsing
+  csv: ^5.0.1
+  # file path manipulatioin
+  path: ^1.8.2
+
+
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

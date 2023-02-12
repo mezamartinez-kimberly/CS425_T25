@@ -1,7 +1,9 @@
+import 'package:edna/screens/register.dart';
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart'; // all screens
+import 'package:edna/utils/database_helper.dart'; // database helper
 
-void main() {
+void main() async {
   runApp(const MyApp());
 }
 
@@ -11,8 +13,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
+<<<<<<< HEAD
       debugShowCheckedModeBanner: false,
       home: LoginPage(),
+=======
+      home: RegisterPage(),
+>>>>>>> John-Dev
     );
   }
 }
