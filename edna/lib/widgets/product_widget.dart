@@ -48,17 +48,19 @@ class _ProductWidgetState extends State<ProductWidget> {
         : _buildItemContainer();
   }
 
-  ListTile _buildItemContainer() {
-    return ListTile(
-        leading: _buildCheckBox(widget.enableCheckbox),
-        title: Text(widget.pantryItem.name,
-            style: TextStyle(
-                // if deleted, strikethrough text
-                decoration: widget.isDeleted!
-                    ? TextDecoration.lineThrough
-                    : TextDecoration.none)),
-        // subtitle: Text(widget.pantryItem.expirationDate),
-        trailing: _buildEditButton());
+  Card _buildItemContainer() {
+    return Card(
+      child: ListTile(
+          leading: _buildCheckBox(widget.enableCheckbox),
+          title: Text(widget.pantryItem.name,
+              style: TextStyle(
+                  // if deleted, strikethrough text
+                  decoration: widget.isDeleted!
+                      ? TextDecoration.lineThrough
+                      : TextDecoration.none)),
+          subtitle: Text(widget.pantryItem.expirationDate.toString()),
+          trailing: _buildEditButton()),
+    );
   }
 
   IconButton _buildEditButton() {

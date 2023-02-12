@@ -7,21 +7,21 @@ import 'package:path_provider/path_provider.dart'; // commonly used paths, // ge
 
 class Pantry {
   final int? id;
-
   // is name final? should user be able to change the name of an item?
   String name;
   final DateTime? dateAdded;
   final DateTime? dateRemoved;
+  final DateTime? expirationDate;
   final int? upc;
   final int? plu;
   final int? storageLocation;
-  // i think we should have separate exp date field
 
   Pantry({
     this.id,
     required this.name,
     this.dateAdded,
     this.dateRemoved,
+    this.expirationDate,
     this.upc,
     this.plu,
     this.storageLocation,
@@ -35,6 +35,9 @@ class Pantry {
       dateRemoved: json["dateRemoved"] == null
           ? null
           : DateTime.parse(json["dateRemoved"]),
+      expirationDate: json["expirationDate"] == null
+          ? null
+          : DateTime.parse(json["expirationDate"]),
       upc: json["upc"],
       plu: json["plu"],
       storageLocation: json["storageLocation"]);
@@ -45,6 +48,8 @@ class Pantry {
         "dateAdded": dateAdded == null ? null : dateAdded!.toIso8601String(),
         "dateRemoved":
             dateRemoved == null ? null : dateRemoved!.toIso8601String(),
+        "expirationDate":
+            expirationDate == null ? null : expirationDate!.toIso8601String(),
         "upc": upc,
         "plu": plu,
         "storageLocation": storageLocation,
@@ -77,6 +82,7 @@ class PantryDatabase {
       name TEXT NOT NULL,
       dateAdded TEXT,
       dateRemoved TEXT,
+      expirationDate TEXT,
       upc INTEGER,
       plu INTEGER,
       storageLocation INTEGER
