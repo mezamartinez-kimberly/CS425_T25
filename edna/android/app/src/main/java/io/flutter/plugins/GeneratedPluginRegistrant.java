@@ -21,9 +21,9 @@ public final class GeneratedPluginRegistrant {
       Log.e(TAG, "Error registering plugin camera, io.flutter.plugins.camera.CameraPlugin", e);
     }
     try {
-      flutterEngine.getPlugins().add(new com.amolg.flutterbarcodescanner.FlutterBarcodeScannerPlugin());
+      flutterEngine.getPlugins().add(new dev.facundo.fastqrreaderview.FastQrReaderViewPlugin());
     } catch(Exception e) {
-      Log.e(TAG, "Error registering plugin flutter_barcode_scanner, com.amolg.flutterbarcodescanner.FlutterBarcodeScannerPlugin", e);
+      Log.e(TAG, "Error registering plugin fast_qr_reader_view, dev.facundo.fastqrreaderview.FastQrReaderViewPlugin", e);
     }
     try {
       flutterEngine.getPlugins().add(new io.flutter.plugins.flutter_plugin_android_lifecycle.FlutterAndroidLifecyclePlugin());

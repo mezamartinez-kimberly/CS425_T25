@@ -35,7 +35,8 @@ dependencies:
   camera: ^0.8.1+7
   # choose image from gallery/camera
   image_picker: ^0.8.6
-  flutter_barcode_scanner: ^2.0.0
+  # barcode scan
+  fast_qr_reader_view: ^0.2.0
   # bottom nav bar
   google_nav_bar: ^5.0.6
   #packages for calendar
