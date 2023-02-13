@@ -98,6 +98,16 @@ class PantryDatabase {
     return pantryList;
   }
 
+  // get all pantry items where dateRemoved is null
+  Future<List<Pantry>> getActivePantry() async {
+    Database db = await instance.database;
+    var items = await db.query("pantry",
+        where: "dateRemoved IS NULL", orderBy: "dateAdded DESC");
+    List<Pantry> pantryList =
+        items.isNotEmpty ? items.map((c) => Pantry.fromMap(c)).toList() : [];
+    return pantryList;
+  }
+
   // add pantry item
   Future<int> insert(Pantry pantry) async {
     Database db = await instance.database;
@@ -105,9 +115,16 @@ class PantryDatabase {
   }
 
   // delete pantry item
+  // Future<int> delete(int id) async {
+  //   Database db = await instance.database;
+  //   return await db.delete("pantry", where: "id = ?", whereArgs: [id]);
+  // }
+
+  // set isDeleted to true
   Future<int> delete(int id) async {
     Database db = await instance.database;
-    return await db.delete("pantry", where: "id = ?", whereArgs: [id]);
+    return await db.update("pantry", {"dateRemoved": DateTime.now().toString()},
+        where: "id = ?", whereArgs: [id]);
   }
 
   // update pantry item

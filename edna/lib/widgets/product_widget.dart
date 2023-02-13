@@ -57,17 +57,10 @@ class _ProductWidgetState extends State<ProductWidget> {
   }
 
   Padding _buildItemContainer() {
-    String formattedDate;
-    DateTime? date = widget.pantryItem.expirationDate;
-    if (date != null) {
-      formattedDate = "Expires: ${DateFormat.yMMMEd().format(date)}";
-    } else {
-      formattedDate = "No Expiration Date";
-    }
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       child: Card(
+        // outline
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
           side: const BorderSide(
@@ -75,7 +68,7 @@ class _ProductWidgetState extends State<ProductWidget> {
             width: 1.0,
           ),
         ),
-        elevation: 5.0,
+        elevation: 5.0, // shadow
         child: ListTile(
             leading: _buildCheckBox(widget.enableCheckbox),
             title: Text(widget.pantryItem.name,
@@ -84,7 +77,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                     decoration: widget.isDeleted!
                         ? TextDecoration.lineThrough
                         : TextDecoration.none)),
-            subtitle: Text(formattedDate),
+            subtitle: Text(_formatDate()),
             trailing: _buildEditButton()),
       ),
     );
@@ -118,5 +111,15 @@ class _ProductWidgetState extends State<ProductWidget> {
           ))
         : // if checkmark disabled, return empty container
         Container();
+  }
+
+  String _formatDate() {
+    // format date
+    DateTime? date = widget.pantryItem.expirationDate;
+    if (date != null) {
+      return "Expires: ${DateFormat.yMMMEd().format(date)}";
+    } else {
+      return "No Expiration Date";
+    }
   }
 }
