@@ -1,6 +1,7 @@
 import 'package:edna/dbs/pantry_db.dart';
 import 'package:edna/widgets/edit_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ProductWidget extends StatefulWidget {
   @override
@@ -42,24 +43,50 @@ class _ProductWidgetState extends State<ProductWidget> {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return _buildItemContainer();
               }
-              // if done, return empty container
+              // if done, delete item and empty container
+              int? itemID = widget.pantryItem.id;
+              if (itemID != null) {
+                PantryDatabase.instance.delete(itemID);
+              } else {
+                // throw exception
+                throw Exception("Error: pantry item ID is null");
+              }
               return Container();
             })
         : _buildItemContainer();
   }
 
-  Card _buildItemContainer() {
-    return Card(
-      child: ListTile(
-          leading: _buildCheckBox(widget.enableCheckbox),
-          title: Text(widget.pantryItem.name,
-              style: TextStyle(
-                  // if deleted, strikethrough text
-                  decoration: widget.isDeleted!
-                      ? TextDecoration.lineThrough
-                      : TextDecoration.none)),
-          subtitle: Text(widget.pantryItem.expirationDate.toString()),
-          trailing: _buildEditButton()),
+  Padding _buildItemContainer() {
+    String formattedDate;
+    DateTime? date = widget.pantryItem.expirationDate;
+    if (date != null) {
+      formattedDate = "Expires: ${DateFormat.yMMMEd().format(date)}";
+    } else {
+      formattedDate = "No Expiration Date";
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+          side: const BorderSide(
+            color: Colors.black,
+            width: 1.0,
+          ),
+        ),
+        elevation: 5.0,
+        child: ListTile(
+            leading: _buildCheckBox(widget.enableCheckbox),
+            title: Text(widget.pantryItem.name,
+                style: TextStyle(
+                    // if deleted, strikethrough text
+                    decoration: widget.isDeleted!
+                        ? TextDecoration.lineThrough
+                        : TextDecoration.none)),
+            subtitle: Text(formattedDate),
+            trailing: _buildEditButton()),
+      ),
     );
   }
 

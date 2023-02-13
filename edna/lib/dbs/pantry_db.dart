@@ -116,4 +116,8 @@ class PantryDatabase {
     return await db.update("pantry", pantry.toMap(),
         where: "id = ?", whereArgs: [pantry.id]);
   }
+
+  // drop database
+  Future<void> deleteDatabase(String path) =>
+      databaseFactory.deleteDatabase(path);
 }

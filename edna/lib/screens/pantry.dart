@@ -51,6 +51,7 @@ class PantryPageState extends State<PantryPage> {
           Padding(
             padding: const EdgeInsets.all(15),
             child: Text('Pantry',
+                textAlign: TextAlign.left,
                 style:
                     GoogleFonts.notoSerif(fontSize: 35, color: Colors.black)),
           ),
@@ -90,15 +91,15 @@ class PantryPageState extends State<PantryPage> {
           ),
           Container(
             padding:
-                const EdgeInsets.only(left: 0, bottom: 20, right: 5, top: 10),
+                const EdgeInsets.only(left: 0, bottom: 20, right: 15, top: 10),
             alignment: Alignment.bottomRight,
             child: FloatingActionButton(
               onPressed: () async {
                 await PantryDatabase.instance.insert(
                   Pantry(
-                      name: 'test',
-                      dateAdded: DateTime.now(),
-                      storageLocation: 1),
+                    name: 'item_name',
+                    dateAdded: DateTime.now(),
+                  ),
                 );
                 // refresh list
                 setState(() {});

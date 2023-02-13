@@ -90,8 +90,11 @@ class CameraPageState extends State<CameraPage> {
         ),
         home: Scaffold(
           appBar: AppBar(
-            title: const Text("Camera View"),
-          ),
+              title: const Align(
+            alignment: Alignment.centerLeft,
+            child: Text('Camera'),
+          )),
+
           // builder = stateless utility widget
           body: Builder(builder: (BuildContext context) {
             return Padding(

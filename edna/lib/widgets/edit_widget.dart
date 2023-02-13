@@ -58,6 +58,7 @@ class EditWidget {
                   // is not editing
                   productWidget.isEditing = false;
                   // update pantry item
+
                   PantryDatabase.instance.update(productWidget.pantryItem);
                   // re-set state
                   //  setState(() {});
