@@ -39,6 +39,15 @@ db.init_app(app)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~ ROUTE SETUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @app.route('/register', methods=['POST'])
+
+# expected input:
+# {
+#     "first_name": "John",
+#     "last_name": "Doe",
+#     "email": "johndoe123@gmail.com",
+#     "password": "password123"
+# }
+
 def register():
     first_name = request.json['first_name']
     last_name = request.json['last_name']
@@ -79,3 +88,13 @@ def register():
     db.session.commit()
 
     return jsonify({'message': 'User created successfully'}), 201
+
+
+# create a quick debug route that will delete all info from all tables
+@app.route('/delete_all', methods=['DELETE'])
+def delete_all():
+    db.session.query(User).delete()
+    db.session.query(UserPreference).delete()
+    db.session.query(Person).delete()
+    db.session.commit()
+    return jsonify({'message': 'All tables have been cleared'}), 200
