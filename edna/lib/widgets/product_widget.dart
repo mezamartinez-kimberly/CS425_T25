@@ -56,7 +56,7 @@ class _ProductWidgetState extends State<ProductWidget> {
         : _buildItemContainer();
   }
 
-  Padding _buildItemContainer() {
+  Widget _buildItemContainer() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
       child: Card(
@@ -83,7 +83,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     );
   }
 
-  IconButton _buildEditButton() {
+  Widget _buildEditButton() {
     return IconButton(
       icon: const Icon(Icons.edit),
       onPressed: () {
@@ -94,7 +94,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     );
   }
 
-  Container _buildCheckBox(bool enableCheckbox) {
+  Widget _buildCheckBox(bool enableCheckbox) {
     return enableCheckbox
         ? // if checkmark is enabled, show checkmark
         Container(
