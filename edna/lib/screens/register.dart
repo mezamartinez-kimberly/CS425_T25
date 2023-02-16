@@ -11,6 +11,7 @@ import 'dart:ffi';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:edna/backend_utils.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:edna/screens/all.dart'; // all screens
 
@@ -25,7 +26,11 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  late String firstName, lastName, email, password;
+  String firstName = '';
+  String lastName = '';
+  String email = '';
+  String password = '';
+  String confirmPassword = '';
 
   final formKey = GlobalKey<FormState>();
 
@@ -248,7 +253,9 @@ class _RegisterPageState extends State<RegisterPage> {
           return null;
         },
         onSaved: (String? value) {
-          password = value!;
+          if (password == value) {
+            confirmPassword = value!;
+          }
         },
         obscureText: true,
       ),
@@ -266,11 +273,79 @@ class _RegisterPageState extends State<RegisterPage> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        onPressed: () {
+        onPressed: () async {
           if (!formKey.currentState!.validate()) {
+            formKey.currentState!.save();
             return;
           }
-          formKey.currentState!.save();
+
+          // send the validated data to the registerUser function
+          String result = await BackendUtils.registerUser(
+              firstName, lastName, email, password);
+          if (result == "Registration successful") {
+            // create an alert dialog to show the user that they have successfully registered
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    title: const Text("Registration Successful!"),
+                    content:
+                        const Text("Please login to continue into the app."),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          if (!mounted) return;
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginPage()));
+                        },
+                        child: const Text("OK"),
+                      ),
+                    ],
+                  );
+                });
+          } else {
+            // Error message for Email already exists
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    title: const Text("Registration Failed"),
+                    content: Text(result),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          if (!mounted) return;
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const LoginPage()));
+                        },
+                        child: const Text("Try Again"),
+                      ),
+                      TextButton(
+                        // direct the user to the forgot password page
+                        onPressed: () {
+                          if (!mounted) return;
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const ForgotPasswordPage()));
+                        },
+                        child: const Text("Forgot Password"),
+                      ),
+                    ],
+                  );
+                });
+          }
         },
         child: const Text(
           'Register',

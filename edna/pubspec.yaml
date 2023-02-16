@@ -52,6 +52,13 @@ dependencies:
   csv: ^5.0.1
   # file path manipulatioin
   path: ^1.8.2
+  #talking to the backend
+  http: ^0.13.5
+  # States
+  provider: ^6.0.5
+
+
+
 
 
 

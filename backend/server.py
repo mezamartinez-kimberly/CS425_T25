@@ -5,6 +5,14 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, JSON, Null
 from sqlalchemy import null
 
+# create Json Web Token (JWT) for authentication
+from flask_jwt_extended import create_access_token
+from flask_jwt_extended import get_jwt_identity
+from flask_jwt_extended import jwt_required
+from flask_jwt_extended import JWTManager
+
+
+# password hashing
 from flask_bcrypt import Bcrypt
 
 # Import the database object and the Model Classes from the models.py file
@@ -27,19 +35,32 @@ from models import db, User, UserPreference, Person
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SETUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # create the flask app
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
+jwt = JWTManager(app)
 
+
+# set the token to never expire ~ this is for testing purposes
+JWT_ACCESS_TOKEN_EXPIRES = False
 
 # tells SQLAlchemy where the database is
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
+# create a super secret key for JWT
+app.config["JWT_SECRET_KEY"] = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY3NjQ5MzAyOSwiaWF0IjoxNjc2NDkzMDI5fQ.Oa-YzeYO8bLEqSKb3nJ6wm7n7z9mJP7Qc2zVc3qjY3k"  
+
 db.init_app(app)
+
+
+
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SETUP END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~ ROUTE SETUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 @app.route('/register', methods=['POST'])
-
 # expected input:
 # {
 #     "first_name": "John",
@@ -47,7 +68,6 @@ db.init_app(app)
 #     "email": "johndoe123@gmail.com",
 #     "password": "password123"
 # }
-
 def register():
     first_name = request.json['first_name']
     last_name = request.json['last_name']
@@ -56,7 +76,7 @@ def register():
 
     # Check if the email is already registered
     if User.query.filter_by(email=email).first():
-        return jsonify({'error': 'Email already registered'})
+        return jsonify({'error': 'Email already registered'}, 401)
 
     # Create a new user and user preference
     person = Person(first_name=first_name, 
@@ -90,6 +110,48 @@ def register():
     return jsonify({'message': 'User created successfully'}), 201
 
 
+@app.route('/login', methods=['POST'])
+# expected input:
+# {
+#     "email": "
+#     "password": "
+# }
+def login():
+    email = request.json['email']
+    password = request.json['password']
+
+
+    # Note: The message "Please check your credentials and try again" is used to prevent
+    # malicious users from knowing which field is incorrect
+
+    # Check if the email is registered
+    user = User.query.filter_by(email=email).first()
+    if not user:
+        print ("email not registered")
+        print (email)
+        return jsonify({'error': 'Please check your credentials and try again'}), 401
+    
+
+    # Check if the password is correct
+    if not bcrypt.check_password_hash(user.password_hash, password):
+        print ("password is incorrect")
+        return jsonify({'error': 'Please check your credentials and try again'}), 401
+    
+
+
+
+    # Generate a session token
+    session_token = create_access_token(identity=email)
+
+    # Update the user's session token
+    user.session_token = session_token
+    db.session.add(user)
+    db.session.commit()
+
+    return jsonify({'message': 'User logged in successfully', 'session_token': session_token}), 201
+
+
+
 # create a quick debug route that will delete all info from all tables
 @app.route('/delete_all', methods=['DELETE'])
 def delete_all():
@@ -98,3 +160,9 @@ def delete_all():
     db.session.query(Person).delete()
     db.session.commit()
     return jsonify({'message': 'All tables have been cleared'}), 200
+
+
+# create a simple route that will only return helloworld
+@app.route('/hello', methods=['POST', 'GET', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD', 'TRACE', 'CONNECT', 'COPY', 'LOCK', 'MKCOL', 'MOVE', 'PROPFIND', 'PROPPATCH', 'SEARCH', 'UNLOCK', 'BIND', 'REBIND', 'UNBIND', 'ACL', 'REPORT', 'MKACTIVITY', 'CHECKOUT', 'MERGE', 'M-SEARCH', 'NOTIFY', 'SUBSCRIBE', 'UNSUBSCRIBE', 'PATCH', 'PURGE', 'MKCALENDAR', 'LINK', 'UNLINK', 'SOURCE', 'VIEW',   'PURGE', 'UNBIND', 'UNLINK', 'UNLOCK'])
+def hello():
+    return jsonify({'message': 'Hello World'}), 200

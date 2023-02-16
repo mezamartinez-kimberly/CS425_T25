@@ -6,6 +6,7 @@
 ==============================
 */
 
+import 'package:edna/backend_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,7 +23,8 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late String email, password;
+  String email = '';
+  String password = '';
   final formKey = GlobalKey<FormState>();
 
 // Createa a widget for the logo and Title Page
@@ -148,12 +150,6 @@ class _LoginPageState extends State<LoginPage> {
             borderRadius: BorderRadius.circular(15),
           ),
         ),
-        onPressed: () {
-          if (!formKey.currentState!.validate()) {
-            return;
-          }
-          formKey.currentState!.save();
-        },
         child: const Text(
           'Login',
           style: TextStyle(
@@ -164,6 +160,59 @@ class _LoginPageState extends State<LoginPage> {
             fontFamily: 'Roboto',
           ),
         ),
+
+        // When you press the button validate the form and send the information to the backend
+        onPressed: () async {
+          if (!formKey.currentState!.validate()) {
+            formKey.currentState!.save();
+            return;
+          }
+
+          // print the email and password to the console
+          print('Email: $email');
+          print('Password: $password');
+
+          // Send the infomation to the backend
+          String result = await BackendUtils.loginUser(email, password);
+
+          // Resolved an aync + naviagation issue
+          // https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html
+          if (!mounted) return;
+
+          if (result == 'Login successful') {
+            // Navigate to the home page
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const HomePage()),
+            );
+          } else {
+            // Show an in line error message ontop of the email field
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Container(
+                  alignment: Alignment.topCenter,
+                  height: 15.0,
+                  child: const Center(
+                    child: Text(
+                      'Please check your credentials and try again',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                backgroundColor: const Color.fromARGB(255, 255, 55, 55),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(40.0),
+                ),
+                behavior: SnackBarBehavior.floating,
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50),
+              ),
+            );
+          }
+        },
       ),
     );
   }
@@ -176,7 +225,7 @@ class _LoginPageState extends State<LoginPage> {
         // on press navigate to the forgot password page
         onPressed: () => Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => const ForgotPassword()),
+          MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
         ),
 
         child: const Text(

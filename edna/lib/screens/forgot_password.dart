@@ -9,15 +9,15 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class ForgotPassword extends StatefulWidget {
-  const ForgotPassword({Key? key}) : super(key: key);
+class ForgotPasswordPage extends StatefulWidget {
+  const ForgotPasswordPage({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
   _ForgotPasswordState createState() => _ForgotPasswordState();
 }
 
-class _ForgotPasswordState extends State<ForgotPassword> {
+class _ForgotPasswordState extends State<ForgotPasswordPage> {
   late String email;
   final formKey = GlobalKey<FormState>();
 
