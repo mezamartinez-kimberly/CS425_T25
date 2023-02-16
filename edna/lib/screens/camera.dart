@@ -98,9 +98,13 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:edna/widgets/product_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+
+import 'package:edna/dbs/pantry_db.dart'; // pantry db
+import 'package:edna/widgets/product_widget.dart'; // pantry item widget
 
 class CameraPage extends StatefulWidget {
   const CameraPage({Key? key}) : super(key: key);
@@ -132,7 +136,6 @@ class _CameraPageState extends State<CameraPage> {
     return Scaffold(
       body: Column(
         children: <Widget>[
-          // black bar at top
           Container(
             height: 70,
             color: Colors.red,
@@ -155,8 +158,13 @@ class _CameraPageState extends State<CameraPage> {
               fit: BoxFit.contain,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   _printScanResult(),
+                  SizedBox(
+                    height: 20,
+                    child: ProductWidget(pantryItem: Pantry(name: "test")),
+                  ),
                 ],
               ),
             ),
@@ -270,8 +278,15 @@ class _CameraPageState extends State<CameraPage> {
 
   Widget _printScanResult() {
     if (result != null) {
+      // make call based on upc
+      // store return data as pantry item
+      // create product with pantry item
+
       return Text(
           'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}');
+      // return ProductWidget(
+      //   pantryItem: Pantry(name: 'test'),
+      // );
     } else {
       return const Text('Scan a code');
     }

@@ -13,7 +13,7 @@
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart';
 import 'package:google_fonts/google_fonts.dart'; // fonts
-import 'package:edna/dbs/pantry_db.dart';
+import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // pantry item widget
 
 main() {
