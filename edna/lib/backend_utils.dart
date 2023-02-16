@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class BackendUtils {
+  static String sessionToken = '';
+
   static Future<String> registerUser(
       String firstName, String lastName, String email, String password) async {
     const String apiUrl = 'http://192.168.161.137/register';
@@ -43,18 +45,22 @@ class BackendUtils {
     };
     final String jsonPayload = json.encode(message);
 
-    // send the request to the backend as POST request
-    final http.Response response = await http.post(headers: {
-      'Content-Type':
-          'application/json', // set Content-Type header to application/json
-    }, Uri.parse(apiUrl), body: jsonPayload);
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonPayload,
+    );
 
-    // check the status code for the result
     if (response.statusCode == 201) {
-      // Registration was successful
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+      sessionToken = responseBody['session_token'];
+
+      print(sessionToken);
+
       return "Login successful";
     } else {
-      // Registration failed
       return "Login failed";
     }
   }

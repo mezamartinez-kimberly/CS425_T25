@@ -5,6 +5,10 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, Column, Integer, String, JSON, Null
 from sqlalchemy import null
 
+# for API Calls
+from urllib.request import Request, urlopen
+import json
+
 # create Json Web Token (JWT) for authentication
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
@@ -89,8 +93,6 @@ def register():
                                      is_notifications_on=True, 
                                      notification_range=10)
     
-  
-
     db.session.add(person)
     db.session.add(user_preference)
     db.session.commit()
@@ -136,9 +138,6 @@ def login():
     if not bcrypt.check_password_hash(user.password_hash, password):
         print ("password is incorrect")
         return jsonify({'error': 'Please check your credentials and try again'}), 401
-    
-
-
 
     # Generate a session token
     session_token = create_access_token(identity=email)
@@ -162,7 +161,25 @@ def delete_all():
     return jsonify({'message': 'All tables have been cleared'}), 200
 
 
-# create a simple route that will only return helloworld
-@app.route('/hello', methods=['POST', 'GET', 'PUT', 'DELETE', 'PATCH', 'OPTIONS', 'HEAD', 'TRACE', 'CONNECT', 'COPY', 'LOCK', 'MKCOL', 'MOVE', 'PROPFIND', 'PROPPATCH', 'SEARCH', 'UNLOCK', 'BIND', 'REBIND', 'UNBIND', 'ACL', 'REPORT', 'MKACTIVITY', 'CHECKOUT', 'MERGE', 'M-SEARCH', 'NOTIFY', 'SUBSCRIBE', 'UNSUBSCRIBE', 'PATCH', 'PURGE', 'MKCALENDAR', 'LINK', 'UNLINK', 'SOURCE', 'VIEW',   'PURGE', 'UNBIND', 'UNLINK', 'UNLOCK'])
-def hello():
-    return jsonify({'message': 'Hello World'}), 200
+# create a route that will query the upc API and return the data
+@app.route('/upc', methods=['GET'])
+# expected input:
+# {
+#     "upc": ""
+#     "session_token": ""
+# }
+#@jwt_required# this means that the session token must be passed in the header
+def upc():
+    upc = request.json['upc']
+    api_key = 'd20cfa73c6e8943592d96091a7469ccad33c7b60d59ab8a7923d0adc573bf5d8'
+
+    req = Request('https://go-upc.com/api/v1/code/' + upc)
+    req.add_header('Authorization', 'Bearer ' + api_key)
+    
+    content = urlopen(req).read()
+    data = json.loads(content.decode())
+
+    product_name = data["product"]["name"]
+
+
+    return jsonify({'message': 'UPC API call successful', 'name': product_name }), 200
