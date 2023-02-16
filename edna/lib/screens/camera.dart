@@ -161,10 +161,10 @@ class _CameraPageState extends State<CameraPage> {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   _printScanResult(),
-                  SizedBox(
-                    height: 20,
-                    child: ProductWidget(pantryItem: Pantry(name: "test")),
-                  ),
+                  // SizedBox(
+                  //   height: 20,
+                  //   child: ProductWidget(pantryItem: Pantry(name: "test")),
+                  // ),
                 ],
               ),
             ),
