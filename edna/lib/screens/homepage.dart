@@ -17,8 +17,9 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+// Following this tutorial: https://api.flutter.dev/flutter/material/NavigationBar-class.html
 class _HomePageState extends State<HomePage> {
-  int _selectedIndex = 0;
+  int _currentIndex = 0;
   final _pageOptions = [
     const CameraPage(),
     const PantryPage(),
@@ -27,62 +28,47 @@ class _HomePageState extends State<HomePage> {
     const ProfilePage()
   ];
 
-// Following the basic structure of the tutorial at:
-// https://pub.dev/packages/google_nav_bar
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: Center(
         child: _pageOptions
-            .elementAt(_selectedIndex), // move to page at selected index
+            .elementAt(_currentIndex), // move to page at selected index
       ),
-      bottomNavigationBar: GNav(
-        haptic: true, // haptic feedback
-        gap: 8,
-        iconSize: 24,
-        padding: const EdgeInsets.symmetric(
-            horizontal: 15, vertical: 20), // navigation bar padding
-        tabs: [
-          GButton(
-            icon: Icons.camera_alt_rounded,
-            text: 'Camera',
-            iconActiveColor: Colors.lightBlue,
-            backgroundColor: Colors.lightBlue.withOpacity(0.2),
-          ),
-          GButton(
-            icon: Icons.shopping_basket,
-            text: 'Pantry',
-            iconActiveColor: Colors.red,
-            backgroundColor: Colors.red.withOpacity(0.2),
-          ),
-          GButton(
-            icon: Icons.calendar_today_rounded,
-            text: 'Calendar',
-            iconActiveColor: Colors.orange,
-            backgroundColor: Colors.orange.withOpacity(0.2),
-          ),
-          GButton(
-            icon: Icons.list_alt,
-            text: 'Stats',
-            iconActiveColor: Colors.purple,
-            backgroundColor: Colors.purple.withOpacity(0.2),
-          ),
-          GButton(
-            icon: Icons.account_circle,
-            text: 'Profile',
-            iconActiveColor: Colors.grey,
-            backgroundColor: Colors.grey.withOpacity(0.2),
-          ),
-        ],
-        selectedIndex: _selectedIndex,
-        // update index when user selects tab
-        onTabChange: (index) {
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _currentIndex,
+        onDestinationSelected: (int newIndex) {
           setState(() {
-            _selectedIndex = index;
+            _currentIndex = newIndex;
           });
         },
+        destinations: const [
+          NavigationDestination(
+            selectedIcon: Icon(Icons.camera_alt),
+            icon: Icon(Icons.camera_alt_outlined),
+            label: 'Camera',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.shopping_basket),
+            icon: Icon(Icons.shopping_basket_outlined),
+            label: 'Pantry',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.calendar_month),
+            icon: Icon(Icons.calendar_month_outlined),
+            label: 'Calendar',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.bar_chart),
+            icon: Icon(Icons.bar_chart_outlined),
+            label: 'Stats',
+          ),
+          NavigationDestination(
+            selectedIcon: Icon(Icons.person),
+            icon: Icon(Icons.person_outlined),
+            label: 'Profile',
+          ),
+        ],
       ),
     );
   }
