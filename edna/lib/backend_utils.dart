@@ -57,11 +57,44 @@ class BackendUtils {
       final Map<String, dynamic> responseBody = json.decode(response.body);
       sessionToken = responseBody['session_token'];
 
-      print(sessionToken);
-
       return "Login successful";
     } else {
       return "Login failed";
+    }
+  }
+
+// // Create a upc get function to get the upc data
+  static Future<String> getUpcData(String upc) async {
+    const String apiUrl = 'http://192.168.161.137/upc';
+
+    // create a map called "message" that contains the data to be sent to the backend
+    final Map<String, dynamic> message = {
+      'upc': upc,
+    };
+
+    // convert the map to a JSON string
+    final String jsonPayload = json.encode(message);
+
+    // send the request to the backend as POST request
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': "Bearer $sessionToken",
+        'Content-Type': 'application/json',
+      },
+      body: jsonPayload,
+    );
+
+    if (response.statusCode == 201) {
+      // grab the rest of the body
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+      String name = responseBody['name'];
+
+      // Registration was successful
+      return name;
+    } else {
+      // Registration failed
+      return "UPC not found";
     }
   }
 }

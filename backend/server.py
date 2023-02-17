@@ -7,6 +7,8 @@ from sqlalchemy import null
 
 # for API Calls
 from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
+
 import json
 
 # create Json Web Token (JWT) for authentication
@@ -20,9 +22,7 @@ from flask_jwt_extended import JWTManager
 from flask_bcrypt import Bcrypt
 
 # Import the database object and the Model Classes from the models.py file
-from models import db, User, UserPreference, Person
-
-
+from models import db, User, UserPreference, Person, Product, ExpirationData, Pantry
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # how to create the virtual environment/ install flask & dotenv
@@ -48,7 +48,7 @@ jwt = JWTManager(app)
 
 
 # set the token to never expire ~ this is for testing purposes
-JWT_ACCESS_TOKEN_EXPIRES = False
+app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
 
 # tells SQLAlchemy where the database is
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
@@ -64,15 +64,26 @@ db.init_app(app)
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~ ROUTE SETUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# create a quick debug route that will delete all info from all tables
+@app.route('/delete_all', methods=['DELETE'])
+def delete_all():
+    db.session.query(User).delete()
+    db.session.query(UserPreference).delete()
+    db.session.query(Person).delete()
+    db.session.commit()
+    return jsonify({'message': 'All tables have been cleared'}), 200
+
 @app.route('/register', methods=['POST'])
-# expected input:
-# {
-#     "first_name": "John",
-#     "last_name": "Doe",
-#     "email": "johndoe123@gmail.com",
-#     "password": "password123"
-# }
 def register():
+
+    # expected input:
+    # {
+    #     "first_name": "John",
+    #     "last_name": "Doe",
+    #     "email": "johndoe123@gmail.com",
+    #     "password": "password123"
+    # }
+
     first_name = request.json['first_name']
     last_name = request.json['last_name']
     email = request.json['email']
@@ -111,14 +122,13 @@ def register():
 
     return jsonify({'message': 'User created successfully'}), 201
 
-
 @app.route('/login', methods=['POST'])
-# expected input:
-# {
-#     "email": "
-#     "password": "
-# }
 def login():
+    # expected input:
+    # {
+    #     "email": "
+    #     "password": "
+    # }
     email = request.json['email']
     password = request.json['password']
 
@@ -151,35 +161,35 @@ def login():
 
 
 
-# create a quick debug route that will delete all info from all tables
-@app.route('/delete_all', methods=['DELETE'])
-def delete_all():
-    db.session.query(User).delete()
-    db.session.query(UserPreference).delete()
-    db.session.query(Person).delete()
-    db.session.commit()
-    return jsonify({'message': 'All tables have been cleared'}), 200
-
-
 # create a route that will query the upc API and return the data
-@app.route('/upc', methods=['GET'])
-# expected input:
-# {
-#     "upc": ""
-#     "session_token": ""
-# }
-#@jwt_required# this means that the session token must be passed in the header
+
+@app.route('/upc', methods=['POST'])
+@jwt_required()
 def upc():
-    upc = request.json['upc']
-    api_key = 'd20cfa73c6e8943592d96091a7469ccad33c7b60d59ab8a7923d0adc573bf5d8'
+    try:
+        upc = request.json['upc']
+        api_key = 'd20cfa73c6e8943592d96091a7469ccad33c7b60d59ab8a7923d0adc573bf5d8'
 
-    req = Request('https://go-upc.com/api/v1/code/' + upc)
-    req.add_header('Authorization', 'Bearer ' + api_key)
+        req = Request('https://go-upc.com/api/v1/code/' + upc)
+        req.add_header('Authorization', 'Bearer ' + api_key)
+
+        content = urlopen(req).read()
+        data = json.loads(content.decode())
+
+        product_name = data["product"]["name"]
+
+        product = Product(upc=upc, name=product_name, logical_delete=0, plu=None)
+        db.session.add(product)
+        db.session.commit()
+
+        return jsonify({'message': 'UPC API call successful', 'name': product_name}), 200
     
-    content = urlopen(req).read()
-    data = json.loads(content.decode())
-
-    product_name = data["product"]["name"]
-
-
-    return jsonify({'message': 'UPC API call successful', 'name': product_name }), 200
+    # All the possible errors:
+    except HTTPError as e:
+        return jsonify({'error': f'HTTP error: {e.code} {e.reason}'}), 500
+    except URLError as e:
+        return jsonify({'error': f'URL error: {e.reason}'}), 500
+    except (KeyError, TypeError) as e:
+        return jsonify({'error': 'Invalid UPC code or API response'}), 400
+    except Exception as e:
+        return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
