@@ -7,14 +7,14 @@ import 'package:path_provider/path_provider.dart'; // commonly used paths, // ge
 
 class Pantry {
   final int? id;
-  // is name final? should user be able to change the name of an item?
   String name;
   final DateTime? dateAdded;
-  final DateTime? dateRemoved;
-  final DateTime? expirationDate;
+  DateTime? dateRemoved;
+  DateTime? expirationDate;
   final int? upc;
   final int? plu;
-  final int? storageLocation;
+  int? storageLocation;
+  int? isDeleted;
 
   Pantry({
     this.id,
@@ -25,6 +25,7 @@ class Pantry {
     this.upc,
     this.plu,
     this.storageLocation,
+    this.isDeleted = 0,
   });
 
   factory Pantry.fromMap(Map<String, dynamic> json) => Pantry(
@@ -40,7 +41,8 @@ class Pantry {
           : DateTime.parse(json["expirationDate"]),
       upc: json["upc"],
       plu: json["plu"],
-      storageLocation: json["storageLocation"]);
+      storageLocation: json["storageLocation"],
+      isDeleted: json["isDeleted"]);
 
   Map<String, dynamic> toMap() => {
         "id": id,
@@ -53,6 +55,7 @@ class Pantry {
         "upc": upc,
         "plu": plu,
         "storageLocation": storageLocation,
+        "isDeleted": isDeleted,
       };
 }
 
@@ -85,14 +88,26 @@ class PantryDatabase {
       expirationDate TEXT,
       upc INTEGER,
       plu INTEGER,
-      storageLocation INTEGER
+      storageLocation INTEGER,
+      isDeleted INTEGER
     )''');
   }
 
   // get all pantry items
   Future<List<Pantry>> getAllPantry() async {
     Database db = await instance.database;
-    var items = await db.query("pantry", orderBy: "dateAdded DESC");
+    var items = await db.query("pantry", orderBy: "expirationDate DESC");
+    // note: sqlite considers NULL to be smaller than any other value, so nulls will show at the bottom of the list
+    List<Pantry> pantryList =
+        items.isNotEmpty ? items.map((c) => Pantry.fromMap(c)).toList() : [];
+    return pantryList;
+  }
+
+  // get all pantry items where isDeleted is 0
+  Future<List<Pantry>> getActivePantry() async {
+    Database db = await instance.database;
+    var items = await db.query("pantry",
+        where: "isDeleted = 0", orderBy: "dateAdded DESC");
     List<Pantry> pantryList =
         items.isNotEmpty ? items.map((c) => Pantry.fromMap(c)).toList() : [];
     return pantryList;
@@ -105,9 +120,23 @@ class PantryDatabase {
   }
 
   // delete pantry item
+  // Future<int> delete(int id) async {
+  //   Database db = await instance.database;
+  //   return await db.delete("pantry", where: "id = ?", whereArgs: [id]);
+  // }
+
+  // set isDeleted to true
   Future<int> delete(int id) async {
     Database db = await instance.database;
-    return await db.delete("pantry", where: "id = ?", whereArgs: [id]);
+    return await db.update("pantry", {"isDeleted": 1},
+        where: "id = ?", whereArgs: [id]);
+  }
+
+  // undo delete
+  Future<int> undoDelete(int id) async {
+    Database db = await instance.database;
+    return await db.update("pantry", {"isDeleted": 0},
+        where: "id = ?", whereArgs: [id]);
   }
 
   // update pantry item
@@ -115,5 +144,12 @@ class PantryDatabase {
     Database db = await instance.database;
     return await db.update("pantry", pantry.toMap(),
         where: "id = ?", whereArgs: [pantry.id]);
+  }
+
+  // drop database
+  Future<void> deleteDatabase() async {
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, "pantry.db");
+    databaseFactory.deleteDatabase(path);
   }
 }
