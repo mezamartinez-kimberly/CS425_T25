@@ -11,100 +11,16 @@
 // - https://stackoverflow.com/questions/65992435/how-to-open-barcode-scanner-in-a-custom-widget
 // */
 
-// import 'dart:async';
-// import 'package:flutter/material.dart';
-// import 'package:edna/screens/all.dart'; // all screens
-// import 'package:qr_code_scanner/qr_code_scanner.dart'; // barcode scanner
-// import 'package:flutter/services.dart'; // PlatformException
-// import 'package:google_fonts/google_fonts.dart'; // fonts
-
-// class CameraPage extends StatefulWidget {
-//   const CameraPage({super.key});
-
-//   @override
-//   CameraPageState createState() => CameraPageState();
-// }
-
-// class CameraPageState extends State<CameraPage> {
-//   String _scanBarcode = 'Unknown';
-//   String _pluCode = "null";
-
-//   @override
-//   void initState() {
-//     super.initState();
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container();
-//   }
-// }
-
-//   // @override
-//   // Widget build(BuildContext context) {
-//   //   return MaterialApp(
-//   //       debugShowCheckedModeBanner: false,
-//   //       title: 'Camera Page',
-//   //       theme: ThemeData(
-//   //         primarySwatch: Colors.blue,
-//   //         textTheme:
-//   //             GoogleFonts.notoSerifTextTheme(Theme.of(context).textTheme),
-//   //       ),
-//   //       home: Scaffold(
-//   //         appBar: AppBar(
-//   //             title: const Align(
-//   //           alignment: Alignment.centerLeft,
-//   //           child: Text('Camera'),
-//   //         )),
-//   //         body: Builder(builder: (BuildContext context) {
-//   //           return Padding(
-//   //             padding: const EdgeInsets.symmetric(horizontal: 50.0),
-//   //             child: Container(
-//   //               alignment: Alignment.center,
-//   //               child: Flex(
-//   //                   direction: Axis.vertical,
-//   //                   mainAxisAlignment: MainAxisAlignment.center,
-//   //                   children: <Widget>[
-//   //                     // barcode button
-
-//   //                     // upc text output
-//   //                     Text('UPC Code: $_scanBarcode\n',
-//   //                         style: const TextStyle(fontSize: 20)),
-
-//   //                     // plu text entry
-//   //                     TextField(
-//   //                       onChanged: (text) {
-//   //                         // get numbers user entered
-//   //                         _pluCode = text;
-//   //                       },
-//   //                       decoration:
-//   //                           const InputDecoration(labelText: "Enter PLU Code"),
-//   //                       keyboardType: TextInputType.number,
-//   //                       inputFormatters: <TextInputFormatter>[
-//   //                         FilteringTextInputFormatter
-//   //                             .digitsOnly, // only allow nums
-//   //                         LengthLimitingTextInputFormatter(
-//   //                             4), // only allow 4 nums
-//   //                       ],
-//   //                     ),
-//   //                   ]),
-//   //             ),
-//   //           );
-//   //         }),
-//   //       ));
-//   // }
-// //}
-
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:edna/backend_utils.dart';
 import 'package:edna/widgets/product_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
-import 'package:edna/widgets/product_widget.dart'; // pantry item widget
 
 class CameraPage extends StatefulWidget {
   const CameraPage({Key? key}) : super(key: key);
@@ -160,11 +76,10 @@ class _CameraPageState extends State<CameraPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  _printScanResult(),
-                  // SizedBox(
-                  //   height: 20,
-                  //   child: ProductWidget(pantryItem: Pantry(name: "test")),
-                  // ),
+                  SizedBox(
+                    height: 20,
+                    child: ProductWidget(pantryItem: Pantry(name: "test")),
+                  ),
                 ],
               ),
             ),
@@ -203,6 +118,9 @@ class _CameraPageState extends State<CameraPage> {
       setState(() {
         result = scanData;
       });
+
+      // call the get name functiion
+      getName();
     });
   }
 
@@ -276,9 +194,26 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
-  Widget _printScanResult() {
+  Future<Widget> getName() async {
     if (result != null) {
       // make call based on upc
+
+      // check to make sure the upc is in the correct format
+      // Formats avalible: https://github.com/juliuscanute/qr_code_scanner/blob/master/lib/src/types/barcode_format.dart
+      // Formats accepted by API: https://go-upc.com/upc-checker-validator
+      if (result!.format == BarcodeFormat.upcA ||
+          result!.format == BarcodeFormat.upcE ||
+          result!.format == BarcodeFormat.ean13 ||
+          result!.format == BarcodeFormat.ean8) {
+        String productName =
+            await BackendUtils.getUpcData(result!.code as String);
+
+        //print to console
+        print(productName);
+      }
+
+      // return error message
+
       // store return data as pantry item
       // create product with pantry item
 
