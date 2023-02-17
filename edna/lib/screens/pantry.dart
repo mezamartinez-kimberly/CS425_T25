@@ -125,9 +125,6 @@ class PantryPageState extends State<PantryPage> {
       if (!snapshot.hasData) {
         return const CircularProgressIndicator();
       }
-      // if (!snapshot.data!.isEmpty) {
-      //   print(snapshot.data.toString());
-      // }
       return snapshot.data!.isEmpty
           ? const Center(
               child: Text('No items in pantry', style: TextStyle(fontSize: 20)))
@@ -135,8 +132,14 @@ class PantryPageState extends State<PantryPage> {
               shrinkWrap: true, // fix sizing
               itemCount: snapshot.data!.length,
               itemBuilder: (BuildContext context, int index) {
+                // instantiate new item
                 Pantry item = snapshot.data![index];
-                return ProductWidget(pantryItem: item);
+                // return widget containing item
+                return _showDeletedItems
+                    ? ProductWidget(pantryItem: item)
+                    : item.isDeleted == 1
+                        ? Container() // return dialog box ?
+                        : ProductWidget(pantryItem: item);
               },
             );
     };

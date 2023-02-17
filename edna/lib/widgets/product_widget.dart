@@ -1,7 +1,7 @@
 import 'package:edna/dbs/pantry_db.dart';
 import 'package:edna/widgets/edit_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart'; // DateFormat
 
 class ProductWidget extends StatefulWidget {
   @override
@@ -9,39 +9,50 @@ class ProductWidget extends StatefulWidget {
 
   final Pantry pantryItem;
   int quantity;
-  bool isEditing;
   bool enableCheckbox;
-  String? notes;
 
   // constructor
   ProductWidget({
     Key? key,
     required this.pantryItem,
     this.quantity = 1,
-    this.isEditing = false,
     this.enableCheckbox = true, // enabled by default
-    this.notes,
   }) : super(key: key);
 }
 
 class _ProductWidgetState extends State<ProductWidget> {
   bool _isChecked = false;
-  final EditWidget editWidget = EditWidget();
+  bool _isEditing = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     // if item deleted, remove
-    return widget.pantryItem.isDeleted! == 1
-        ? FutureBuilder(
-            future: Future.delayed(
-                // wait 400 ms before deleting
-                const Duration(milliseconds: 400)),
-            builder: (context, snapshot) {
-              // while waiting, return product widget
-              return _buildItemContainer();
-            })
-        // if not deleted, create the product widget
-        : _buildItemContainer();
+    return Column(
+      children: [
+        widget.pantryItem.isDeleted! == 1
+            ? FutureBuilder(
+                future: Future.delayed(
+                    // wait 400 ms before deleting
+                    const Duration(milliseconds: 400)),
+                builder: (context, snapshot) {
+                  // while waiting, return product widget
+                  return _buildItemContainer();
+                })
+            // if not deleted, create the product widget
+            : _buildItemContainer(),
+        // Visibility(
+        //   child: EditWidget(
+        //     pantryItem: widget.pantryItem,
+        //   ),
+        //   visible: _isEditing,
+        // ),
+      ],
+    );
   }
 
   Widget _buildItemContainer() {
@@ -86,20 +97,14 @@ class _ProductWidgetState extends State<ProductWidget> {
     return IconButton(
       icon: const Icon(Icons.edit),
       onPressed: () {
-        widget.isEditing = true; // is editing
-        // display dialog box
-        editWidget.buildEdit(widget, context);
+        _isEditing = true;
       },
     );
   }
 
   Widget _buildCheckBox(bool enableCheckbox) {
     // if pantry item is deleted, keep box checked
-    if (widget.pantryItem.isDeleted! == 1) {
-      _isChecked = true;
-    } else {
-      _isChecked = false;
-    }
+    widget.pantryItem.isDeleted == 1 ? _isChecked = true : _isChecked = false;
     return enableCheckbox
         ? // if checkmark is enabled, show checkmark
         Container(

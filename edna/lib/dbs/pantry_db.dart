@@ -7,14 +7,13 @@ import 'package:path_provider/path_provider.dart'; // commonly used paths, // ge
 
 class Pantry {
   final int? id;
-  // is name final? should user be able to change the name of an item?
   String name;
   final DateTime? dateAdded;
-  final DateTime? dateRemoved;
-  final DateTime? expirationDate;
+  DateTime? dateRemoved;
+  DateTime? expirationDate;
   final int? upc;
   final int? plu;
-  final int? storageLocation;
+  int? storageLocation;
   int? isDeleted;
 
   Pantry({
@@ -97,7 +96,8 @@ class PantryDatabase {
   // get all pantry items
   Future<List<Pantry>> getAllPantry() async {
     Database db = await instance.database;
-    var items = await db.query("pantry", orderBy: "dateAdded DESC");
+    var items = await db.query("pantry", orderBy: "expirationDate DESC");
+    // note: sqlite considers NULL to be smaller than any other value, so nulls will show at the bottom of the list
     List<Pantry> pantryList =
         items.isNotEmpty ? items.map((c) => Pantry.fromMap(c)).toList() : [];
     return pantryList;
