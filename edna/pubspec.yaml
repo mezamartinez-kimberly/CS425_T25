@@ -33,13 +33,10 @@ dependencies:
     sdk: flutter
   # take picture
   camera: ^0.8.1+7
+  # barcode scanner
   qr_code_scanner: ^1.0.1
-
-
   # choose image from gallery/camera
   image_picker: ^0.8.6
-  # barcode scan
-  qr_code_scanner: ^1.0.1
   # bottom nav bar
   google_nav_bar: ^5.0.6
   #packages for calendar
