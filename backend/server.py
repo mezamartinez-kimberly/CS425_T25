@@ -17,6 +17,8 @@ from flask_jwt_extended import get_jwt_identity
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import JWTManager
 
+# for confimation emails
+from flask_mail import Mail, Message
 
 # password hashing
 from flask_bcrypt import Bcrypt
@@ -45,15 +47,24 @@ from models import db, User, UserPreference, Person, Product, ExpirationData, Pa
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
+mail = Mail(app) 
 
 
 # set the token to never expire ~ this is for testing purposes
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = False
-
 # tells SQLAlchemy where the database is
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///db.sqlite'
 # create a super secret key for JWT
 app.config["JWT_SECRET_KEY"] = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N1ZXIiOiJJc3N1ZXIiLCJVc2VybmFtZSI6IkphdmFJblVzZSIsImV4cCI6MTY3NjQ5MzAyOSwiaWF0IjoxNjc2NDkzMDI5fQ.Oa-YzeYO8bLEqSKb3nJ6wm7n7z9mJP7Qc2zVc3qjY3k"  
+
+# configuration of mail
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'edna.app123@gmail.com'
+app.config['MAIL_PASSWORD'] = 'zjmlopzqglasobnc'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
 
 db.init_app(app)
 
@@ -64,6 +75,22 @@ db.init_app(app)
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~ ROUTE SETUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+# @app.route("/testEmail")
+# def index():
+#    msg = Message(
+#                 'Hello',
+#                 sender ='yourId@gmail.com',
+#                 recipients = ['john.watson3091@gmail.com']
+#                )
+#    msg.body = 'Hello Flask message sent from Flask-Mail'
+#    mail.send(msg)
+#    return 'Sent'
+
+
+
+
+
 # create a quick debug route that will delete all info from all tables
 @app.route('/delete_all', methods=['DELETE'])
 def delete_all():
@@ -159,10 +186,7 @@ def login():
 
     return jsonify({'message': 'User logged in successfully', 'session_token': session_token}), 201
 
-
-
 # create a route that will query the upc API and return the data
-
 @app.route('/upc', methods=['POST'])
 @jwt_required()
 def upc():
@@ -193,3 +217,6 @@ def upc():
         return jsonify({'error': 'Invalid UPC code or API response'}), 400
     except Exception as e:
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
+
+# @app.route('/forgotPassword', methods=['POST'])
+# def forgot_password():

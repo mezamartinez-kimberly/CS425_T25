@@ -94,9 +94,10 @@ class _ForgotPasswordState extends State<ForgotPasswordPage> {
         ),
         onPressed: () {
           if (!formKey.currentState!.validate()) {
+            formKey.currentState!.save();
+
             return;
           }
-          formKey.currentState!.save();
         },
         child: const Text(
           'Reset Password',
