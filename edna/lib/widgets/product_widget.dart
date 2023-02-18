@@ -16,7 +16,7 @@ class ProductWidget extends StatefulWidget {
     Key? key,
     required this.pantryItem,
     this.quantity = 1,
-    this.enableCheckbox = true, // enabled by default
+    this.enableCheckbox = false, // enabled by default
   }) : super(key: key);
 }
 
@@ -68,29 +68,40 @@ class _ProductWidgetState extends State<ProductWidget> {
     //                 },
     //                 child:
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-      child: Card(
-        // outline
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-          side: const BorderSide(
-            color: Colors.black,
-            width: 1.0,
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+        child: Card(
+          // outline
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15.0),
+            side: const BorderSide(
+              color: Colors.black,
+              width: 1.0,
+            ),
           ),
-        ),
-        elevation: 5.0, // shadow
-        child: ListTile(
-            leading: _buildCheckBox(widget.enableCheckbox),
-            title: Text(widget.pantryItem.name,
-                style: TextStyle(
-                    // if deleted, strikethrough text
-                    decoration: widget.pantryItem.isDeleted! == 1
-                        ? TextDecoration.lineThrough
-                        : TextDecoration.none)),
-            subtitle: Text(_formatDate()),
-            trailing: _buildEditButton()),
-      ),
-    );
+          elevation: 5.0, // shadow
+          child: SizedBox(
+            height: 100,
+            width: 400,
+            child: ListView.builder(
+              physics:
+                  const NeverScrollableScrollPhysics(), // disable scroll within individual cards
+              itemCount: 1,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: _buildCheckBox(widget.enableCheckbox),
+                  title: Text(widget.pantryItem.name,
+                      style: TextStyle(
+                          // if deleted, strikethrough text
+                          decoration: widget.pantryItem.isDeleted! == 1
+                              ? TextDecoration.lineThrough
+                              : TextDecoration.none)),
+                  subtitle: Text(_formatDate()),
+                  trailing: _buildEditButton(),
+                );
+              },
+            ),
+          ),
+        ));
   }
 
   Widget _buildEditButton() {
@@ -107,8 +118,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     widget.pantryItem.isDeleted == 1 ? _isChecked = true : _isChecked = false;
     return enableCheckbox
         ? // if checkmark is enabled, show checkmark
-        Container(
-            child: Checkbox(
+        Checkbox(
             value: _isChecked, // unchecked by default
             onChanged: widget.pantryItem.isDeleted! == 1
                 // if isDeleted is true and user clicks on checkbox, change checkbox to unchecked, "undelete" item
@@ -128,9 +138,9 @@ class _ProductWidgetState extends State<ProductWidget> {
                       PantryDatabase.instance.delete(widget.pantryItem.id!);
                     });
                   },
-          ))
+          )
         : // if checkmark disabled, return empty container
-        Container();
+        const SizedBox();
   }
 
   String _formatDate() {

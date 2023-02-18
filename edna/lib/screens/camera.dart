@@ -98,7 +98,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:edna/widgets/product_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -153,22 +152,21 @@ class _CameraPageState extends State<CameraPage> {
           ),
           Expanded(flex: 1, child: _buildQrView(context)),
           Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  _printScanResult(),
-                  // SizedBox(
-                  //   height: 20,
-                  //   child: ProductWidget(pantryItem: Pantry(name: "test")),
-                  // ),
-                ],
-              ),
+            flex: 2,
+            // child: FittedBox(
+            //   fit: BoxFit.contain,
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              // mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                _printScanResult(),
+                ProductWidget(
+                  pantryItem: Pantry(id: 500, name: "test"),
+                ),
+              ],
             ),
-          )
+          ),
+          //  )
         ],
       ),
     );
@@ -222,31 +220,28 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   Widget _buildFlashButton() {
-    return Container(
-      child: // show flash icon
-          IconButton(
-        icon: _flashOn
-            ? const Icon(
-                Icons.flash_on,
-                size: 40,
-              )
-            : const Icon(
-                Icons.flash_off,
-                size: 40,
-              ),
-        onPressed: () async {
-          await controller?.toggleFlash();
-          setState(() {
-            _flashOn = !_flashOn;
-          });
-          FutureBuilder(
-            future: controller?.getFlashStatus(),
-            builder: (context, snapshot) {
-              return Text('Flash: ${snapshot.data}');
-            },
-          );
-        },
-      ),
+    return IconButton(
+      icon: _flashOn
+          ? const Icon(
+              Icons.flash_on,
+              size: 40,
+            )
+          : const Icon(
+              Icons.flash_off,
+              size: 40,
+            ),
+      onPressed: () async {
+        await controller?.toggleFlash();
+        setState(() {
+          _flashOn = !_flashOn;
+        });
+        FutureBuilder(
+          future: controller?.getFlashStatus(),
+          builder: (context, snapshot) {
+            return Text('Flash: ${snapshot.data}');
+          },
+        );
+      },
     );
   }
 
@@ -282,11 +277,12 @@ class _CameraPageState extends State<CameraPage> {
       // store return data as pantry item
       // create product with pantry item
 
-      return Text(
-          'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}');
-      // return ProductWidget(
-      //   pantryItem: Pantry(name: 'test'),
-      // );
+      //return Text(
+      //   'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}');
+      String upcCode = result!.code.toString();
+      return ProductWidget(pantryItem: Pantry(id: 500, name: upcCode));
+
+      // something is pushing this down?
     } else {
       return const Text('Scan a code');
     }

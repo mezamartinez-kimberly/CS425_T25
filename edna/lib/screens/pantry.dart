@@ -104,7 +104,6 @@ class PantryPageState extends State<PantryPage> {
   }
 
   _listAllItems() {
-    print("listing all items");
     return Center(
       child: FutureBuilder<List<Pantry>>(
           future: PantryDatabase.instance.getAllPantry(),
@@ -138,7 +137,7 @@ class PantryPageState extends State<PantryPage> {
                 return _showDeletedItems
                     ? ProductWidget(pantryItem: item)
                     : item.isDeleted == 1
-                        ? Container() // return dialog box ?
+                        ? Container() // return dialog box instead ?
                         : ProductWidget(pantryItem: item);
               },
             );
