@@ -165,7 +165,7 @@ def login():
 # create a route that will query the upc API and return the data
 
 @app.route('/upc', methods=['POST'])
-@jwt_required()
+@jwt_required() # authentication Required
 def upc():
     try:
         upc = request.json['upc']
