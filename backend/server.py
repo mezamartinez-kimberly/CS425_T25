@@ -10,6 +10,7 @@ from urllib.request import Request, urlopen
 from urllib.error import HTTPError, URLError
 
 import json
+import csv
 
 # create Json Web Token (JWT) for authentication
 from flask_jwt_extended import create_access_token
@@ -164,7 +165,7 @@ def login():
 # create a route that will query the upc API and return the data
 
 @app.route('/upc', methods=['POST'])
-@jwt_required()
+@jwt_required() # authentication Required
 def upc():
     try:
         upc = request.json['upc']
@@ -177,6 +178,13 @@ def upc():
         data = json.loads(content.decode())
 
         product_name = data["product"]["name"]
+
+
+        # save data to a csv file located in the JSON Output Folder
+        with open('JSON Output/UPC.csv', 'a') as f:
+            writer = csv.writer(f)
+            writer.writerow([upc, data])
+
 
         product = Product(upc=upc, name=product_name, logical_delete=0, plu=None)
         db.session.add(product)

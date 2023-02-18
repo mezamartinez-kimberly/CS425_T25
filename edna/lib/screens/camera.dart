@@ -14,13 +14,14 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:edna/backend_utils.dart';
 import 'package:edna/widgets/product_widget.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:edna/backend_utils.dart';
 
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
+import 'package:edna/widgets/product_widget.dart'; // pantry item widget
 
 class CameraPage extends StatefulWidget {
   const CameraPage({Key? key}) : super(key: key);
@@ -76,10 +77,21 @@ class _CameraPageState extends State<CameraPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  SizedBox(
-                    height: 20,
-                    child: ProductWidget(pantryItem: Pantry(name: "test")),
+                  FutureBuilder<Widget>(
+                    future: _printScanResult(),
+                    builder:
+                        (BuildContext context, AsyncSnapshot<Widget> snapshot) {
+                      if (snapshot.hasData) {
+                        return snapshot.data!;
+                      } else {
+                        return const CircularProgressIndicator();
+                      }
+                    },
                   ),
+                  // SizedBox(
+                  //   height: 20,
+                  //   child: ProductWidget(pantryItem: Pantry(name: "test")),
+                  // ),
                 ],
               ),
             ),
@@ -118,9 +130,6 @@ class _CameraPageState extends State<CameraPage> {
       setState(() {
         result = scanData;
       });
-
-      // call the get name functiion
-      getName();
     });
   }
 
@@ -194,34 +203,27 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
-  Future<Widget> getName() async {
+  Future<Widget> _printScanResult() async {
     if (result != null) {
+      String productName = '';
       // make call based on upc
-
-      // check to make sure the upc is in the correct format
-      // Formats avalible: https://github.com/juliuscanute/qr_code_scanner/blob/master/lib/src/types/barcode_format.dart
-      // Formats accepted by API: https://go-upc.com/upc-checker-validator
-      if (result!.format == BarcodeFormat.upcA ||
-          result!.format == BarcodeFormat.upcE ||
-          result!.format == BarcodeFormat.ean13 ||
-          result!.format == BarcodeFormat.ean8) {
-        String productName =
-            await BackendUtils.getUpcData(result!.code as String);
-
-        //print to console
-        print(productName);
-      }
-
-      // return error message
-
       // store return data as pantry item
       // create product with pantry item
 
-      return Text(
-          'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}');
-      // return ProductWidget(
-      //   pantryItem: Pantry(name: 'test'),
-      // );
+      if (result!.format == BarcodeFormat.ean13 ||
+          result!.format == BarcodeFormat.ean8 ||
+          result!.format == BarcodeFormat.upcA ||
+          result!.format == BarcodeFormat.upcE) {
+        productName = await BackendUtils.getUpcData(result!.code as String);
+      }
+
+      if (productName == 'UPC not found') {
+        return Text("UPC not found");
+      } else {
+        print(productName);
+
+        return Text("name: $productName \n code: ${result!.code}");
+      }
     } else {
       return const Text('Scan a code');
     }
