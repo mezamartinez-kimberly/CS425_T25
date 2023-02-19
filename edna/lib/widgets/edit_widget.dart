@@ -21,6 +21,7 @@ import 'package:flutter/services.dart'; // input formatter
 // https://levelup.gitconnected.com/date-picker-in-flutter-ec6080f3508a
 // https://stackoverflow.com/questions/59455869/how-to-make-fullscreen-alertdialog-in-flutter
 // https://stackoverflow.com/questions/48481590/how-to-set-update-state-of-statefulwidget-from-other-statefulwidget-in-flutter
+// https://stackoverflow.com/questions/70927812/flutter-textfield-should-open-when-button-is-pressed
 
 class EditWidget extends StatefulWidget {
   @override
@@ -65,24 +66,24 @@ class _EditWidgetState extends State<EditWidget> {
               child: SingleChildScrollView(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                child: Center(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      _buildNameField(), // name
-                      _buildDatePicker(), // date
-                      _buildQuantityPicker(), // quantity
-                      _buildNotesField(), // notes
-                      _buildCodeInput(), // upc/plu code
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          _buildCancelButton(), // cancel
-                          _buildSaveButton(), // save
-                        ],
-                      )
-                    ],
-                  ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildNameField(), // name
+                    _buildDatePicker(), // date
+                    _buildQuantityPicker(), // quantity
+                    // _buildNotesField(), // notes
+
+                    _buildCodeInput(), // upc/plu code
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        _buildCancelButton(), // cancel
+                        _buildSaveButton(), // save
+                      ],
+                    )
+                  ],
                 ),
               ),
             ));
@@ -92,37 +93,49 @@ class _EditWidgetState extends State<EditWidget> {
 
   // called functions
   _buildNameField() {
-    return TextField(
-        controller: TextEditingController()..text = widget.pantryItem.name,
-        onChanged: (value) {
-          widget.pantryItem.name = value;
-        });
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
+      child: TextField(
+          controller: TextEditingController()..text = widget.pantryItem.name,
+          decoration: const InputDecoration(
+              contentPadding: EdgeInsets.all(0),
+              icon: Icon(Icons.shopping_cart),
+              hintText: "Enter Name"),
+          onChanged: (value) {
+            widget.pantryItem.name = value;
+          }),
+    );
   }
 
-  _buildDatePicker() {
+  Widget _buildDatePicker() {
+    // if already has expiration date, show in text field
+    if (widget.pantryItem.expirationDate != null) {
+      String formattedDate =
+          DateFormat('MM/dd/yyyy').format(widget.pantryItem.expirationDate!);
+      dateController.text = formattedDate;
+    }
+
     return TextField(
-        controller: dateController, //editing controller of this TextField
+        controller: dateController,
         decoration: const InputDecoration(
-            icon: Icon(Icons.calendar_today), //icon of text field
-            labelText: "Enter Date" //label text of field
-            ),
-        readOnly: true, // when true user cannot edit text
+            contentPadding: EdgeInsets.all(0),
+            icon: Icon(Icons.calendar_today),
+            hintText: "Enter Date"),
+        readOnly: true, // text cannot be modified by keyboard
         onTap: () async {
           DateTime? pickedDate = await showDatePicker(
               context: context,
-              initialDate: DateTime.now(), //get today's date
-              firstDate: DateTime(
-                  2000), //DateTime.now() - not to allow to choose before today.
+              initialDate: DateTime.now(),
+              firstDate: DateTime(2023), // no dates before 2023
               lastDate: DateTime(2101));
 
+          // update text field to picked date
           if (pickedDate != null) {
             String formattedDate = DateFormat('MM/dd/yyyy').format(pickedDate);
             setState(() {
               dateController.text = formattedDate;
             });
             widget.pantryItem.expirationDate = pickedDate;
-          } else {
-            throw Exception('Date is not selected');
           }
         });
   }
@@ -130,6 +143,10 @@ class _EditWidgetState extends State<EditWidget> {
   _buildNotesField() {
     return TextField(
       controller: TextEditingController()..text = widget.notes ?? "Notes",
+      decoration: const InputDecoration(
+          contentPadding: EdgeInsets.all(0),
+          icon: Icon(Icons.notes),
+          hintText: "Enter Notes"),
       onChanged: (value) {
         widget.notes = value;
       },
@@ -167,11 +184,10 @@ class _EditWidgetState extends State<EditWidget> {
   }
 
   _buildQuantityPicker() {
-    return Row(children: [
-      // quantity
-      const Text("Quantity: "),
-      // decrement butto
+    return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      // const Text("Quantity: ", style: TextStyle(fontSize: 20)),
       Card(
+        elevation: 5,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(15.0),
         ),
@@ -205,54 +221,101 @@ class _EditWidgetState extends State<EditWidget> {
   }
 
   Widget _buildCodeInput() {
-    bool _showUPC = false;
-    bool _showPLU = false;
+    bool showUPC = false;
+    bool showPLU = false;
 
-    // select between option A and option B
     return Card(
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              // option A
-              // text button reading "Enter UPC Code"
-              TextButton(
-                  child: const Text("UPC Code"),
-                  onPressed: () {
-                    setState(() {
-                      _showUPC = true;
-                      _showPLU = false;
-                      // _buildUPCInput(_showUPC, _showPLU);
-                    });
-                  }),
-
-              // text button reading "Enter PLU Code"
-              TextButton(
-                child: const Text("PLU Code"),
-                onPressed: () {},
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10.0),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 40,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  // upc code button
+                  SizedBox(
+                    width: 150,
+                    child: TextButton(
+                        child: const Text("UPC Code",
+                            style: TextStyle(fontSize: 20)),
+                        onPressed: () {
+                          setState(() {
+                            showUPC = true;
+                            showPLU = false;
+                          });
+                        }),
+                  ),
+                  // plu code button
+                  SizedBox(
+                    width: 150,
+                    child: TextButton(
+                      child: const Text("PLU Code",
+                          style: TextStyle(fontSize: 20)),
+                      onPressed: () {
+                        setState(() {
+                          showUPC = false;
+                          showPLU = true;
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-          TextField(
-            textAlign: TextAlign.center,
-            //  decoration: const InputDecoration(labelText: "Enter Code"),
-            keyboardType: TextInputType.number,
-            inputFormatters: <TextInputFormatter>[
-              FilteringTextInputFormatter.digitsOnly, // only allow nums
-              LengthLimitingTextInputFormatter(4) // only allow 4 nums
-            ],
-          ),
-        ],
+            ),
+            SizedBox(
+              height: 50,
+              width: 180,
+              child: Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: _takeUPCInput() // right now just takes UPC input
+
+                  // showUPC
+                  //     ? _takeUPCInput()
+                  //     : showPLU
+                  //         ? _takePLUInput()
+                  //         : Container(),
+                  ),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  // Widget _buildUPCInput(bool _showUPC, bool _showPLU) {
-  //   // display upc input text field
-  //   return Visibility(
-  //     visible: true,
-  //     child:
-  //   );
-  // }
+  Widget _takeUPCInput() {
+    return TextField(
+      onChanged: (value) {
+        widget.pantryItem.upc = int.parse(value);
+      },
+      textAlign: TextAlign.center,
+      decoration: const InputDecoration(
+          contentPadding: EdgeInsets.all(0), hintText: "Enter UPC Code"),
+      keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly, // only allow nums
+        LengthLimitingTextInputFormatter(12) // 12 digits
+      ],
+    );
+  }
+
+  Widget _takePLUInput() {
+    return TextField(
+      onChanged: (value) {
+        widget.pantryItem.plu = int.parse(value);
+      },
+      textAlign: TextAlign.center,
+      decoration: const InputDecoration(
+          contentPadding: EdgeInsets.all(0), hintText: "Enter PLU Code"),
+      keyboardType: TextInputType.number,
+      inputFormatters: <TextInputFormatter>[
+        FilteringTextInputFormatter.digitsOnly, // only allow nums
+        LengthLimitingTextInputFormatter(4) // 4 digits
+      ],
+    );
+  }
 }
