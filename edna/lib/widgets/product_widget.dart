@@ -32,26 +32,34 @@ class _ProductWidgetState extends State<ProductWidget> {
   @override
   Widget build(BuildContext context) {
     // if item deleted, remove
-    return Column(
-      children: [
-        widget.pantryItem.isDeleted! == 1
-            ? FutureBuilder(
-                future: Future.delayed(
-                    // wait 400 ms before deleting
-                    const Duration(milliseconds: 400)),
-                builder: (context, snapshot) {
-                  // while waiting, return product widget
-                  return _buildItemContainer();
-                })
-            // if not deleted, create the product widget
-            : _buildItemContainer(),
-        // Visibility(
-        //   child: EditWidget(
-        //     pantryItem: widget.pantryItem,
-        //   ),
-        //   visible: _isEditing,
-        // ),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          widget.pantryItem.isDeleted! == 1
+              ? FutureBuilder(
+                  future: Future.delayed(
+                      // wait 400 ms before deleting
+                      const Duration(milliseconds: 400)),
+                  builder: (context, snapshot) {
+                    // while waiting, return product widget
+                    return _buildItemContainer();
+                  })
+              // if not deleted, create the product widget
+              : _buildItemContainer(),
+
+          // _isEditing
+          //     ? EditWidget(
+          //         pantryItem: widget.pantryItem,
+          //       )
+          //     : Container(),
+          // Visibility(
+          //   child: EditWidget(
+          //     pantryItem: widget.pantryItem,
+          //   ),
+          //   visible: _isEditing,
+          // ),
+        ],
+      ),
     );
   }
 
@@ -109,6 +117,13 @@ class _ProductWidgetState extends State<ProductWidget> {
       icon: const Icon(Icons.edit),
       onPressed: () {
         _isEditing = true;
+        showDialog(
+            context: context,
+            builder: (context) {
+              return EditWidget(
+                pantryItem: widget.pantryItem,
+              );
+            });
       },
     );
   }

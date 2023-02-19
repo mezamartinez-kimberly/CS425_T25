@@ -155,15 +155,17 @@ class _CameraPageState extends State<CameraPage> {
             flex: 2,
             // child: FittedBox(
             //   fit: BoxFit.contain,
-            child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              // mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                _printScanResult(),
-                ProductWidget(
-                  pantryItem: Pantry(id: 500, name: "test"),
-                ),
-              ],
+            child: SingleChildScrollView(
+              child: Column(
+                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                // mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  _printScanResult(),
+                  ProductWidget(
+                    pantryItem: Pantry(id: 500, name: "test"),
+                  ),
+                ],
+              ),
             ),
           ),
           //  )

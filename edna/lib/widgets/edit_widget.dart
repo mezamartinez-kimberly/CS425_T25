@@ -16,7 +16,9 @@ import 'package:intl/intl.dart';
 //   // }
 // }
 
-//ref: https://levelup.gitconnected.com/date-picker-in-flutter-ec6080f3508a
+//ref:
+// https://levelup.gitconnected.com/date-picker-in-flutter-ec6080f3508a
+// https://stackoverflow.com/questions/59455869/how-to-make-fullscreen-alertdialog-in-flutter
 
 class EditWidget extends StatefulWidget {
   @override
@@ -38,65 +40,45 @@ class EditWidget extends StatefulWidget {
 class _EditWidgetState extends State<EditWidget> {
   @override
   Widget build(BuildContext context) {
-    print("here");
-    return Scaffold(body: Container(child: _buildEdit()));
+    return Container(
+        height: // fit to screen height
+            MediaQuery.of(context).size.height,
+        width: // fit to screen width
+            MediaQuery.of(context).size.width,
+        child: createNewMessage());
   }
 
-  // dialog box
-  _buildEdit() {
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Edit Item'),
-            content: Column(
-              children: [
-                // name
-                TextField(
-                  controller: TextEditingController()
-                    ..text = widget.pantryItem.name,
-                  onChanged: (value) {
-                    widget.pantryItem.name = value;
-                  },
+  createNewMessage() {
+    return StatefulBuilder(
+      builder: (context, setState) {
+        return WillPopScope(
+            onWillPop: () {
+              return Future.value(true);
+            },
+            child: Material(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    _buildNameField(), // name
+                    _buildDatePicker(), // date
+                    _buildNotesField(), // notes
+                    _buildQuantityPicker(), // quantity
+                  ],
                 ),
-                // expiration date
-                _buildDatePicker(),
-
-                // notes
-                TextField(
-                  controller: TextEditingController()
-                    ..text = widget.notes ?? "Notes",
-                  onChanged: (value) {
-                    widget.notes = value;
-                  },
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                child: const Text('Cancel'),
-                onPressed: () {
-                  // set is not editing
-                  widget.isEditing = false;
-                  Navigator.of(context).pop();
-                },
               ),
-              TextButton(
-                child: const Text('Save'),
-                onPressed: () {
-                  // is not editing
-                  widget.isEditing = false;
-                  // update pantry item
+            ));
+      },
+    );
+  }
 
-                  PantryDatabase.instance.update(widget.pantryItem);
-                  // re-set state
-                  setState(() {});
-                  // close dialog box
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
+  // called functions
+  _buildNameField() {
+    return TextField(
+        controller: TextEditingController()..text = widget.pantryItem.name,
+        onChanged: (value) {
+          widget.pantryItem.name = value;
         });
   }
 
@@ -136,5 +118,80 @@ class _EditWidgetState extends State<EditWidget> {
             throw Exception('Date is not selected');
           }
         });
+  }
+
+  _buildNotesField() {
+    return TextField(
+      controller: TextEditingController()..text = widget.notes ?? "Notes",
+      onChanged: (value) {
+        widget.notes = value;
+      },
+    );
+  }
+
+  _buildCancelButton() {
+    return TextButton(
+      child: const Text('Cancel'),
+      onPressed: () {
+        // set is not editing
+        widget.isEditing = false;
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  _buildSaveButton() {
+    return TextButton(
+      child: const Text('Save'),
+      onPressed: () {
+        // is not editing
+        widget.isEditing = false;
+        // update pantry item
+
+        PantryDatabase.instance.update(widget.pantryItem);
+        // re-set state
+        setState(() {});
+        // close dialog box
+        Navigator.of(context).pop();
+      },
+    );
+  }
+
+  _buildQuantityPicker() {
+    return Row(children: [
+      // quantity
+      const Text("Quantity: "),
+      // decrement butto
+      Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Row(
+          children: [
+            IconButton(
+              icon: const Icon(// minus circle outline
+                  Icons.remove_circle_rounded),
+              onPressed: () {
+                setState(() {
+                  widget.pantryItem.quantity = widget.pantryItem.quantity! - 1;
+                });
+              },
+            ),
+
+            // output quantity
+            Text(widget.pantryItem.quantity.toString()),
+            // increment button
+            IconButton(
+              icon: const Icon(Icons.add_circle_rounded),
+              onPressed: () {
+                setState(() {
+                  widget.pantryItem.quantity = widget.pantryItem.quantity! + 1;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    ]);
   }
 }

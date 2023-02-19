@@ -11,6 +11,7 @@ class Pantry {
   final DateTime? dateAdded;
   DateTime? dateRemoved;
   DateTime? expirationDate;
+  int? quantity;
   final int? upc;
   final int? plu;
   int? storageLocation;
@@ -22,6 +23,7 @@ class Pantry {
     this.dateAdded,
     this.dateRemoved,
     this.expirationDate,
+    this.quantity = 1,
     this.upc,
     this.plu,
     this.storageLocation,
@@ -39,6 +41,7 @@ class Pantry {
       expirationDate: json["expirationDate"] == null
           ? null
           : DateTime.parse(json["expirationDate"]),
+      quantity: json["quantity"],
       upc: json["upc"],
       plu: json["plu"],
       storageLocation: json["storageLocation"],
@@ -52,6 +55,7 @@ class Pantry {
             dateRemoved == null ? null : dateRemoved!.toIso8601String(),
         "expirationDate":
             expirationDate == null ? null : expirationDate!.toIso8601String(),
+        "quantity": quantity,
         "upc": upc,
         "plu": plu,
         "storageLocation": storageLocation,
