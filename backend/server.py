@@ -165,7 +165,7 @@ def login():
 # create a route that will query the upc API and return the data
 
 @app.route('/upc', methods=['POST'])
-@jwt_required() # authentication Required
+# @jwt_required() # authentication Required
 def upc():
     try:
         upc = request.json['upc']
@@ -178,7 +178,7 @@ def upc():
         data = json.loads(content.decode())
 
         product_name = data["product"]["name"]
-
+        
 
         # save data to a csv file located in the JSON Output Folder
         with open('JSON Output/UPC.csv', 'a') as f:
@@ -190,14 +190,24 @@ def upc():
         db.session.add(product)
         db.session.commit()
 
+        print(product_name)
+
         return jsonify({'message': 'UPC API call successful', 'name': product_name}), 200
     
     # All the possible errors:
     except HTTPError as e:
+        print(e)
         return jsonify({'error': f'HTTP error: {e.code} {e.reason}'}), 500
     except URLError as e:
+        print(e)
         return jsonify({'error': f'URL error: {e.reason}'}), 500
     except (KeyError, TypeError) as e:
+        print(e)
         return jsonify({'error': 'Invalid UPC code or API response'}), 400
     except Exception as e:
+        print(e)
         return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
+
+# @app.route('/addpantry', methods=['POST'])
+# @jwt_required() # authentication Required
+# def upc():

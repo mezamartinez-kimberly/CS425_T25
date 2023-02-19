@@ -218,7 +218,7 @@ class _CameraPageState extends State<CameraPage> {
       }
 
       if (productName == 'UPC not found') {
-        return Text("UPC not found");
+        return Text("UPC ${result!.code} not found");
       } else {
         print(productName);
 
