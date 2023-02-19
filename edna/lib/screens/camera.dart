@@ -134,23 +134,14 @@ class _CameraPageState extends State<CameraPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        actions: <Widget>[
+          _buildFlashButton(),
+          _buildCameraToggleButton(),
+        ],
+      ),
       body: Column(
         children: <Widget>[
-          Container(
-            height: 70,
-            color: Colors.red,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 20.0),
-              child: Row(
-                // align elements to right
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  _buildFlashButton(),
-                  _buildCameraToggleButton(),
-                ],
-              ),
-            ),
-          ),
           Expanded(flex: 1, child: _buildQrView(context)),
           Expanded(
             flex: 2,
@@ -162,33 +153,33 @@ class _CameraPageState extends State<CameraPage> {
                 // mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   _printScanResult(),
-                  // ProductWidget(
-                  //   pantryItem: Pantry(
-                  //     id: 500,
-                  //     name: "test",
-                  //   ),
-                  // ),
                 ],
               ),
             ),
           ),
-          Expanded(
-              flex: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  _buildManualButton(),
-                  _buildSubmitButton(),
-                ],
-              ))
-          //  )
+          Padding(
+            padding: const EdgeInsets.only(right: 8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                _buildManualButton(),
+                _buildSubmitButton(),
+              ],
+            ),
+          )
         ],
       ),
     );
   }
 
   Widget _buildManualButton() {
-    return ElevatedButton(
+    return ElevatedButton.icon(
+      // rounded
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
+        ),
+      ),
       onPressed: () {
         // show edit widget
         showDialog(
@@ -203,16 +194,22 @@ class _CameraPageState extends State<CameraPage> {
               );
             });
       },
-      child: const Text(
-        'Manual',
-      ),
+      icon: const Icon(Icons.add),
+      label: const Text("Manual"),
     );
   }
 
   Widget _buildSubmitButton() {
-    return ElevatedButton(
+    return ElevatedButton.icon(
+      // rounded
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18.0),
+        ),
+      ),
       onPressed: () {},
-      child: const Text(
+      icon: const Icon(Icons.check),
+      label: const Text(
         'Submit',
       ),
     );

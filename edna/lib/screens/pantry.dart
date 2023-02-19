@@ -15,6 +15,7 @@ import 'package:edna/screens/all.dart';
 import 'package:google_fonts/google_fonts.dart'; // fonts
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // pantry item widget
+import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
 
 main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +36,7 @@ class PantryPageState extends State<PantryPage> {
   bool _showDeletedItems = false;
 
   refresh() {
-    // wait 500 ms
+    // wait 400 ms
     Future.delayed(const Duration(milliseconds: 400), () {
       setState(() {});
     });
@@ -154,17 +155,31 @@ class PantryPageState extends State<PantryPage> {
       padding: const EdgeInsets.only(left: 0, bottom: 20, right: 15, top: 10),
       alignment: Alignment.bottomRight,
       child: FloatingActionButton(
-        onPressed: () async {
-          count++;
-          await PantryDatabase.instance.insert(
-            Pantry(
-              name: "#$count",
-              dateAdded: DateTime.now(),
-              isDeleted: 0,
-            ),
-          );
-          // refresh list
-          setState(() {});
+        onPressed: () {
+          // show edit widget
+          showDialog(
+              context: context,
+              builder: (context) {
+                return EditWidget(
+                  pantryItem: Pantry(
+                    id: 401, // static var incremented each time?
+                    name: "",
+                  ),
+                  updateProductWidget: () {},
+                  refreshPantryList: refresh,
+                );
+              });
+          // call manual
+          // count++; // debugging
+          // await PantryDatabase.instance.insert(
+          //   Pantry(
+          //     name: "#$count",
+          //     dateAdded: DateTime.now(),
+          //     isDeleted: 0,
+          //   ),
+          // );
+          // // refresh list
+          // setState(() {});
         },
         elevation: 2.0,
         child: const Icon(

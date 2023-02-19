@@ -31,7 +31,7 @@ class EditWidget extends StatefulWidget {
   String? notes;
   bool isEditing;
   final Function() updateProductWidget;
-  final Function() createProductWidget;
+  final Function()? refreshPantryList;
 
   // constructor
   EditWidget({
@@ -40,7 +40,7 @@ class EditWidget extends StatefulWidget {
     this.notes,
     this.isEditing = true,
     required this.updateProductWidget,
-    required this.createProductWidget,
+    this.refreshPantryList,
   }) : super(key: key);
 }
 
@@ -169,18 +169,33 @@ class _EditWidgetState extends State<EditWidget> {
   _buildSaveButton() {
     return TextButton(
       child: const Text('Save'),
-      onPressed: () {
-        // if product widget doesn't exist
-
-        // is not editing
-        widget.isEditing = false;
-        // update pantry item
-        setState(() {
-          // update pantry item with new values
-          PantryDatabase.instance.update(widget.pantryItem);
-          // update product widget
-          widget.updateProductWidget();
-        });
+      onPressed: () async {
+        widget.isEditing = false; // is not editing
+        // if product widget doesn't exist, create
+        if (await PantryDatabase.instance.checkIfExists(widget.pantryItem) ==
+            false) {
+          await PantryDatabase.instance.insert(
+            Pantry(
+              name: widget.pantryItem.name,
+              expirationDate: widget.pantryItem.expirationDate,
+              quantity: widget.pantryItem.quantity,
+              dateAdded: DateTime.now(),
+              isDeleted: 0,
+            ),
+          );
+          setState(() {}); // refresh list
+        }
+        // else, update existing widget and item
+        else {
+          setState(() {
+            // update pantry item with new values
+            PantryDatabase.instance.update(widget.pantryItem);
+            // update product widget
+            widget.updateProductWidget();
+          });
+        }
+        // refresh pantry list
+        widget.refreshPantryList!();
         // close dialog box
         Navigator.of(context).pop();
       },

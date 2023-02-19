@@ -50,12 +50,6 @@ class _ProductWidgetState extends State<ProductWidget> {
     });
   }
 
-  void createProductWidget(Pantry pantryItem) {
-    setState(() {
-      ProductWidget newWidget = ProductWidget(pantryItem: pantryItem);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     // if item deleted, remove
@@ -93,7 +87,7 @@ class _ProductWidgetState extends State<ProductWidget> {
           ),
           elevation: 5.0, // shadow
           child: SizedBox(
-            height: 100,
+            height: 70,
             width: 400,
             child: ListView.builder(
               physics:
