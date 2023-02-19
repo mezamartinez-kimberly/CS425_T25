@@ -8,7 +8,7 @@ import 'package:path_provider/path_provider.dart'; // commonly used paths, // ge
 class Pantry {
   final int? id;
   String name;
-  final DateTime? dateAdded;
+  DateTime? dateAdded;
   DateTime? dateRemoved;
   DateTime? expirationDate;
   int? quantity;
@@ -113,7 +113,7 @@ class PantryDatabase {
   Future<List<Pantry>> getActivePantry() async {
     Database db = await instance.database;
     var items = await db.query("pantry",
-        where: "isDeleted = 0", orderBy: "dateAdded DESC");
+        where: "isDeleted = 0", orderBy: "expirationDate DESC");
     List<Pantry> pantryList =
         items.isNotEmpty ? items.map((c) => Pantry.fromMap(c)).toList() : [];
     return pantryList;

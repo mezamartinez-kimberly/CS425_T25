@@ -31,6 +31,7 @@ class EditWidget extends StatefulWidget {
   String? notes;
   bool isEditing;
   final Function() updateProductWidget;
+  final Function() createProductWidget;
 
   // constructor
   EditWidget({
@@ -39,6 +40,7 @@ class EditWidget extends StatefulWidget {
     this.notes,
     this.isEditing = true,
     required this.updateProductWidget,
+    required this.createProductWidget,
   }) : super(key: key);
 }
 
@@ -168,6 +170,8 @@ class _EditWidgetState extends State<EditWidget> {
     return TextButton(
       child: const Text('Save'),
       onPressed: () {
+        // if product widget doesn't exist
+
         // is not editing
         widget.isEditing = false;
         // update pantry item

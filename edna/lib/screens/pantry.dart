@@ -32,23 +32,20 @@ class PantryPage extends StatefulWidget {
 int count = 0;
 
 class PantryPageState extends State<PantryPage> {
-  // color theme
-  MyTheme myTheme = const MyTheme();
-  late MaterialColor myBlue =
-      myTheme.createMaterialColor(const Color(0xFF69B9BB));
-
   bool _showDeletedItems = false;
+
+  refresh() {
+    // wait 500 ms
+    Future.delayed(const Duration(milliseconds: 400), () {
+      setState(() {});
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Pantry Page',
-        theme: ThemeData(
-          primarySwatch: myBlue,
-          textTheme:
-              GoogleFonts.notoSerifTextTheme(Theme.of(context).textTheme),
-        ),
         home: SafeArea(
             child: Scaffold(
                 body: Column(children: [
@@ -68,15 +65,15 @@ class PantryPageState extends State<PantryPage> {
             style: GoogleFonts.notoSerif(fontSize: 35, color: Colors.black)),
       ),
       // delete database button for debugging
-      IconButton(
-        icon: const Icon(
-          Icons.delete_forever,
-          size: 40,
-        ),
-        onPressed: () {
-          PantryDatabase.instance.deleteDatabase();
-        },
-      ),
+      // IconButton(
+      //   icon: const Icon(
+      //     Icons.delete_forever,
+      //     size: 40,
+      //   ),
+      //   onPressed: () {
+      //     PantryDatabase.instance.deleteDatabase();
+      //   },
+      // ),
       // eye button
       Padding(
         padding: const EdgeInsets.only(right: 30),
@@ -135,10 +132,18 @@ class PantryPageState extends State<PantryPage> {
                 Pantry item = snapshot.data![index];
                 // return widget containing item
                 return _showDeletedItems
-                    ? ProductWidget(pantryItem: item)
+                    ? ProductWidget(
+                        pantryItem: item,
+                        enableCheckbox: true,
+                        refreshPantryList: refresh,
+                      )
                     : item.isDeleted == 1
                         ? Container() // return dialog box instead ?
-                        : ProductWidget(pantryItem: item);
+                        : ProductWidget(
+                            pantryItem: item,
+                            enableCheckbox: true,
+                            refreshPantryList: refresh,
+                          );
               },
             );
     };

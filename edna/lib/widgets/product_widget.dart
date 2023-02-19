@@ -10,6 +10,7 @@ class ProductWidget extends StatefulWidget {
   final Pantry pantryItem;
   int quantity;
   bool enableCheckbox;
+  final Function()? refreshPantryList;
 
   // constructor
   ProductWidget({
@@ -17,6 +18,7 @@ class ProductWidget extends StatefulWidget {
     required this.pantryItem,
     this.quantity = 1,
     this.enableCheckbox = false, // enabled by default
+    this.refreshPantryList,
   }) : super(key: key);
 }
 
@@ -40,6 +42,17 @@ class _ProductWidgetState extends State<ProductWidget> {
       widget.pantryItem.quantity = pantryItem.quantity;
       widget.pantryItem.expirationDate = pantryItem.expirationDate;
       widget.pantryItem.isDeleted = pantryItem.isDeleted;
+      widget.pantryItem.dateAdded = pantryItem.dateAdded;
+      widget.pantryItem.dateRemoved = pantryItem.dateRemoved;
+      widget.pantryItem.upc = pantryItem.upc;
+      widget.pantryItem.plu = pantryItem.plu;
+      widget.pantryItem.storageLocation = pantryItem.storageLocation;
+    });
+  }
+
+  void createProductWidget(Pantry pantryItem) {
+    setState(() {
+      ProductWidget newWidget = ProductWidget(pantryItem: pantryItem);
     });
   }
 
@@ -49,29 +62,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     return SingleChildScrollView(
       child: Column(
         children: [
-          widget.pantryItem.isDeleted! == 1
-              ? FutureBuilder(
-                  future: Future.delayed(
-                      // wait 400 ms before deleting
-                      const Duration(milliseconds: 400)),
-                  builder: (context, snapshot) {
-                    // while waiting, return product widget
-                    return _buildItemContainer();
-                  })
-              // if not deleted, create the product widget
-              : _buildItemContainer(),
-
-          // _isEditing
-          //     ? EditWidget(
-          //         pantryItem: widget.pantryItem,
-          //       )
-          //     : Container(),
-          // Visibility(
-          //   child: EditWidget(
-          //     pantryItem: widget.pantryItem,
-          //   ),
-          //   visible: _isEditing,
-          // ),
+          _buildItemContainer(),
         ],
       ),
     );
@@ -157,6 +148,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                       _isChecked = false;
                       widget.pantryItem.isDeleted = 0;
                       PantryDatabase.instance.undoDelete(widget.pantryItem.id!);
+                      widget.refreshPantryList!();
                     });
                   }
                 :
@@ -166,6 +158,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                       _isChecked = true;
                       widget.pantryItem.isDeleted = 1;
                       PantryDatabase.instance.delete(widget.pantryItem.id!);
+                      widget.refreshPantryList!();
                     });
                   },
           )
@@ -177,7 +170,7 @@ class _ProductWidgetState extends State<ProductWidget> {
     // format date
     DateTime? date = widget.pantryItem.expirationDate;
     if (date != null) {
-      return "Expires: ${DateFormat.yMMMEd().format(date)}";
+      return "Expires: ${DateFormat.MMMEd().format(date)}";
     } else {
       return "No Expiration Date";
     }

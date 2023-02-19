@@ -103,7 +103,8 @@ import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
-import 'package:edna/widgets/product_widget.dart'; // pantry item widget
+import 'package:edna/widgets/product_widget.dart'; // product widget
+import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
 
 class CameraPage extends StatefulWidget {
   const CameraPage({Key? key}) : super(key: key);
@@ -161,15 +162,58 @@ class _CameraPageState extends State<CameraPage> {
                 // mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   _printScanResult(),
-                  ProductWidget(
-                    pantryItem: Pantry(id: 500, name: "test"),
-                  ),
+                  // ProductWidget(
+                  //   pantryItem: Pantry(
+                  //     id: 500,
+                  //     name: "test",
+                  //   ),
+                  // ),
                 ],
               ),
             ),
           ),
+          Expanded(
+              flex: 1,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  _buildManualButton(),
+                  _buildSubmitButton(),
+                ],
+              ))
           //  )
         ],
+      ),
+    );
+  }
+
+  Widget _buildManualButton() {
+    return ElevatedButton(
+      onPressed: () {
+        // show edit widget
+        showDialog(
+            context: context,
+            builder: (context) {
+              return EditWidget(
+                pantryItem: Pantry(
+                  id: 401, // static var incremented each time?
+                  name: "",
+                ),
+                updateProductWidget: () {},
+              );
+            });
+      },
+      child: const Text(
+        'Manual',
+      ),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return ElevatedButton(
+      onPressed: () {},
+      child: const Text(
+        'Submit',
       ),
     );
   }
