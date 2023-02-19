@@ -29,6 +29,20 @@ class _ProductWidgetState extends State<ProductWidget> {
     super.initState();
   }
 
+  refresh() {
+    setState(() {});
+  }
+
+  // update product widget values
+  void updateProductWidget(Pantry pantryItem) {
+    setState(() {
+      widget.pantryItem.name = pantryItem.name;
+      widget.pantryItem.quantity = pantryItem.quantity;
+      widget.pantryItem.expirationDate = pantryItem.expirationDate;
+      widget.pantryItem.isDeleted = pantryItem.isDeleted;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     // if item deleted, remove
@@ -122,6 +136,7 @@ class _ProductWidgetState extends State<ProductWidget> {
             builder: (context) {
               return EditWidget(
                 pantryItem: widget.pantryItem,
+                updateProductWidget: refresh,
               );
             });
       },

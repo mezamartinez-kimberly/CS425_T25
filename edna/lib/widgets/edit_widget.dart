@@ -2,6 +2,7 @@ import 'package:edna/dbs/pantry_db.dart';
 import 'package:edna/widgets/product_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter/services.dart'; // input formatter
 
 // class EditWidget extends StatefulWidget {
 //   const EditWidget({super.key});
@@ -19,6 +20,7 @@ import 'package:intl/intl.dart';
 //ref:
 // https://levelup.gitconnected.com/date-picker-in-flutter-ec6080f3508a
 // https://stackoverflow.com/questions/59455869/how-to-make-fullscreen-alertdialog-in-flutter
+// https://stackoverflow.com/questions/48481590/how-to-set-update-state-of-statefulwidget-from-other-statefulwidget-in-flutter
 
 class EditWidget extends StatefulWidget {
   @override
@@ -27,6 +29,7 @@ class EditWidget extends StatefulWidget {
   final Pantry pantryItem;
   String? notes;
   bool isEditing;
+  final Function() updateProductWidget;
 
   // constructor
   EditWidget({
@@ -34,13 +37,16 @@ class EditWidget extends StatefulWidget {
     required this.pantryItem,
     this.notes,
     this.isEditing = true,
+    required this.updateProductWidget,
   }) : super(key: key);
 }
 
 class _EditWidgetState extends State<EditWidget> {
+  TextEditingController dateController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         height: // fit to screen height
             MediaQuery.of(context).size.height,
         width: // fit to screen width
@@ -57,15 +63,26 @@ class _EditWidgetState extends State<EditWidget> {
             },
             child: Material(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildNameField(), // name
-                    _buildDatePicker(), // date
-                    _buildNotesField(), // notes
-                    _buildQuantityPicker(), // quantity
-                  ],
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
+                child: Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildNameField(), // name
+                      _buildDatePicker(), // date
+                      _buildQuantityPicker(), // quantity
+                      _buildNotesField(), // notes
+                      _buildCodeInput(), // upc/plu code
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          _buildCancelButton(), // cancel
+                          _buildSaveButton(), // save
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
             ));
@@ -83,8 +100,6 @@ class _EditWidgetState extends State<EditWidget> {
   }
 
   _buildDatePicker() {
-    TextEditingController dateController = TextEditingController();
-
     return TextField(
         controller: dateController, //editing controller of this TextField
         decoration: const InputDecoration(
@@ -101,19 +116,11 @@ class _EditWidgetState extends State<EditWidget> {
               lastDate: DateTime(2101));
 
           if (pickedDate != null) {
-            //get the picked date in the format => 2022-07-04 00:00:00.000
-            String formattedDate = DateFormat('yyyy-MM-dd').format(
-                pickedDate); // format date in required form here we use yyyy-MM-dd that means time is removed
-            //formatted date output using intl package =>  2022-07-04
-            //You can format date as per your need
-
+            String formattedDate = DateFormat('MM/dd/yyyy').format(pickedDate);
             setState(() {
-              dateController.text =
-                  formattedDate; //set foratted date to TextField value.
+              dateController.text = formattedDate;
             });
-
             widget.pantryItem.expirationDate = pickedDate;
-            PantryDatabase.instance.update(widget.pantryItem);
           } else {
             throw Exception('Date is not selected');
           }
@@ -147,10 +154,12 @@ class _EditWidgetState extends State<EditWidget> {
         // is not editing
         widget.isEditing = false;
         // update pantry item
-
-        PantryDatabase.instance.update(widget.pantryItem);
-        // re-set state
-        setState(() {});
+        setState(() {
+          // update pantry item with new values
+          PantryDatabase.instance.update(widget.pantryItem);
+          // update product widget
+          widget.updateProductWidget();
+        });
         // close dialog box
         Navigator.of(context).pop();
       },
@@ -194,4 +203,56 @@ class _EditWidgetState extends State<EditWidget> {
       ),
     ]);
   }
+
+  Widget _buildCodeInput() {
+    bool _showUPC = false;
+    bool _showPLU = false;
+
+    // select between option A and option B
+    return Card(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // option A
+              // text button reading "Enter UPC Code"
+              TextButton(
+                  child: const Text("UPC Code"),
+                  onPressed: () {
+                    setState(() {
+                      _showUPC = true;
+                      _showPLU = false;
+                      // _buildUPCInput(_showUPC, _showPLU);
+                    });
+                  }),
+
+              // text button reading "Enter PLU Code"
+              TextButton(
+                child: const Text("PLU Code"),
+                onPressed: () {},
+              ),
+            ],
+          ),
+          TextField(
+            textAlign: TextAlign.center,
+            //  decoration: const InputDecoration(labelText: "Enter Code"),
+            keyboardType: TextInputType.number,
+            inputFormatters: <TextInputFormatter>[
+              FilteringTextInputFormatter.digitsOnly, // only allow nums
+              LengthLimitingTextInputFormatter(4) // only allow 4 nums
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  // Widget _buildUPCInput(bool _showUPC, bool _showPLU) {
+  //   // display upc input text field
+  //   return Visibility(
+  //     visible: true,
+  //     child:
+  //   );
+  // }
 }

@@ -12,8 +12,8 @@ class Pantry {
   DateTime? dateRemoved;
   DateTime? expirationDate;
   int? quantity;
-  final int? upc;
-  final int? plu;
+  int? upc;
+  int? plu;
   int? storageLocation;
   int? isDeleted;
 
@@ -78,6 +78,7 @@ class PantryDatabase {
   // init database
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
+
     String path = join(documentsDirectory.path, "pantry.db");
     return await openDatabase(path, version: 1, onCreate: _onCreate);
   }
@@ -90,6 +91,7 @@ class PantryDatabase {
       dateAdded TEXT,
       dateRemoved TEXT,
       expirationDate TEXT,
+      quantity INTEGER,
       upc INTEGER,
       plu INTEGER,
       storageLocation INTEGER,
