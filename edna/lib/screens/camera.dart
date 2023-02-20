@@ -226,10 +226,22 @@ class _CameraPageState extends State<CameraPage> {
         for (ProductWidget product in widget.scannedProducts!) {
           PantryDatabase.instance.insert(product.pantryItem);
         }
-        // clear scanned list
-        widget.scannedProducts!.clear();
-        // refresh page
-        refresh(); // resets state
+        showDialog(
+            context: context,
+            builder: (context) {
+              // wait 0.5 sec
+              Future.delayed(Duration(milliseconds: 500), () {
+                // clear scanned list
+                widget.scannedProducts!.clear();
+                // refresh page
+                refresh(); // resets state
+                // close dialog
+                Navigator.of(context).pop(true);
+              });
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            });
       },
       icon: const Icon(Icons.check),
       label: const Text(
