@@ -24,6 +24,7 @@ import 'package:flutter/services.dart'; // input formatter
 // https://stackoverflow.com/questions/59455869/how-to-make-fullscreen-alertdialog-in-flutter
 // https://stackoverflow.com/questions/48481590/how-to-set-update-state-of-statefulwidget-from-other-statefulwidget-in-flutter
 // https://stackoverflow.com/questions/70927812/flutter-textfield-should-open-when-button-is-pressed
+// https://api.flutter.dev/flutter/material/ToggleButtons-class.html
 
 class EditWidget extends StatefulWidget {
   @override
@@ -51,6 +52,10 @@ class EditWidget extends StatefulWidget {
 }
 
 class _EditWidgetState extends State<EditWidget> {
+  // for upc/plu input
+  final List<bool> _selectedCodeType = <bool>[false, false];
+  final List<Widget> codeTypes = <Widget>[const Text('UPC'), const Text('PLU')];
+
   TextEditingController dateController = TextEditingController();
 
   @override
@@ -159,7 +164,7 @@ class _EditWidgetState extends State<EditWidget> {
         });
   }
 
-  _buildNotesField() {
+  Widget _buildNotesField() {
     return TextField(
       //controller: TextEditingController()..text = widget.notes ?? "Notes",
       decoration: const InputDecoration(
@@ -172,7 +177,7 @@ class _EditWidgetState extends State<EditWidget> {
     );
   }
 
-  _buildCancelButton() {
+  Widget _buildCancelButton() {
     return TextButton(
       child: const Text('Cancel'),
       onPressed: () {
@@ -183,7 +188,7 @@ class _EditWidgetState extends State<EditWidget> {
     );
   }
 
-  _buildSaveButton() {
+  Widget _buildSaveButton() {
     return TextButton(
       child: const Text('Save'),
       onPressed: () async {
@@ -249,7 +254,7 @@ class _EditWidgetState extends State<EditWidget> {
     );
   }
 
-  _buildQuantityPicker() {
+  Widget _buildQuantityPicker() {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
       // const Text("Quantity: ", style: TextStyle(fontSize: 20)),
       Card(
@@ -287,9 +292,6 @@ class _EditWidgetState extends State<EditWidget> {
   }
 
   Widget _buildCodeInput() {
-    bool showUPC = false;
-    bool showPLU = false;
-
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
@@ -300,52 +302,65 @@ class _EditWidgetState extends State<EditWidget> {
           children: [
             SizedBox(
               height: 40,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  // upc code button
-                  SizedBox(
-                    width: 150,
-                    child: TextButton(
-                        child: const Text("UPC Code",
-                            style: TextStyle(fontSize: 20)),
-                        onPressed: () {
-                          setState(() {
-                            showUPC = true;
-                            showPLU = false;
-                          });
-                        }),
-                  ),
-                  // plu code button
-                  SizedBox(
-                    width: 150,
-                    child: TextButton(
-                      child: const Text("PLU Code",
-                          style: TextStyle(fontSize: 20)),
-                      onPressed: () {
-                        setState(() {
-                          showUPC = false;
-                          showPLU = true;
-                        });
-                      },
-                    ),
-                  ),
-                ],
+              child: ToggleButtons(
+                direction: Axis.horizontal,
+                onPressed: (int index) {
+                  setState(() {
+                    // The button that is tapped is set to true, and the others to false.
+                    for (int i = 0; i < _selectedCodeType.length; i++) {
+                      _selectedCodeType[i] = i == index;
+                    }
+                  });
+                },
+                borderRadius: const BorderRadius.all(Radius.circular(8)),
+                constraints: const BoxConstraints(
+                  minHeight: 40.0,
+                  minWidth: 80.0,
+                ),
+                isSelected: _selectedCodeType,
+                children: codeTypes,
               ),
+              // child: Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //   children: [
+              //     // upc code button
+              //     SizedBox(
+              //       width: 150,
+              //       child: TextButton(
+              //           child: const Text("UPC Code",
+              //               style: TextStyle(fontSize: 20)),
+              //           onPressed: () {
+              //             setState(() {
+              //               showUPC = true;
+              //               showPLU = false;
+              //             });
+              //           }),
+              //     ),
+              //     // plu code button
+              //     SizedBox(
+              //       width: 150,
+              //       child: TextButton(
+              //         child: const Text("PLU Code",
+              //             style: TextStyle(fontSize: 20)),
+              //         onPressed: () {
+              //           setState(() {
+              //             showUPC = false;
+              //             showPLU = true;
+              //           });
+              //         },
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ),
             SizedBox(
               height: 50,
               width: 180,
               child: Padding(
                   padding: const EdgeInsets.only(bottom: 10),
-                  child: _takeUPCInput() // right now just takes UPC input
-
-                  // showUPC
-                  //     ? _takeUPCInput()
-                  //     : showPLU
-                  //         ? _takePLUInput()
-                  //         : Container(),
-                  ),
+                  child: (_selectedCodeType[0]) // if upc code is selected
+                      ? _takeUPCInput()
+                      : _takePLUInput()),
             ),
           ],
         ),
@@ -354,6 +369,7 @@ class _EditWidgetState extends State<EditWidget> {
   }
 
   Widget _takeUPCInput() {
+    setState(() {});
     String initValue = "";
     if (widget.pantryItem.upc != null) {
       initValue = widget.pantryItem.upc.toString();
@@ -383,13 +399,26 @@ class _EditWidgetState extends State<EditWidget> {
   }
 
   Widget _takePLUInput() {
-    return TextField(
+    String initValue = "";
+    if (widget.pantryItem.plu != null) {
+      initValue = widget.pantryItem.plu.toString();
+    }
+    return TextFormField(
+      initialValue: initValue,
       onChanged: (value) {
-        widget.pantryItem.plu = int.parse(value);
+        if (value != "") {
+          widget.pantryItem.plu = int.parse(value);
+        } else {
+          // if user deletes all text
+          widget.pantryItem.plu = null;
+        }
+        setState(() {});
       },
       textAlign: TextAlign.center,
-      decoration: const InputDecoration(
-          contentPadding: EdgeInsets.all(0), hintText: "Enter PLU Code"),
+      decoration: InputDecoration(
+          contentPadding: const EdgeInsets.all(0),
+          // only show hint text if upc null
+          hintText: widget.pantryItem.upc == null ? "Enter PLU Code" : ""),
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.digitsOnly, // only allow nums
