@@ -62,30 +62,37 @@ class _EditWidgetState extends State<EditWidget> {
             onWillPop: () {
               return Future.value(true);
             },
-            child: Material(
-              child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 40),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _buildNameField(), // name
-                    _buildDatePicker(), // date
-                    _buildQuantityPicker(), // quantity
-                    //  _buildStorageDropdown(), // storage location
-                    // _buildNotesField(), // notes
-                    _buildCodeInput(), // upc/plu code
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        _buildCancelButton(), // cancel
-                        _buildSaveButton(), // save
-                      ],
-                    )
-                  ],
+            child: AlertDialog(
+              scrollable: true,
+              content: SizedBox(
+                height: // fit to half screen height
+                    MediaQuery.of(context).size.height / 2,
+                width: MediaQuery.of(context).size.width,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildNameField(), // name
+                      _buildDatePicker(), // date
+                      _buildQuantityPicker(), // quantity
+                      //  _buildStorageDropdown(), // storage location
+                      // _buildNotesField(), // notes
+                      _buildCodeInput(), // upc/plu code
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+
+                      //   ],
+                      // )
+                    ],
+                  ),
                 ),
               ),
+              actions: [
+                _buildCancelButton(),
+                _buildSaveButton(),
+              ],
             ));
       },
     );
@@ -129,16 +136,19 @@ class _EditWidgetState extends State<EditWidget> {
     return TextField(
         controller: dateController,
         decoration: const InputDecoration(
-            contentPadding: EdgeInsets.all(0),
+            contentPadding: EdgeInsets.all(5),
             icon: Icon(Icons.calendar_today),
             hintText: "Enter Date"),
         readOnly: true, // text cannot be modified by keyboard
         onTap: () async {
           DateTime? pickedDate = await showDatePicker(
-              context: context,
-              initialDate: DateTime.now(),
-              firstDate: DateTime(2023), // no dates before 2023
-              lastDate: DateTime(2101));
+            context: context,
+            initialDate: DateTime.now(),
+            firstDate: DateTime(2023), // no dates before 2023
+            lastDate: DateTime(2101),
+            helpText: "Select Expiration Date",
+            errorInvalidText: "Invalid Date",
+          );
 
           // update text field to picked date
           if (pickedDate != null) {
@@ -180,13 +190,11 @@ class _EditWidgetState extends State<EditWidget> {
       child: const Text('Save'),
       onPressed: () async {
         widget.isEditing = false; // is not editing
-        // if product widget doesn't exist, create
-        print(widget.callingWidget.runtimeType);
 
-        // if user just scanned item
+        // if user just scanned item, add to list on camera page
         if (widget.callingWidget.runtimeType == CameraPage) {
-          // get calling widget
           CameraPage cameraPage = widget.callingWidget as CameraPage;
+
           // create new pantry item with user entered values
           Pantry newPantryItem = Pantry(
             name: widget.pantryItem.name,
@@ -211,7 +219,7 @@ class _EditWidgetState extends State<EditWidget> {
           widget.refreshCameraPage!();
         }
 
-        // if user is editing pantry item
+        // if user is creating widget on pantry page, add product to pantry
         if (widget.callingWidget.runtimeType == PantryPage) {
           await PantryDatabase.instance.insert(
             Pantry(
@@ -226,7 +234,7 @@ class _EditWidgetState extends State<EditWidget> {
           );
           setState(() {}); // refresh list
         }
-        // else, update existing
+        // else, user is editing a product widget, so update existing
         setState(() {
           // update pantry item with new values
           PantryDatabase.instance.update(widget.pantryItem);
@@ -279,52 +287,51 @@ class _EditWidgetState extends State<EditWidget> {
   }
 
   Widget _buildCodeInput() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 40), // size of card
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
-        ),
-        child: Padding(
-          padding:
-              const EdgeInsets.only(top: 10.0), // distance buttons from top
-          child: Center(
-            child: Column(
-              children: [
-                SizedBox(
-                  // upc and plu buttons
-                  child: ToggleButtons(
-                    direction: Axis.horizontal,
-                    onPressed: (int index) {
-                      setState(() {
-                        // The button that is tapped is set to true, and the others to false.
-                        for (int i = 0; i < _selectedCodeType.length; i++) {
-                          _selectedCodeType[i] = i == index;
-                        }
-                      });
-                    },
-                    borderRadius: const BorderRadius.all(Radius.circular(8)),
-                    constraints: const BoxConstraints(
-                      minHeight: 40.0,
-                      minWidth: 80.0,
-                    ),
-                    isSelected: _selectedCodeType,
-                    children: codeTypes,
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 10.0), // distance buttons from top
+        child: Center(
+          child: Column(
+            children: [
+              SizedBox(
+                // upc and plu buttons
+                child: ToggleButtons(
+                  direction: Axis.horizontal,
+                  onPressed: (int index) {
+                    setState(() {
+                      // The button that is tapped is set to true, and the others to false.
+                      for (int i = 0; i < _selectedCodeType.length; i++) {
+                        _selectedCodeType[i] = i == index;
+                      }
+                    });
+                  },
+                  borderRadius: const BorderRadius.all(Radius.circular(8)),
+                  constraints: const BoxConstraints(
+                    // button sizes
+                    minHeight: 40.0,
+                    minWidth: 80.0,
                   ),
+                  isSelected: _selectedCodeType,
+                  children: codeTypes,
                 ),
-                // text field for code input
-                SizedBox(
-                  height: 60,
-                  width: 150,
-                  child: Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 15), // distance text from bottom
-                      child: (_selectedCodeType[0]) // if upc code is selected
-                          ? _takeUPCInput()
-                          : _takePLUInput()),
-                ),
-              ],
-            ),
+              ),
+              // text field for code input
+              SizedBox(
+                // resize text field
+                height: 55,
+                width: 150,
+                child: Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: 15), // distance text from bottom
+                    child: (_selectedCodeType[0]) // if upc code is selected
+                        ? _takeUPCInput()
+                        : _takePLUInput()),
+              ),
+            ],
           ),
         ),
       ),
