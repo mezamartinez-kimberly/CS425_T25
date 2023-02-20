@@ -61,6 +61,7 @@ class PantryPageState extends State<PantryPage> {
             ),
             body: Column(children: [
               // make scrollable
+              _buildHeader(),
               Expanded(
                   child:
                       _showDeletedItems ? _listAllItems() : _listActiveItems()),
@@ -84,8 +85,8 @@ class PantryPageState extends State<PantryPage> {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Padding(
         padding: const EdgeInsets.only(left: 20, bottom: 15, top: 15),
-        child: Text('Pantry',
-            style: GoogleFonts.notoSerif(fontSize: 35, color: Colors.black)),
+        // child: Text('Pantry',
+        //   style: GoogleFonts.notoSerif(fontSize: 35, color: Colors.black)),
       ),
       // delete database button for debugging
       // IconButton(
