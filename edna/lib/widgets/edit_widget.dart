@@ -1,6 +1,8 @@
 import 'package:edna/dbs/pantry_db.dart';
+import 'package:edna/screens/all.dart';
 import 'package:edna/widgets/product_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart'; // input formatter
 
@@ -28,21 +30,23 @@ class EditWidget extends StatefulWidget {
   _EditWidgetState createState() => _EditWidgetState();
 
   final Pantry pantryItem;
-  ProductWidget? productWidget;
+  Widget? callingWidget;
   String? notes;
   bool isEditing;
-  final Function() updateProductWidget;
+  final Function()? updateProductWidget;
   final Function()? refreshPantryList;
+  final Function()? refreshCameraPage;
 
   // constructor
   EditWidget({
     Key? key,
     required this.pantryItem,
-    this.productWidget,
+    this.callingWidget,
     this.notes,
     this.isEditing = true,
-    required this.updateProductWidget,
+    this.updateProductWidget,
     this.refreshPantryList,
+    this.refreshCameraPage,
   }) : super(key: key);
 }
 
@@ -184,43 +188,59 @@ class _EditWidgetState extends State<EditWidget> {
       child: const Text('Save'),
       onPressed: () async {
         widget.isEditing = false; // is not editing
-
         // if product widget doesn't exist, create
-        if (widget.productWidget == null) {
+        print(widget.callingWidget.runtimeType);
+
+        // if user just scanned item
+        if (widget.callingWidget.runtimeType == CameraPage) {
+          // get calling widget
+          CameraPage cameraPage = widget.callingWidget as CameraPage;
+          // create new pantry item with user entered values
+          Pantry newPantryItem = Pantry(
+            name: widget.pantryItem.name,
+            expirationDate: widget.pantryItem.expirationDate,
+            quantity: widget.pantryItem.quantity,
+            dateAdded: DateTime.now(),
+            upc: widget.pantryItem.upc,
+            plu: widget.pantryItem.plu,
+            isDeleted: 0,
+          );
+
+          // create product widget with new pantry item
+          ProductWidget newProductWidget = ProductWidget(
+              pantryItem: newPantryItem,
+              enableCheckbox: false,
+              // no need to refresh pantry since we're still on camera page
+              refreshPantryList: () {});
+
+          // add to scanned list on camera page
+          cameraPage.addScannedProduct(newProductWidget);
+          // refresh camera page
+          widget.refreshCameraPage!();
+        }
+
+        // if user is editing pantry item
+        if (widget.callingWidget.runtimeType == PantryPage) {
           await PantryDatabase.instance.insert(
             Pantry(
               name: widget.pantryItem.name,
               expirationDate: widget.pantryItem.expirationDate,
               quantity: widget.pantryItem.quantity,
               dateAdded: DateTime.now(),
+              upc: widget.pantryItem.upc,
+              plu: widget.pantryItem.plu,
               isDeleted: 0,
             ),
           );
           setState(() {}); // refresh list
-
         }
-        // if (await PantryDatabase.instance.checkIfExists(widget.pantryItem) ==
-        //     false) {
-        //   await PantryDatabase.instance.insert(
-        //     Pantry(
-        //       name: widget.pantryItem.name,
-        //       expirationDate: widget.pantryItem.expirationDate,
-        //       quantity: widget.pantryItem.quantity,
-        //       dateAdded: DateTime.now(),
-        //       isDeleted: 0,
-        //     ),
-        //   );
-        //   setState(() {}); // refresh list
-        // }
-        // else, update existing widget and item
-        //else {
+        // else, update existing
         setState(() {
           // update pantry item with new values
           PantryDatabase.instance.update(widget.pantryItem);
           // update product widget
-          widget.updateProductWidget();
+          widget.updateProductWidget!();
         });
-        // }
         // refresh pantry list
         widget.refreshPantryList!();
         // close dialog box

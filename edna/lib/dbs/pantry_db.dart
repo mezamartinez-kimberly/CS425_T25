@@ -158,15 +158,4 @@ class PantryDatabase {
     String path = join(documentsDirectory.path, "pantry.db");
     databaseFactory.deleteDatabase(path);
   }
-
-  // check if pantry item already exists by pantry object
-  Future<bool> checkIfExists(Pantry pantry) async {
-    Database db = await instance.database;
-    var items = await db.query("pantry",
-        where: "name = ? AND expirationDate = ?",
-        whereArgs: [pantry.name, pantry.expirationDate]);
-    List<Pantry> pantryList =
-        items.isNotEmpty ? items.map((c) => Pantry.fromMap(c)).toList() : [];
-    return pantryList.isNotEmpty;
-  }
 }

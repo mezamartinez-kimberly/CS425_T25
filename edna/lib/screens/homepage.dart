@@ -20,7 +20,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _selectedIndex = 0;
   final _pageOptions = [
-    const CameraPage(),
+    CameraPage(),
     const PantryPage(),
     const CalendarClass(),
     const StatsPage(),

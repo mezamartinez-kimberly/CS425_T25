@@ -8,7 +8,6 @@ class ProductWidget extends StatefulWidget {
   _ProductWidgetState createState() => _ProductWidgetState();
 
   final Pantry pantryItem;
-  int quantity;
   bool enableCheckbox;
   final Function()? refreshPantryList;
 
@@ -16,7 +15,6 @@ class ProductWidget extends StatefulWidget {
   ProductWidget({
     Key? key,
     required this.pantryItem,
-    this.quantity = 1,
     this.enableCheckbox = false, // enabled by default
     this.refreshPantryList,
   }) : super(key: key);
@@ -121,7 +119,7 @@ class _ProductWidgetState extends State<ProductWidget> {
             builder: (context) {
               return EditWidget(
                 pantryItem: widget.pantryItem,
-                productWidget: widget,
+                callingWidget: widget,
                 updateProductWidget: refresh,
                 refreshPantryList: () {},
               );

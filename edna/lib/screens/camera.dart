@@ -107,7 +107,13 @@ import 'package:edna/widgets/product_widget.dart'; // product widget
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
 
 class CameraPage extends StatefulWidget {
-  const CameraPage({Key? key}) : super(key: key);
+  List<ProductWidget>? scannedProducts;
+  void addScannedProduct(ProductWidget product) {
+    scannedProducts ??= []; // initialize if null
+    scannedProducts?.add(product);
+  }
+
+  CameraPage({Key? key, this.scannedProducts}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CameraPageState();
@@ -131,6 +137,10 @@ class _CameraPageState extends State<CameraPage> {
     controller!.resumeCamera();
   }
 
+  refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,15 +157,16 @@ class _CameraPageState extends State<CameraPage> {
             flex: 2,
             // child: FittedBox(
             //   fit: BoxFit.contain,
-            child: SingleChildScrollView(
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                // mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  _printScanResult(),
-                ],
-              ),
+            // child: SingleChildScrollView(
+            child: Column(
+              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              // mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                //_printScanResult(), // deprecated
+                _buildScannedList(),
+              ],
             ),
+            // ),
           ),
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -187,11 +198,13 @@ class _CameraPageState extends State<CameraPage> {
             builder: (context) {
               return EditWidget(
                 pantryItem: Pantry(
-                  id: 401, // static var incremented each time?
+                  id: 401, // id should be static var incremented each time?
                   name: "",
                 ),
+                callingWidget: widget,
                 updateProductWidget: () {},
                 refreshPantryList: () {},
+                refreshCameraPage: refresh,
               );
             });
       },
@@ -208,7 +221,16 @@ class _CameraPageState extends State<CameraPage> {
           borderRadius: BorderRadius.circular(18.0),
         ),
       ),
-      onPressed: () {},
+      onPressed: () {
+        // insert scanned items into pantry database
+        for (ProductWidget product in widget.scannedProducts!) {
+          PantryDatabase.instance.insert(product.pantryItem);
+        }
+        // clear scanned list
+        widget.scannedProducts!.clear();
+        // refresh page
+        refresh(); // resets state
+      },
       icon: const Icon(Icons.check),
       label: const Text(
         'Submit',
@@ -330,5 +352,20 @@ class _CameraPageState extends State<CameraPage> {
     } else {
       return const Text('Scan a code');
     }
+  }
+
+  _buildScannedList() {
+    print("length = ${widget.scannedProducts?.length}");
+    return widget.scannedProducts != null
+        ? Expanded(
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: widget.scannedProducts?.length,
+              itemBuilder: (context, index) {
+                return widget.scannedProducts![index];
+              },
+            ),
+          )
+        : Container();
   }
 }
