@@ -1,30 +1,17 @@
-import 'package:edna/dbs/pantry_db.dart';
-import 'package:edna/screens/all.dart';
-import 'package:edna/widgets/product_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter/services.dart'; // input formatter
-
-// class EditWidget extends StatefulWidget {
-//   const EditWidget({super.key});
-
-//   @override
-//   _EditWidgetState createState() => _EditWidgetState();
-
-//   // _buildEditDialogBox(ProductWidget productWidget, BuildContext context) {}
-
-//   // void buildEdit(ProductWidget widget, BuildContext context) {
-//   //   _buildEditDialogBox(widget, context);
-//   // }
-// }
-
 //ref:
 // https://levelup.gitconnected.com/date-picker-in-flutter-ec6080f3508a
 // https://stackoverflow.com/questions/59455869/how-to-make-fullscreen-alertdialog-in-flutter
 // https://stackoverflow.com/questions/48481590/how-to-set-update-state-of-statefulwidget-from-other-statefulwidget-in-flutter
 // https://stackoverflow.com/questions/70927812/flutter-textfield-should-open-when-button-is-pressed
 // https://api.flutter.dev/flutter/material/ToggleButtons-class.html
+
+import 'package:edna/dbs/pantry_db.dart';
+import 'package:edna/dbs/storage_location_db.dart';
+import 'package:edna/screens/all.dart';
+import 'package:edna/widgets/product_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter/services.dart'; // input formatter
 
 class EditWidget extends StatefulWidget {
   @override
@@ -86,8 +73,8 @@ class _EditWidgetState extends State<EditWidget> {
                     _buildNameField(), // name
                     _buildDatePicker(), // date
                     _buildQuantityPicker(), // quantity
+                    //  _buildStorageDropdown(), // storage location
                     // _buildNotesField(), // notes
-
                     _buildCodeInput(), // upc/plu code
                     Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -292,84 +279,59 @@ class _EditWidgetState extends State<EditWidget> {
   }
 
   Widget _buildCodeInput() {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10.0),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 40,
-              child: ToggleButtons(
-                direction: Axis.horizontal,
-                onPressed: (int index) {
-                  setState(() {
-                    // The button that is tapped is set to true, and the others to false.
-                    for (int i = 0; i < _selectedCodeType.length; i++) {
-                      _selectedCodeType[i] = i == index;
-                    }
-                  });
-                },
-                borderRadius: const BorderRadius.all(Radius.circular(8)),
-                constraints: const BoxConstraints(
-                  minHeight: 40.0,
-                  minWidth: 80.0,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 40), // size of card
+      child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
+        child: Padding(
+          padding:
+              const EdgeInsets.only(top: 10.0), // distance buttons from top
+          child: Center(
+            child: Column(
+              children: [
+                SizedBox(
+                  // upc and plu buttons
+                  child: ToggleButtons(
+                    direction: Axis.horizontal,
+                    onPressed: (int index) {
+                      setState(() {
+                        // The button that is tapped is set to true, and the others to false.
+                        for (int i = 0; i < _selectedCodeType.length; i++) {
+                          _selectedCodeType[i] = i == index;
+                        }
+                      });
+                    },
+                    borderRadius: const BorderRadius.all(Radius.circular(8)),
+                    constraints: const BoxConstraints(
+                      minHeight: 40.0,
+                      minWidth: 80.0,
+                    ),
+                    isSelected: _selectedCodeType,
+                    children: codeTypes,
+                  ),
                 ),
-                isSelected: _selectedCodeType,
-                children: codeTypes,
-              ),
-              // child: Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //   children: [
-              //     // upc code button
-              //     SizedBox(
-              //       width: 150,
-              //       child: TextButton(
-              //           child: const Text("UPC Code",
-              //               style: TextStyle(fontSize: 20)),
-              //           onPressed: () {
-              //             setState(() {
-              //               showUPC = true;
-              //               showPLU = false;
-              //             });
-              //           }),
-              //     ),
-              //     // plu code button
-              //     SizedBox(
-              //       width: 150,
-              //       child: TextButton(
-              //         child: const Text("PLU Code",
-              //             style: TextStyle(fontSize: 20)),
-              //         onPressed: () {
-              //           setState(() {
-              //             showUPC = false;
-              //             showPLU = true;
-              //           });
-              //         },
-              //       ),
-              //     ),
-              //   ],
-              // ),
+                // text field for code input
+                SizedBox(
+                  height: 60,
+                  width: 150,
+                  child: Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: 15), // distance text from bottom
+                      child: (_selectedCodeType[0]) // if upc code is selected
+                          ? _takeUPCInput()
+                          : _takePLUInput()),
+                ),
+              ],
             ),
-            SizedBox(
-              height: 50,
-              width: 180,
-              child: Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
-                  child: (_selectedCodeType[0]) // if upc code is selected
-                      ? _takeUPCInput()
-                      : _takePLUInput()),
-            ),
-          ],
+          ),
         ),
       ),
     );
   }
 
   Widget _takeUPCInput() {
-    setState(() {});
     String initValue = "";
     if (widget.pantryItem.upc != null) {
       initValue = widget.pantryItem.upc.toString();
@@ -424,6 +386,38 @@ class _EditWidgetState extends State<EditWidget> {
         FilteringTextInputFormatter.digitsOnly, // only allow nums
         LengthLimitingTextInputFormatter(4) // 4 digits
       ],
+    );
+  }
+
+  Widget _buildStorageDropdown() {
+    // get storage location, if null, set to pantry
+    int storageLocation = widget.pantryItem.storageLocation ??=
+        StorageLocation.idFromName("pantry");
+
+    // drop down displaying storage options
+    return DropdownButton<String>(
+      //  value: StorageLocation.nameFromId(storageLocation),
+      icon: const Icon(Icons.arrow_downward),
+      iconSize: 24,
+      elevation: 16,
+      style: const TextStyle(color: Colors.deepPurple),
+      underline: Container(
+        height: 2,
+        color: Colors.deepPurpleAccent,
+      ),
+      onChanged: (String? newValue) {
+        setState(() {
+          widget.pantryItem.storageLocation =
+              StorageLocation.idFromName(newValue!);
+        });
+      },
+      items: <String>['Fridge', 'Freezer', 'Pantry']
+          .map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
   }
 }

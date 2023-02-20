@@ -46,16 +46,38 @@ class PantryPageState extends State<PantryPage> {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        title: 'Pantry Page',
-        home: SafeArea(
-            child: Scaffold(
-                body: Column(children: [
-          _buildHeader(),
-          // make scrollable
-          Expanded(
-              child: _showDeletedItems ? _listAllItems() : _listActiveItems()),
-          _buildAddButton()
-        ]))));
+        home: DefaultTabController(
+          length: 3,
+          child: Scaffold(
+            appBar: AppBar(
+              bottom: const TabBar(
+                tabs: [
+                  Tab(child: Text('Pantry')),
+                  Tab(child: Text('Fridge')),
+                  Tab(child: Text('Freezer')),
+                ],
+              ),
+              title: const Text('Shelf'),
+            ),
+            body: Column(children: [
+              // make scrollable
+              Expanded(
+                  child:
+                      _showDeletedItems ? _listAllItems() : _listActiveItems()),
+              _buildAddButton(),
+            ]),
+          ),
+        ));
+
+    // home: SafeArea(
+    //     child: Scaffold(
+    //         body: Column(children: [
+    //   // _buildHeader(),
+    //   // make scrollable
+    //   Expanded(
+    //       child: _showDeletedItems ? _listAllItems() : _listActiveItems()),
+    //   _buildAddButton()
+    // ]))));
   }
 
   Row _buildHeader() {
