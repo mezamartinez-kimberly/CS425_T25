@@ -30,7 +30,7 @@ class PantryPage extends StatefulWidget {
   PantryPageState createState() => PantryPageState();
 }
 
-int count = 0;
+int count = 0; // debugging
 
 class PantryPageState extends State<PantryPage> {
   bool _showDeletedItems = false;
@@ -81,7 +81,7 @@ class PantryPageState extends State<PantryPage> {
     // ]))));
   }
 
-  Row _buildHeader() {
+  Widget _buildHeader() {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Padding(
         padding: const EdgeInsets.only(left: 20, bottom: 15, top: 15),
@@ -124,7 +124,7 @@ class PantryPageState extends State<PantryPage> {
     ]);
   }
 
-  _listAllItems() {
+  Widget _listAllItems() {
     return Center(
       child: FutureBuilder<List<Pantry>>(
           future: PantryDatabase.instance.getAllPantry(),
@@ -132,7 +132,7 @@ class PantryPageState extends State<PantryPage> {
     );
   }
 
-  _listActiveItems() {
+  Widget _listActiveItems() {
     return Center(
       child: FutureBuilder<List<Pantry>>(
           future: PantryDatabase.instance.getActivePantry(),
@@ -173,7 +173,7 @@ class PantryPageState extends State<PantryPage> {
     };
   }
 
-  Container _buildAddButton() {
+  Widget _buildAddButton() {
     return Container(
       padding: const EdgeInsets.only(left: 0, bottom: 20, right: 15, top: 10),
       alignment: Alignment.bottomRight,
