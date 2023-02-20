@@ -121,7 +121,9 @@ class _ProductWidgetState extends State<ProductWidget> {
             builder: (context) {
               return EditWidget(
                 pantryItem: widget.pantryItem,
+                productWidget: widget,
                 updateProductWidget: refresh,
+                refreshPantryList: () {},
               );
             });
       },

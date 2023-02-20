@@ -169,7 +169,6 @@ class PantryPageState extends State<PantryPage> {
                   refreshPantryList: refresh,
                 );
               });
-          // call manual
           // count++; // debugging
           // await PantryDatabase.instance.insert(
           //   Pantry(

@@ -191,6 +191,7 @@ class _CameraPageState extends State<CameraPage> {
                   name: "",
                 ),
                 updateProductWidget: () {},
+                refreshPantryList: () {},
               );
             });
       },

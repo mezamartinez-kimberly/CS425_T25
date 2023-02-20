@@ -28,6 +28,7 @@ class EditWidget extends StatefulWidget {
   _EditWidgetState createState() => _EditWidgetState();
 
   final Pantry pantryItem;
+  ProductWidget? productWidget;
   String? notes;
   bool isEditing;
   final Function() updateProductWidget;
@@ -37,6 +38,7 @@ class EditWidget extends StatefulWidget {
   EditWidget({
     Key? key,
     required this.pantryItem,
+    this.productWidget,
     this.notes,
     this.isEditing = true,
     required this.updateProductWidget,
@@ -94,17 +96,28 @@ class _EditWidgetState extends State<EditWidget> {
   }
 
   // called functions
-  _buildNameField() {
+  Widget _buildNameField() {
+    String initValue = "";
+    if (widget.pantryItem.name != "") {
+      initValue = widget.pantryItem.name;
+    }
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-      child: TextField(
-          controller: TextEditingController()..text = widget.pantryItem.name,
-          decoration: const InputDecoration(
-              contentPadding: EdgeInsets.all(0),
-              icon: Icon(Icons.shopping_cart),
-              hintText: "Enter Name"),
+      child: TextFormField(
+          initialValue: initValue,
+          decoration: InputDecoration(
+              contentPadding: const EdgeInsets.all(0),
+              icon: const Icon(Icons.shopping_cart),
+              // only show hint text if name null
+              hintText: widget.pantryItem.name == "" ? "Enter Name" : ""),
           onChanged: (value) {
-            widget.pantryItem.name = value;
+            if (value != "") {
+              widget.pantryItem.name = value;
+            } else {
+              // if user deletes all text
+              widget.pantryItem.name = "";
+            }
+            setState(() {});
           }),
     );
   }
@@ -144,7 +157,7 @@ class _EditWidgetState extends State<EditWidget> {
 
   _buildNotesField() {
     return TextField(
-      controller: TextEditingController()..text = widget.notes ?? "Notes",
+      //controller: TextEditingController()..text = widget.notes ?? "Notes",
       decoration: const InputDecoration(
           contentPadding: EdgeInsets.all(0),
           icon: Icon(Icons.notes),
@@ -171,9 +184,9 @@ class _EditWidgetState extends State<EditWidget> {
       child: const Text('Save'),
       onPressed: () async {
         widget.isEditing = false; // is not editing
+
         // if product widget doesn't exist, create
-        if (await PantryDatabase.instance.checkIfExists(widget.pantryItem) ==
-            false) {
+        if (widget.productWidget == null) {
           await PantryDatabase.instance.insert(
             Pantry(
               name: widget.pantryItem.name,
@@ -184,16 +197,30 @@ class _EditWidgetState extends State<EditWidget> {
             ),
           );
           setState(() {}); // refresh list
+
         }
+        // if (await PantryDatabase.instance.checkIfExists(widget.pantryItem) ==
+        //     false) {
+        //   await PantryDatabase.instance.insert(
+        //     Pantry(
+        //       name: widget.pantryItem.name,
+        //       expirationDate: widget.pantryItem.expirationDate,
+        //       quantity: widget.pantryItem.quantity,
+        //       dateAdded: DateTime.now(),
+        //       isDeleted: 0,
+        //     ),
+        //   );
+        //   setState(() {}); // refresh list
+        // }
         // else, update existing widget and item
-        else {
-          setState(() {
-            // update pantry item with new values
-            PantryDatabase.instance.update(widget.pantryItem);
-            // update product widget
-            widget.updateProductWidget();
-          });
-        }
+        //else {
+        setState(() {
+          // update pantry item with new values
+          PantryDatabase.instance.update(widget.pantryItem);
+          // update product widget
+          widget.updateProductWidget();
+        });
+        // }
         // refresh pantry list
         widget.refreshPantryList!();
         // close dialog box
@@ -307,13 +334,26 @@ class _EditWidgetState extends State<EditWidget> {
   }
 
   Widget _takeUPCInput() {
-    return TextField(
+    String initValue = "";
+    if (widget.pantryItem.upc != null) {
+      initValue = widget.pantryItem.upc.toString();
+    }
+    return TextFormField(
+      initialValue: initValue,
       onChanged: (value) {
-        widget.pantryItem.upc = int.parse(value);
+        if (value != "") {
+          widget.pantryItem.upc = int.parse(value);
+        } else {
+          // if user deletes all text
+          widget.pantryItem.upc = null;
+        }
+        setState(() {});
       },
       textAlign: TextAlign.center,
-      decoration: const InputDecoration(
-          contentPadding: EdgeInsets.all(0), hintText: "Enter UPC Code"),
+      decoration: InputDecoration(
+          contentPadding: const EdgeInsets.all(0),
+          // only show hint text if upc null
+          hintText: widget.pantryItem.upc == null ? "Enter UPC Code" : ""),
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.digitsOnly, // only allow nums

@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
           ),
           GButton(
             icon: Icons.shopping_basket,
-            text: 'Pantry',
+            text: 'Shelf',
             iconActiveColor: Colors.red,
             backgroundColor: Colors.red.withOpacity(0.2),
           ),
