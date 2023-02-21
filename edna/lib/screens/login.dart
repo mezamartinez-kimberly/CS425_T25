@@ -167,8 +167,8 @@ class _LoginPageState extends State<LoginPage> {
             _formKey.currentState!.save();
 
             // print the email and password to the console
-            print('Email: $email');
-            print('Password: $password');
+            // print('Email: $email');
+            // print('Password: $password');
 
             // Send the information to the backend
             String result = await BackendUtils.loginUser(email, password);

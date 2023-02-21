@@ -24,6 +24,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), nullable=False)
     session_token = db.Column(db.String(120), nullable=True)
+    otp_hash = db.Column(db.String(120), nullable=True)
 
     # relationships
     pantry = db.relationship("Pantry", backref="user")

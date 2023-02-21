@@ -22,6 +22,9 @@ from flask_mail import Mail, Message
 
 # password hashing
 from flask_bcrypt import Bcrypt
+import bs4 # for html/ email editing
+import random # for generating random numbers for OTP
+
 
 # Import the database object and the Model Classes from the models.py file
 from models import db, User, UserPreference, Person, Product, ExpirationData, Pantry
@@ -68,7 +71,7 @@ mail = Mail(app)
 
 db.init_app(app)
 
-
+time_confimation_otp_was_sent = 0
 
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SETUP END ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -76,17 +79,102 @@ db.init_app(app)
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~ ROUTE SETUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# @app.route("/testEmail")
-# def index():
-#    msg = Message(
-#                 'Hello',
-#                 sender ='yourId@gmail.com',
-#                 recipients = ['john.watson3091@gmail.com']
-#                )
-#    msg.body = 'Hello Flask message sent from Flask-Mail'
-#    mail.send(msg)
-#    return 'Sent'
+@app.route("/sendOTP", methods=["POST"])
+def sendOTP():
 
+    # expected input:
+    # {
+    #          "email": "
+    # }
+
+    # parse the json input
+    email = request.json['email']
+
+    print(email)
+
+
+    # check if the email is registered
+    user = User.query.filter_by(email=email).first()
+
+    if user is None:
+        return jsonify({'error': 'Email not registered'}), 401
+    else:
+        # generate a random 5 digit number
+        otp = random.randint(10000, 99999)
+
+        # check if the user is trying to reset their password or confirm their email
+            #import the html file and replace the otp with the generated otp
+        with open("Email Templates/forgotPassword.html", "r") as file:
+            html = file.read()
+            html = html.replace("98273", str(otp))
+        
+        # send the email
+        msg = Message('Edna - Forgot Password', sender = 'yourId@gmail.com', recipients = [email])
+        msg.html = html
+        mail.send(msg)
+
+        # update the user's otp and hash using bcrypt
+        user.otp_hash = bcrypt.generate_password_hash(str(otp)).decode('utf-8')
+        db.session.commit()
+
+        return jsonify({'message': 'OTP sent successfully'}),201
+
+
+
+
+# create an approute to verify the otp
+@app.route("/verifyOTP", methods=["POST"])
+def verifyOTP():
+    
+        # expected input:
+        # {
+        #     "email": "email",
+        #     "otp": "otp"
+        # }
+    
+        # parse the json input
+        email = request.json['email']
+        otp = request.json['otp']
+
+
+        # check if the email is registered
+        user = User.query.filter_by(email=email).first()
+
+        if user is None:
+            return jsonify({'error': 'Email not registered'}), 401
+        else:
+            # check if the otp is correct
+            if bcrypt.check_password_hash(user.otp_hash, otp):
+                return jsonify({'message': 'OTP is correct'}), 200
+            else:
+                return jsonify({'error': 'OTP is incorrect'}), 402
+            
+
+@app.route("/changPassword", methods=["POST"])
+def resetPassword():
+        
+            # expected input:
+            # {
+            #     "email": "email",
+            #     "password": "password"
+            # }
+        
+            # parse the json input
+            email = request.json['email']
+            password = request.json['password']
+    
+            # check if the email is registered
+            user = User.query.filter_by(email=email).first()
+    
+            # check to see if the new password is different from the old password
+            if bcrypt.check_password_hash(user.password_hash, password):
+                return jsonify({'error': 'New password cannot be the same as the old password'}), 401
+            else:
+                # update the user's password
+                user.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
+                db.session.commit()
+
+                return jsonify({'message': 'Password updated successfully'}), 200
 
 
 

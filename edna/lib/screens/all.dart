@@ -3,6 +3,8 @@
 // Login Files
 export 'login.dart';
 export 'forgot_password.dart';
+export 'otp_entry.dart';
+export 'new_password.dart';
 export 'change_password.dart';
 export 'register.dart';
 

@@ -8,6 +8,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'all.dart';
+import 'package:edna/backend_utils.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);
@@ -92,11 +94,50 @@ class _ForgotPasswordState extends State<ForgotPasswordPage> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        onPressed: () {
-          if (!formKey.currentState!.validate()) {
-            formKey.currentState!.save();
+        onPressed: () async {
+          formKey.currentState!.save(); // Always save the form data
 
-            return;
+          if (formKey.currentState!.validate()) {
+            // print email
+            print(email);
+
+            String result = await BackendUtils.sendOTPEmail(email);
+
+            // Resolved an aync + naviagation issue
+            // https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html
+            if (!mounted) return;
+
+            if (result == "Email sent successfully") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const OtpEntryPage()),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Container(
+                    alignment: Alignment.topCenter,
+                    height: 15.0,
+                    child: const Center(
+                      child: Text(
+                        'Please check your credentials and try again',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 55, 55),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40.0),
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 30.0, vertical: 50),
+                ),
+              );
+            }
           }
         },
         child: const Text(

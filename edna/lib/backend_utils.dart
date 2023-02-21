@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 
 class BackendUtils {
   static String sessionToken = '';
+  static String emailGlobal = '';
 
   static Future<String> registerUser(
       String firstName, String lastName, String email, String password) async {
@@ -95,6 +96,98 @@ class BackendUtils {
     } else {
       // Registration failed
       return "UPC not found";
+    }
+  }
+
+// create a function to sent the smail adress to the backend
+  static Future<String> sendOTPEmail(String email) async {
+    const String apiUrl = 'http://192.168.161.137/sendOTP';
+
+    emailGlobal = email;
+
+    final Map<String, dynamic> message = {
+      'email': email,
+    };
+
+    // convert the map to a JSON string
+    final String jsonPayload = json.encode(message);
+
+    // send the request to the backend as POST request
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonPayload,
+    );
+
+    if (response.statusCode == 201) {
+      // Email sent was successful
+      return "Email sent successfully";
+    } else {
+      // Email doesn't exist in db
+      return "Email not registered";
+    }
+  }
+
+// Create a function to verify the OTP
+  static Future<String> verifyOTP(String otp) async {
+    const String apiUrl = 'http://192.168.161.137/verifyOTP';
+
+    final Map<String, dynamic> message = {
+      'email': emailGlobal,
+      'otp': otp,
+    };
+
+    // convert the map to a JSON string
+    final String jsonPayload = json.encode(message);
+
+    // send the request to the backend as POST request
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonPayload,
+    );
+
+    if (response.statusCode == 200) {
+      // Email sent was successful
+      return "OTP is correct";
+    } else if (response.statusCode == 402) {
+      return "OTP is incorrect";
+    } else {
+      return "Email not registered";
+    }
+  }
+
+  static Future<String> changePassword(String password) async {
+    const String apiUrl = 'http://192.168.161.137/changePassword';
+
+    final Map<String, dynamic> message = {
+      'email': emailGlobal,
+      'password': password,
+    };
+
+    // convert the map to a JSON string
+    final String jsonPayload = json.encode(message);
+
+    // send the request to the backend as POST request
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonPayload,
+    );
+
+    if (response.statusCode == 200) {
+      // Email sent was successful
+      return "New Password set";
+    } else if (response.statusCode == 401) {
+      return "New Password cant be the same as old password";
+    } else {
+      return "Email not registered";
     }
   }
 }
