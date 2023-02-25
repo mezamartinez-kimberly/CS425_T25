@@ -17,6 +17,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:edna/backend_utils.dart';
 
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // product widget
@@ -265,18 +266,27 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
-  Widget _printScanResult() {
+  Future<Widget> _printScanResult() async {
     if (result != null) {
+      String productName = '';
       // make call based on upc
       // store return data as pantry item
       // create product with pantry item
 
-      //return Text(
-      //   'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}');
-      String upcCode = result!.code.toString();
-      return ProductWidget(pantryItem: Pantry(id: 500, name: upcCode));
+      if (result!.format == BarcodeFormat.ean13 ||
+          result!.format == BarcodeFormat.ean8 ||
+          result!.format == BarcodeFormat.upcA ||
+          result!.format == BarcodeFormat.upcE) {
+        productName = await BackendUtils.getUpcData(result!.code as String);
+      }
 
-      // something is pushing this down?
+      if (productName == 'UPC not found') {
+        return Text("UPC ${result!.code} not found");
+      } else {
+        print(productName);
+
+        return Text("name: $productName \n code: ${result!.code}");
+      }
     } else {
       return const Text('Scan a code');
     }

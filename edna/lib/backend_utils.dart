@@ -86,11 +86,10 @@ class BackendUtils {
       body: jsonPayload,
     );
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 200) {
       // grab the rest of the body
       final Map<String, dynamic> responseBody = json.decode(response.body);
       String name = responseBody['name'];
-
       // Registration was successful
       return name;
     } else {
