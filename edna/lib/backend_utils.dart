@@ -7,7 +7,7 @@ class BackendUtils {
 
   static Future<String> registerUser(
       String firstName, String lastName, String email, String password) async {
-    const String apiUrl = 'http://192.168.161.137/register';
+    const String apiUrl = 'http://10.0.2.2:5000/register';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -39,7 +39,7 @@ class BackendUtils {
 // create a function to log the user in
 // this will need to change the state of the app and return the user to the home screen
   static Future<String> loginUser(String email, String password) async {
-    const String apiUrl = 'http://192.168.161.137/login';
+    const String apiUrl = 'http://10.0.2.2:5000/login';
     final Map<String, dynamic> message = {
       'email': email,
       'password': password,
@@ -66,7 +66,7 @@ class BackendUtils {
 
 // // Create a upc get function to get the upc data
   static Future<String> getUpcData(String upc) async {
-    const String apiUrl = 'http://192.168.161.137/upc';
+    const String apiUrl = 'http://10.0.2.2:5000/upc';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -101,7 +101,7 @@ class BackendUtils {
 
 // create a function to sent the smail adress to the backend
   static Future<String> sendOTPEmail(String email) async {
-    const String apiUrl = 'http://192.168.161.137/sendOTP';
+    const String apiUrl = 'http://10.0.2.2:5000/sendOTP';
 
     emailGlobal = email;
 
@@ -132,7 +132,7 @@ class BackendUtils {
 
 // Create a function to verify the OTP
   static Future<String> verifyOTP(String otp) async {
-    const String apiUrl = 'http://192.168.161.137/verifyOTP';
+    const String apiUrl = 'http://10.0.2.2:5000/verifyOTP';
 
     final Map<String, dynamic> message = {
       'email': emailGlobal,
@@ -162,7 +162,7 @@ class BackendUtils {
   }
 
   static Future<String> changePassword(String password) async {
-    const String apiUrl = 'http://192.168.161.137/changePassword';
+    const String apiUrl = 'http://10.0.2.2:5000/changePassword';
 
     final Map<String, dynamic> message = {
       'email': emailGlobal,
