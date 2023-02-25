@@ -6,6 +6,7 @@
 ==============================
 */
 
+import 'package:edna/backend_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -22,314 +23,329 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-  late String email, password;
+  String email = '';
+  String password = '';
+  final _formKey = GlobalKey<FormState>();
+
+// Createa a widget for the logo and Title Page
   Widget _buildLogo() {
-    
-    // This creates a row widget for the Login Title
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(left: 20, bottom: 70),
-          child: Text(
-            'Login',
-            style: GoogleFonts.notoSerif(
-              fontSize: 40,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget _buildEmailRow() {
-    // Creates the Email Row
-    final theme = ThemeData();
-
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const SizedBox(height: 10),
-        Text(
-          // This Text widget is the label for the Email Field
-          'Email',
-          style: GoogleFonts.quicksand(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-
-        // This Sized Box widget is the space between the label and the field
-        const SizedBox(height: 8),
-
-        // This Container widget is the field itself
-        Container(
-          alignment: Alignment.centerLeft,
-          height: MediaQuery.of(context).size.height / 15,
-          width: MediaQuery.of(context).size.width / 1.25,
-          child: Theme(
-            // This theme wrapper helps me change the color of the Label and Underline when inputting data
-            data: Theme.of(context).copyWith(
-                colorScheme: theme.colorScheme.copyWith(
-              primary: const Color.fromARGB(255, 181, 79, 79), // NEW WAY
-            )),
-
-            child: TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              onChanged: (value) {
-                setState(() {
-                  email = value;
-                });
-              },
-              decoration: const InputDecoration(
-                prefixIcon: Icon(
-                  Icons.email,
-                  color: Colors.grey,
-                ),
-                labelText: 'Enter your Email',
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPasswordRow() {
-    // create a cloumn widget for the text field label
-// create a row widget for the text form field
-    final theme = ThemeData();
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // This Sized Box widget is the space between the label and the field
-        const SizedBox(height: 30),
-
-        Text(
-          // This Text widget is the label for the Email Field
-          'Password',
-          style: GoogleFonts.quicksand(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-        ),
-
-        // This Sized Box widget is the space between the label and the field
-        const SizedBox(height: 8),
-
-        // This Container widget is the field itself
-        Container(
-          alignment: Alignment.centerLeft,
-          height: MediaQuery.of(context).size.height / 15,
-          width: MediaQuery.of(context).size.width / 1.25,
-          child: Theme(
-            // This theme wrapper helps me change the color of the Label and Underline when inputting data
-
-            data: Theme.of(context).copyWith(
-                colorScheme: theme.colorScheme.copyWith(
-              primary: const Color.fromARGB(255, 181, 79, 79), // NEW WAY
-            )),
-
-            child: TextFormField(
-              keyboardType: TextInputType.emailAddress,
-              obscureText: true,
-              onChanged: (value) {
-                setState(() {
-                  password = value;
-                });
-              },
-              decoration: const InputDecoration(
-                prefixIcon: Icon(
-                  Icons.lock,
-                  color: Colors.grey,
-                ),
-                labelText: 'Enter your Password',
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildForgetPasswordButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: <Widget>[
+      children: const <Widget>[
         SizedBox(
-          width: MediaQuery.of(context).size.width * 0.58,
+          height: 50,
         ),
-        TextButton(
-          onPressed: () {},
-          child: Text(
-            "Forgot Password?",
-            style: GoogleFonts.quicksand(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-              color: const Color.fromARGB(255, 181, 79, 79),
-            ),
+        Text(
+          'Welcome Back',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 30,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        Text(
+          'Login to your Account',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 18,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildLoginButton() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Container(
-          height: 1.4 * (MediaQuery.of(context).size.height / 20),
-          width: 5 * (MediaQuery.of(context).size.width / 10),
-          margin: const EdgeInsets.only(bottom: 20),
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color.fromARGB(255, 105, 185, 187),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30.0),
-              ),
+  // Create a widget for the email field
+  Widget _buildEmailField() {
+    return SizedBox(
+      height: 80,
+      width: 350,
+      child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
+        decoration: InputDecoration(
+          // show the label text even when unfocused
+          labelText: 'E-mail',
+          labelStyle: GoogleFonts.openSans(
+            textStyle: const TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
             ),
-            onPressed: () {
-              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-                MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return const HomePage();
-                  },
-                ),
-                (_) => false,
+          ),
+          prefixIcon: const Icon(
+            FontAwesomeIcons.envelope,
+            color: Colors.black,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        validator: (String? value) {
+          if (value!.isEmpty) {
+            return 'Email is required';
+          }
+          if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+              .hasMatch(value)) {
+            return 'Please enter a valid email address';
+          }
+          return null;
+        },
+        onSaved: (String? value) {
+          email = value!;
+        },
+      ),
+    );
+  }
+
+// create a widget for the password field
+  Widget _buildPasswordField() {
+    return SizedBox(
+      height: 70,
+      width: 350,
+      child: TextFormField(
+        decoration: InputDecoration(
+          labelText: 'Password',
+          labelStyle: GoogleFonts.openSans(
+            textStyle: const TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          prefixIcon: const Icon(
+            FontAwesomeIcons.lock,
+            color: Colors.black,
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        validator: (String? value) {
+          if (value!.isEmpty) {
+            return 'Password is required';
+          }
+          if (value.length < 6) {
+            return 'Password must be at least 6 characters';
+          }
+          return null;
+        },
+        onSaved: (String? value) {
+          password = value!;
+        },
+        obscureText: true,
+      ),
+    );
+  }
+
+// Create a Widget for the login button
+  Widget _buildLoginBtn() {
+    return SizedBox(
+      height: 60,
+      width: 350,
+      // padding: const EdgeInsets.symmetric(vertical: 25),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+        ),
+        child: const Text(
+          'Login',
+          style: TextStyle(
+            color: Colors.white,
+            letterSpacing: 1.5,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Roboto',
+          ),
+        ),
+
+        // When you press the button validate the form and send the information to the backend
+        onPressed: () async {
+          if (_formKey.currentState!.validate()) {
+            _formKey.currentState!.save();
+
+            // print the email and password to the console
+            // print('Email: $email');
+            // print('Password: $password');
+
+            // Send the information to the backend
+            String result = await BackendUtils.loginUser(email, password);
+
+            // Resolved an aync + naviagation issue
+            // https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html
+            if (!mounted) return;
+
+            if (result == 'Login successful') {
+              // Navigate to the home page
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const HomePage()),
               );
-            },
-            child: Text(
-              "Login",
-              style: GoogleFonts.notoSerif(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-          ),
-        )
-      ],
+            } else {
+              // Show an in line error message on top of the email field
+              // Show an in line error message ontop of the email field
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Container(
+                    alignment: Alignment.topCenter,
+                    height: 15.0,
+                    child: const Center(
+                      child: Text(
+                        'Please check your credentials and try again',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 55, 55),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40.0),
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 30.0, vertical: 50),
+                ),
+              );
+            }
+          }
+        },
+      ),
     );
   }
 
+// create the forgot password button this should be the same type of hyperlink as the register button
+  Widget _buildForgotPasswordBtn() {
+    return Container(
+      alignment: Alignment.center,
+      child: TextButton(
+        // on press navigate to the forgot password page
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ForgotPasswordPage()),
+        ),
+
+        child: const Text(
+          'Forgot Password?',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+            fontFamily: 'Roboto',
+          ),
+        ),
+      ),
+    );
+  }
+
+// Create a Widget for the register button
+  Widget _buildRegisterBtn() {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const RegisterPage()),
+      ),
+      child: RichText(
+        text: const TextSpan(
+          children: [
+            TextSpan(
+              text: 'Don\'t have an Account? ',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.w400,
+              ),
+            ),
+            TextSpan(
+              text: 'Register',
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+// Create a divider to seperate the log in from the login with google
   Widget _buildOrRow() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Container(
-          margin: const EdgeInsets.only(bottom: 15),
-          child: const Text(
-            '- OR -',
+      children: const <Widget>[
+        Expanded(
+          child: Divider(
+            color: Colors.black,
+            height: 1.5,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Text(
+            'OR',
             style: TextStyle(
-              fontWeight: FontWeight.w400,
-            ),
-          ),
-        )
-      ],
-    );
-  }
-
-  Widget _buildSocialBtnRow() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        GestureDetector(
-          onTap: () {},
-          child: Container(
-            height: 60,
-            width: 60,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color.fromARGB(255, 105, 185, 187),
-              boxShadow: [
-                BoxShadow(
-                    color: Colors.black26,
-                    offset: Offset(0, 2),
-                    blurRadius: 6.0)
-              ],
-            ),
-            child: const Icon(
-              FontAwesomeIcons.google,
+              fontSize: 20,
               color: Colors.black,
+              fontWeight: FontWeight.w800,
             ),
           ),
-        )
-      ],
-    );
-  }
-
-  // This Builds the container that has the login form
-  Widget _buildContainer() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        ClipRRect(
-          // This Clips the border Radius of the Container
-          borderRadius: const BorderRadius.all(
-            Radius.circular(20),
-          ),
-
-          child: Container(
-            // This sets the attributes of the Container
-            height: MediaQuery.of(context).size.height * 0.62,
-            width: MediaQuery.of(context).size.width * 0.9,
-            decoration: const BoxDecoration(
-              color: Colors.white,
-            ),
-
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-
-              // Build each of the attributes in the login Page
-              children: <Widget>[
-                _buildEmailRow(),
-                _buildPasswordRow(),
-                _buildForgetPasswordButton(),
-                _buildLoginButton(),
-                _buildOrRow(),
-                _buildSocialBtnRow(),
-                _buildSignUpBtn(),
-              ],
-            ),
+        ),
+        Expanded(
+          child: Divider(
+            color: Colors.black,
+            height: 1.5,
           ),
         ),
       ],
     );
   }
 
-  Widget _buildSignUpBtn() {
+// build the Social Media Login Button based on the image asset
+  Widget _buildSocialBtn() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(top: 0),
-          child: TextButton(
-            onPressed: () {},
-            child: RichText(
-              text: TextSpan(children: [
-                TextSpan(
-                  text: 'Dont have an account yet? ',
-                  style: GoogleFonts.quicksand(
-                    fontSize: MediaQuery.of(context).size.height / 50,
-                    color: Colors.black,
-                  ),
+        Expanded(
+          child: GestureDetector(
+            onTap: () => {},
+            child: Container(
+              height: 60,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.all(
+                  Radius.circular(10),
                 ),
-                TextSpan(
-                  text: 'Sign Up',
-                  style: GoogleFonts.quicksand(
-                    fontSize: MediaQuery.of(context).size.height / 50,
-                    fontWeight: FontWeight.bold,
-                    color: const Color.fromARGB(255, 181, 79, 79),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    offset: Offset(0, 2),
+                    blurRadius: 6,
                   ),
-                )
-              ]),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: const <Widget>[
+                  Image(
+                    image: AssetImage('assets/logos/g-logo.png'),
+                    height: 30,
+                  ),
+                  SizedBox(
+                    width: 10,
+                  ),
+                  Text(
+                    'Log in with Google',
+                    style: TextStyle(
+                      fontFamily: 'Roboto-Medium',
+                      color: Color.fromARGB(255, 108, 108, 108),
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -339,79 +355,63 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
+    return GestureDetector(
+      onTap: () {
+        FocusScopeNode currentFocus = FocusScope.of(context);
+        if (!currentFocus.hasPrimaryFocus) {
+          currentFocus.unfocus();
+        }
+      },
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: const Color.fromARGB(255, 218, 218, 218),
-        body: Stack(
-          // This Child is the Background for the Login Page
-          children: <Widget>[
-            // create a circle in the upper right hand corner
-
-            Positioned(
-              // Upper right circle
-              top: -MediaQuery.of(context).size.height * 0.4,
-              right: -MediaQuery.of(context).size.width * 0.5,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.8,
-                width: MediaQuery.of(context).size.width * 0.8,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color.fromARGB(255, 181, 79, 79),
+        body: GestureDetector(
+          onTap: () {
+            FocusScopeNode currentFocus = FocusScope.of(context);
+            if (!currentFocus.hasPrimaryFocus) {
+              currentFocus.unfocus();
+            }
+          },
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 30),
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    _buildLogo(),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    _buildEmailField(),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    _buildPasswordField(),
+                    _buildForgotPasswordBtn(),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    _buildLoginBtn(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _buildOrRow(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _buildSocialBtn(),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    _buildRegisterBtn(),
+                  ],
                 ),
               ),
             ),
-
-            Positioned(
-              // Middle Left Circle
-              bottom: -MediaQuery.of(context).size.height * -0.4,
-              left: -MediaQuery.of(context).size.width * 0.2,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.5,
-                width: MediaQuery.of(context).size.width * 0.5,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color.fromARGB(255, 181, 79, 79),
-                ),
-              ),
-            ),
-
-            Positioned(
-              // Bottom Left Circle
-              bottom: -MediaQuery.of(context).size.height * 0.3,
-              left: -MediaQuery.of(context).size.width * 0.4,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.7,
-                width: MediaQuery.of(context).size.width * 0.9,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color.fromARGB(255, 181, 79, 79),
-                ),
-              ),
-            ),
-
-            Positioned(
-              // Middle Right Circle
-              bottom: -MediaQuery.of(context).size.height * -0.2,
-              right: -MediaQuery.of(context).size.width * 0.2,
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.5,
-                width: MediaQuery.of(context).size.width * 0.5,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color.fromARGB(255, 181, 79, 79),
-                ),
-              ),
-            ),
-
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                _buildLogo(),
-                _buildContainer(),
-              ],
-            )
-          ],
+          ),
         ),
       ),
     );
