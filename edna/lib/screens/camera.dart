@@ -78,7 +78,7 @@ class _CameraPageState extends State<CameraPage> {
               // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               // mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-                //_printScanResult(), // deprecated
+                _printScanResult(),
                 _buildScannedList(),
               ],
             ),
