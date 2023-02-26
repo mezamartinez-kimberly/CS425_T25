@@ -24,13 +24,13 @@ import 'package:edna/widgets/product_widget.dart'; // product widget
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
 
 class CameraPage extends StatefulWidget {
-  List<ProductWidget>? scannedProducts;
-  void addScannedProduct(ProductWidget product) {
-    scannedProducts ??= []; // initialize if null
-    scannedProducts?.add(product);
+  List<ProductWidget>? itemsToInsert;
+  void addItem(ProductWidget product) {
+    itemsToInsert ??= []; // initialize if null
+    itemsToInsert?.add(product);
   }
 
-  CameraPage({Key? key, this.scannedProducts}) : super(key: key);
+  CameraPage({Key? key, this.itemsToInsert}) : super(key: key);
 
   @override
   State<StatefulWidget> createState() => _CameraPageState();
@@ -40,8 +40,10 @@ class _CameraPageState extends State<CameraPage> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-
+  String? productName = '';
   bool _flashOn = false;
+
+  bool itemAdded = false;
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -75,11 +77,13 @@ class _CameraPageState extends State<CameraPage> {
             // child: FittedBox(
             //   fit: BoxFit.contain,
             // child: SingleChildScrollView(
+
             child: Column(
               // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               // mainAxisSize: MainAxisSize.min,
+
               children: <Widget>[
-                _printScanResult(),
+                _upcLookup(),
                 _buildScannedList(),
               ],
             ),
@@ -140,7 +144,7 @@ class _CameraPageState extends State<CameraPage> {
       ),
       onPressed: () {
         // insert scanned items into pantry database
-        for (ProductWidget product in widget.scannedProducts!) {
+        for (ProductWidget product in widget.itemsToInsert!) {
           PantryDatabase.instance.insert(product.pantryItem);
         }
         showDialog(
@@ -149,7 +153,7 @@ class _CameraPageState extends State<CameraPage> {
               // wait 0.5 sec
               Future.delayed(Duration(milliseconds: 500), () {
                 // clear scanned list
-                widget.scannedProducts!.clear();
+                widget.itemsToInsert!.clear();
                 // refresh page
                 refresh(); // resets state
                 // close dialog
@@ -266,26 +270,66 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
-  Future<Widget> _printScanResult() async {
-    if (result != null) {
-      String productName = '';
-      // make call based on upc
-      // store return data as pantry item
-      // create product with pantry item
+  // for debugging
+  void printYellow(String text) {
+    print('\x1B[33m$text\x1B[0m');
+  }
 
+  Future<String> name = Future.value("");
+  Function get onError => // print error message
+      (error) => printYellow("error = $error");
+
+  Future _getProductName() async {
+    return productName = await BackendUtils.getUpcData(result!.code as String);
+    // return productName =
+    // await BackendUtils.getUpcData("096619295203").catchError(onError);
+  }
+
+  _upcLookup() {
+    if (result != null) {
       if (result!.format == BarcodeFormat.ean13 ||
           result!.format == BarcodeFormat.ean8 ||
           result!.format == BarcodeFormat.upcA ||
-          result!.format == BarcodeFormat.upcE) {
-        productName = await BackendUtils.getUpcData(result!.code as String);
+          result!.format == BarcodeFormat.upcE) {}
+
+      _getProductName().then((value) => productName = value);
+
+      // when something returned for product name
+      if (productName != '') {
+        if (productName == 'UPC not found') {
+          return Text("UPC ${result!.code} not found");
+        } else {
+          if (!itemAdded) {
+            // convert upc code to int
+            int upc = int.parse(result!.code as String);
+
+            // create new pantry item with values
+            Pantry newPantryItem = Pantry(
+              name: productName as String,
+              dateAdded: DateTime.now(),
+              upc: upc,
+              isDeleted: 0,
+            );
+
+            // create product widget with new pantry item
+            ProductWidget newProductWidget = ProductWidget(
+                pantryItem: newPantryItem,
+                enableCheckbox: false,
+                // no need to refresh pantry since we're still on camera page
+                refreshPantryList: () {});
+            // add to scanned list on camera page
+            widget.addItem(newProductWidget);
+
+            itemAdded = true;
+          }
+          // refresh camera page
+          refresh();
+          return Container();
+        }
       }
-
-      if (productName == 'UPC not found') {
-        return Text("UPC ${result!.code} not found");
-      } else {
-        print(productName);
-
-        return Text("name: $productName \n code: ${result!.code}");
+      // when nothing returned for product name
+      else {
+        return const CircularProgressIndicator();
       }
     } else {
       return const Text('Scan a code');
@@ -293,13 +337,14 @@ class _CameraPageState extends State<CameraPage> {
   }
 
   _buildScannedList() {
-    return widget.scannedProducts != null
+    //return Text("product name = $productName");
+    return widget.itemsToInsert != null
         ? Expanded(
             child: ListView.builder(
               shrinkWrap: true,
-              itemCount: widget.scannedProducts?.length,
+              itemCount: widget.itemsToInsert?.length,
               itemBuilder: (context, index) {
-                return widget.scannedProducts![index];
+                return widget.itemsToInsert![index];
               },
             ),
           )
