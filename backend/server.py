@@ -122,7 +122,7 @@ def sendOTP():
 
         # check if the user is trying to reset their password or confirm their email
             #import the html file and replace the otp with the generated otp
-        with open("Email Templates/forgotPassword.html", "r") as file:
+        with open("Email Templates/forgotPassword.html", "r", encoding="utf-8") as file:
             html = file.read()
             html = html.replace("98273", str(otp))
         
@@ -310,7 +310,7 @@ def upc():
         
 
         # save data to a csv file located in the JSON Output Folder
-        with open('JSON Output/UPC.csv', 'a') as f:
+        with open('JSON Output/UPC.csv', 'a', encoding="utf-8") as f:
             writer = csv.writer(f)
             writer.writerow([upc, data])
 

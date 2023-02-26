@@ -138,7 +138,7 @@ class _EditWidgetState extends State<EditWidget> {
         decoration: const InputDecoration(
             contentPadding: EdgeInsets.all(5),
             icon: Icon(Icons.calendar_today),
-            hintText: "Enter Date"),
+            hintText: "Enter Expiration Date"),
         readOnly: true, // text cannot be modified by keyboard
         onTap: () async {
           DateTime? pickedDate = await showDatePicker(
@@ -214,7 +214,7 @@ class _EditWidgetState extends State<EditWidget> {
               refreshPantryList: () {});
 
           // add to scanned list on camera page
-          cameraPage.addScannedProduct(newProductWidget);
+          cameraPage.addItem(newProductWidget);
           // refresh camera page
           widget.refreshCameraPage!();
         }
