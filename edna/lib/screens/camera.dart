@@ -151,7 +151,7 @@ class _CameraPageState extends State<CameraPage> {
             context: context,
             builder: (context) {
               // wait 0.5 sec
-              Future.delayed(Duration(milliseconds: 500), () {
+              Future.delayed(const Duration(milliseconds: 500), () {
                 // clear scanned list
                 widget.itemsToInsert!.clear();
                 // refresh page
@@ -274,6 +274,12 @@ class _CameraPageState extends State<CameraPage> {
   void printYellow(String text) {
     print('\x1B[33m$text\x1B[0m');
   }
+  _printScanResult() async {
+    if (result != null) {
+      String productName = '';
+      // make call based on upc
+      // store return data as pantry item
+      // create product with pantry item
 
   Future<String> name = Future.value("");
   Function get onError => // print error message
