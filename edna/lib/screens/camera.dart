@@ -87,6 +87,7 @@ class _CameraPageState extends State<CameraPage> {
                 _buildScannedList(),
               ],
             ),
+
             // ),
           ),
           Padding(
@@ -322,8 +323,15 @@ class _CameraPageState extends State<CameraPage> {
 
             itemAdded = true;
           }
+
           // refresh camera page
           refresh();
+          // wait 5 seconds before user can scan another item
+          // this way item doesn't duplicate over and over
+          Future.delayed(const Duration(seconds: 5), () {
+            itemAdded = false;
+          });
+
           return Container();
         }
       }
