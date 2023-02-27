@@ -541,8 +541,8 @@ class _EditWidgetState extends State<EditWidget> {
       backgroundColor: errorBackground,
       flushbarPosition: FlushbarPosition.BOTTOM,
       flushbarStyle: FlushbarStyle.FLOATING,
-      //  margin: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50),
-      //borderRadius: BorderRadius.circular(30.0),
+      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+      borderRadius: BorderRadius.circular(30.0),
     ).show(context);
   }
 }
