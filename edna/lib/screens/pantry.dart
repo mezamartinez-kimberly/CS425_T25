@@ -31,7 +31,8 @@ class PantryPageState extends State<PantryPage> {
   List<Pantry> _activePantryItems = [];
   List<Pantry> _allPantryItems = [];
 
-  refresh() {
+  refresh() async {
+    await _loadPantryItems();
     setState(() {});
   }
 
@@ -45,40 +46,41 @@ class PantryPageState extends State<PantryPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: DefaultTabController(
-          length: 3,
-          child: Scaffold(
-            appBar: AppBar(
-              bottom: const TabBar(
-                tabs: [
-                  Tab(child: Text('Pantry')),
-                  Tab(child: Text('Fridge')),
-                  Tab(child: Text('Freezer')),
-                ],
-              ),
-              title: const Text('Shelf'),
+      debugShowCheckedModeBanner: false,
+      home: DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            bottom: const TabBar(
+              tabs: [
+                Tab(child: Text('Pantry')),
+                Tab(child: Text('Fridge')),
+                Tab(child: Text('Freezer')),
+              ],
             ),
-            body: Column(children: [
-              // make scrollable
-              _buildHeader(),
-              Expanded(
-                  child: FutureBuilder(
-                future: _loadPantryItems(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.done) {
-                    return _showDeletedItems
-                        ? _listAllItems()
-                        : _listActiveItems();
-                  } else {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                },
-              )),
-              _buildAddButton(),
-            ]),
+            title: const Text('Shelf'),
           ),
-        ));
+          body: Column(children: [
+            // make scrollable
+            _buildHeader(),
+            Expanded(
+                child: FutureBuilder(
+              future: _loadPantryItems(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return _showDeletedItems
+                      ? _listAllItems()
+                      : _listActiveItems();
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
+            )),
+            _buildAddButton(),
+          ]),
+        ),
+      ),
+    );
   }
 
   Widget _buildHeader() {
@@ -103,8 +105,12 @@ class PantryPageState extends State<PantryPage> {
                     color: Color.fromARGB(255, 139, 14, 14),
                   ),
             onPressed: () {
+              // refresh list
+              refresh();
+
               setState(() {
                 _showDeletedItems = !_showDeletedItems;
+
                 //     _showDeletedItems ? _listAllItems() : _listActiveItems();
               });
             },
@@ -152,7 +158,6 @@ class PantryPageState extends State<PantryPage> {
                     : item.isDeleted == 1
                         ? Container()
                         : SizedBox(
-                            height: item.isDeleted == 1 ? 0.0 : null,
                             child: ProductWidget(
                               pantryItem: item,
                               enableCheckbox: true,

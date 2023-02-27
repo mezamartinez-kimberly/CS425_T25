@@ -571,8 +571,10 @@ def updatePantryItem():
                 expiration.expiration_time_freezer = (expiration_date - pantry.date_added).days
         if request.json['quantity']:
             pantry.quantity = request.json['quantity']
-        if request.json['is_deleted']:
+        if request.json['is_deleted'] == 0 or request.json['is_deleted'] == 1:
             pantry.is_deleted = request.json['is_deleted']
+
+
 
         # add the changes to the pantry item/ product/ expiration if not Null/None
         if pantry != None:

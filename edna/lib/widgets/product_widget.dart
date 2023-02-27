@@ -22,8 +22,8 @@ class ProductWidget extends StatefulWidget {
 }
 
 class _ProductWidgetState extends State<ProductWidget> {
-  bool _isChecked = false;
   bool _isEditing = false;
+  bool _isChecked = false;
 
   @override
   void initState() {
@@ -155,7 +155,11 @@ class _ProductWidgetState extends State<ProductWidget> {
                       _isChecked = true;
                       widget.pantryItem.isDeleted = 1;
                       BackendUtils.updatePantryItem(widget.pantryItem);
-                      widget.refreshPantryList!();
+
+                      // wait 0.4 sec before deleting on page
+                      Future.delayed(const Duration(milliseconds: 400), () {
+                        widget.refreshPantryList!();
+                      });
                     });
                   },
           )
