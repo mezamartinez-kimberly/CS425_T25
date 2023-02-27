@@ -12,8 +12,8 @@ class Pantry {
   DateTime? dateRemoved;
   DateTime? expirationDate;
   int? quantity;
-  int? upc;
-  int? plu;
+  String? upc;
+  String? plu;
   int? storageLocation;
   int? isDeleted;
 
@@ -33,33 +33,34 @@ class Pantry {
   factory Pantry.fromMap(Map<String, dynamic> json) => Pantry(
       id: json["id"],
       name: json["name"],
-      dateAdded:
-          json["dateAdded"] == null ? null : DateTime.parse(json["dateAdded"]),
-      dateRemoved: json["dateRemoved"] == null
+      dateAdded: json["date_added"] == null
           ? null
-          : DateTime.parse(json["dateRemoved"]),
-      expirationDate: json["expirationDate"] == null
+          : DateTime.parse(json["date_added"]),
+      dateRemoved: json["date_removed"] == null
           ? null
-          : DateTime.parse(json["expirationDate"]),
+          : DateTime.parse(json["date_removed"]),
+      expirationDate: json["expiration_date"] == null
+          ? null
+          : DateTime.parse(json["expiration_date"]),
       quantity: json["quantity"],
       upc: json["upc"],
       plu: json["plu"],
-      storageLocation: json["storageLocation"],
-      isDeleted: json["isDeleted"]);
+      storageLocation: json["location"],
+      isDeleted: json["is_deleted"]);
 
   Map<String, dynamic> toMap() => {
         "id": id,
         "name": name,
-        "dateAdded": dateAdded == null ? null : dateAdded!.toIso8601String(),
-        "dateRemoved":
+        "date_added": dateAdded == null ? null : dateAdded!.toIso8601String(),
+        "date_removed":
             dateRemoved == null ? null : dateRemoved!.toIso8601String(),
-        "expirationDate":
+        "expiration_date":
             expirationDate == null ? null : expirationDate!.toIso8601String(),
         "quantity": quantity,
         "upc": upc,
         "plu": plu,
-        "storageLocation": storageLocation,
-        "isDeleted": isDeleted,
+        "location": storageLocation,
+        "is_deleted": isDeleted,
       };
 }
 
@@ -68,35 +69,34 @@ class PantryDatabase {
   static final PantryDatabase instance = PantryDatabase._privateConstructor();
 
   static Database? _database;
-  // init database if it doesn't exist
+// init database if it doesn't exist
   Future<Database> get database async {
     if (_database != null) return _database!;
     _database = await _initDatabase();
     return _database!;
   }
 
-  // init database
+// init database
   Future<Database> _initDatabase() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-
     String path = join(documentsDirectory.path, "pantry.db");
     return await openDatabase(path, version: 1, onCreate: _onCreate);
   }
 
-  // create database
+// create database
   Future _onCreate(Database db, int version) async {
     await db.execute('''CREATE TABLE pantry (
-      id INTEGER PRIMARY KEY,
-      name TEXT NOT NULL,
-      dateAdded TEXT,
-      dateRemoved TEXT,
-      expirationDate TEXT,
-      quantity INTEGER,
-      upc INTEGER,
-      plu INTEGER,
-      storageLocation INTEGER,
-      isDeleted INTEGER
-    )''');
+id INTEGER PRIMARY KEY,
+name TEXT NOT NULL,
+dateAdded TEXT,
+dateRemoved TEXT,
+expirationDate TEXT,
+quantity INTEGER,
+upc TEXT,
+plu TEXT,
+storageLocation INTEGER,
+isDeleted INTEGER
+)''');
   }
 
   // get all pantry items

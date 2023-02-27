@@ -404,7 +404,8 @@ class _EditWidgetState extends State<EditWidget> {
       ),
       onChanged: (value) {
         if (value != "") {
-          widget.pantryItem.upc = int.parse(value);
+          widget.pantryItem.upc =
+              value.length <= 12 ? value : widget.pantryItem.upc;
         } else {
           // if user deletes all text
           widget.pantryItem.upc = null;
@@ -412,7 +413,7 @@ class _EditWidgetState extends State<EditWidget> {
       },
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
-        FilteringTextInputFormatter.digitsOnly, // only allow nums
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), // only allow nums
         LengthLimitingTextInputFormatter(12) // 12 digits
       ],
     );
@@ -437,7 +438,8 @@ class _EditWidgetState extends State<EditWidget> {
       ),
       onChanged: (value) {
         if (value != "") {
-          widget.pantryItem.plu = int.parse(value);
+          widget.pantryItem.plu =
+              value.length <= 4 ? value : widget.pantryItem.plu;
         } else {
           // if user deletes all text
           widget.pantryItem.plu = null;
@@ -445,7 +447,7 @@ class _EditWidgetState extends State<EditWidget> {
       },
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
-        FilteringTextInputFormatter.digitsOnly, // only allow nums
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), // only allow nums
         LengthLimitingTextInputFormatter(4) // 4 digits
       ],
     );
