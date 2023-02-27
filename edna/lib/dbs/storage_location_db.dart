@@ -9,9 +9,9 @@ class StorageLocation {
   //const StorageLocation._internal(this.id, this.name);
 
   // lookup table
-  static const StorageLocation fridge = StorageLocation(1, 'fridge');
-  static const StorageLocation freezer = StorageLocation(2, 'freezer');
-  static const StorageLocation pantry = StorageLocation(3, 'pantry');
+  static const StorageLocation fridge = StorageLocation(1, 'Fridge');
+  static const StorageLocation freezer = StorageLocation(2, 'Freezer');
+  static const StorageLocation pantry = StorageLocation(3, 'Pantry');
 
   // list of all values
   static List<StorageLocation> get values => [fridge, freezer, pantry];
