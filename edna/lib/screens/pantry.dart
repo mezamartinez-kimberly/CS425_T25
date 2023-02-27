@@ -18,31 +18,20 @@ import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // pantry item widget
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
 
-main() {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  runApp(const PantryPage());
-}
-
 class PantryPage extends StatefulWidget {
+  // constructor
   const PantryPage({Key? key}) : super(key: key);
 
   @override
   PantryPageState createState() => PantryPageState();
 }
 
-int count = 0; // debugging
-
 class PantryPageState extends State<PantryPage> {
-  bool _showDeletedItems = false;
+  late bool _showDeletedItems;
   List<Pantry> _activePantryItems = [];
   List<Pantry> _allPantryItems = [];
 
   refresh() {
-    // wait 400 ms
-    // Future.delayed(const Duration(milliseconds: 400), () {
-    //   setState(() {});
-    // });
     setState(() {});
   }
 
@@ -50,6 +39,7 @@ class PantryPageState extends State<PantryPage> {
   void initState() {
     super.initState();
     _loadPantryItems();
+    _showDeletedItems = false;
   }
 
   @override
@@ -73,22 +63,22 @@ class PantryPageState extends State<PantryPage> {
               // make scrollable
               _buildHeader(),
               Expanded(
-                  child:
-                      _showDeletedItems ? _listAllItems() : _listActiveItems()),
+                  child: FutureBuilder(
+                future: _loadPantryItems(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    return _showDeletedItems
+                        ? _listAllItems()
+                        : _listActiveItems();
+                  } else {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+                },
+              )),
               _buildAddButton(),
             ]),
           ),
         ));
-
-    // home: SafeArea(
-    //     child: Scaffold(
-    //         body: Column(children: [
-    //   // _buildHeader(),
-    //   // make scrollable
-    //   Expanded(
-    //       child: _showDeletedItems ? _listAllItems() : _listActiveItems()),
-    //   _buildAddButton()
-    // ]))));
   }
 
   Widget _buildHeader() {
@@ -115,7 +105,7 @@ class PantryPageState extends State<PantryPage> {
             onPressed: () {
               setState(() {
                 _showDeletedItems = !_showDeletedItems;
-                _showDeletedItems ? _listAllItems() : _listActiveItems();
+                //     _showDeletedItems ? _listAllItems() : _listActiveItems();
               });
             },
           ),

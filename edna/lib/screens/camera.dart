@@ -164,10 +164,9 @@ class _CameraPageState extends State<CameraPage> {
       onPressed: () async {
         // insert scanned items into pantry database
         for (ProductWidget product in widget.itemsToInsert!) {
+          // add to pantry db
           String backendResult =
               await BackendUtils.addPantry(product.pantryItem);
-          // add to pantry db
-          // PantryDatabase.instance.insert(product.pantryItem);
           if (!mounted) return;
 
           // if sucess do nothing else show error with the name and allow the user to edit it
