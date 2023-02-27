@@ -123,8 +123,10 @@ class PantryPageState extends State<PantryPage> {
     );
   }
 
+  // Here we load in the pantry items from the database and store them in a list
   Future<void> _loadPantryItems() async {
     _allPantryItems = await BackendUtils.getAllPantry();
+    // this filters out the deleted items so we dont have to make a dedicated database call
     _activePantryItems =
         _allPantryItems.where((item) => item.isDeleted == 0).toList();
   }
