@@ -25,7 +25,7 @@ main() {
 }
 
 class PantryPage extends StatefulWidget {
-  const PantryPage({super.key});
+  const PantryPage({Key? key}) : super(key: key);
 
   @override
   PantryPageState createState() => PantryPageState();
@@ -35,6 +35,8 @@ int count = 0; // debugging
 
 class PantryPageState extends State<PantryPage> {
   bool _showDeletedItems = false;
+  List<Pantry> _activePantryItems = [];
+  List<Pantry> _allPantryItems = [];
 
   refresh() {
     // wait 400 ms
@@ -42,6 +44,12 @@ class PantryPageState extends State<PantryPage> {
     //   setState(() {});
     // });
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadPantryItems();
   }
 
   @override
@@ -84,79 +92,67 @@ class PantryPageState extends State<PantryPage> {
   }
 
   Widget _buildHeader() {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      const Padding(
-        padding: EdgeInsets.only(left: 20, bottom: 15, top: 15),
-        // child: Text('Pantry',
-        //   style: GoogleFonts.notoSerif(fontSize: 35, color: Colors.black)),
-      ),
-      // delete database button for debugging
-      // IconButton(
-      //   icon: const Icon(
-      //     Icons.delete_forever,
-      //     size: 40,
-      //   ),
-      //   onPressed: () {
-      //     PantryDatabase.instance.deleteDatabase();
-      //   },
-      // ),
-      // eye button
-      Padding(
-        padding: const EdgeInsets.only(right: 30),
-        child: IconButton(
-          icon: _showDeletedItems
-              ? const Icon(
-                  Icons.remove_red_eye,
-                  size: 40,
-                  color: Color.fromARGB(255, 139, 14, 14),
-                )
-              : const Icon(
-                  Icons.visibility_off,
-                  size: 40,
-                  color: Color.fromARGB(255, 139, 14, 14),
-                ),
-          onPressed: () {
-            setState(() {
-              _showDeletedItems = !_showDeletedItems;
-              _showDeletedItems ? _listAllItems() : _listActiveItems();
-            });
-          },
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Padding(
+          padding: EdgeInsets.only(left: 20, bottom: 15, top: 15),
         ),
-      ),
-    ]);
+        Padding(
+          padding: const EdgeInsets.only(right: 30),
+          child: IconButton(
+            icon: _showDeletedItems
+                ? const Icon(
+                    Icons.remove_red_eye,
+                    size: 40,
+                    color: Color.fromARGB(255, 139, 14, 14),
+                  )
+                : const Icon(
+                    Icons.visibility_off,
+                    size: 40,
+                    color: Color.fromARGB(255, 139, 14, 14),
+                  ),
+            onPressed: () {
+              setState(() {
+                _showDeletedItems = !_showDeletedItems;
+                _showDeletedItems ? _listAllItems() : _listActiveItems();
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> _loadPantryItems() async {
+    _allPantryItems = await BackendUtils.getAllPantry();
+    _activePantryItems =
+        _allPantryItems.where((item) => item.isDeleted == 0).toList();
+  }
+
+  Widget _listActiveItems() {
+    return Center(
+      child: _buildPantryList(_activePantryItems),
+    );
   }
 
   Widget _listAllItems() {
     return Center(
-      child: FutureBuilder<List<Pantry>>(
-          future: BackendUtils.getAllPantry(), builder: _buildPantryList()!),
+      child: _buildPantryList(_allPantryItems),
     );
   }
 
-  Widget _listActiveItems() {
-    return Container();
-    // return Center(
-    //   child: FutureBuilder<List<Pantry>>(
-    //       future: PantryDatabase.instance.getActivePantry(),
-    //       builder: _buildPantryList()!),
-    // );
-  }
-
-  _buildPantryList() {
-    return (BuildContext context, AsyncSnapshot<List<Pantry>> snapshot) {
-      if (!snapshot.hasData) {
-        return const CircularProgressIndicator();
-      }
-      return snapshot.data!.isEmpty
-          ? const Center(
-              child: Text('No items in pantry', style: TextStyle(fontSize: 20)))
-          : ListView.builder(
-              shrinkWrap: true, // fix sizing
-              itemCount: snapshot.data!.length,
+  Widget _buildPantryList(List<Pantry> pantryItems) {
+    return pantryItems.isEmpty
+        ? const Center(
+            child: Text('No items in pantry', style: TextStyle(fontSize: 20)))
+        : Align(
+            alignment: Alignment.topCenter,
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: pantryItems.length,
               itemBuilder: (BuildContext context, int index) {
-                // instantiate new item
-                Pantry item = snapshot.data![index];
-                // return widget containing item
+                Pantry item = pantryItems[index];
                 return _showDeletedItems
                     ? ProductWidget(
                         pantryItem: item,
@@ -164,15 +160,18 @@ class PantryPageState extends State<PantryPage> {
                         refreshPantryList: refresh,
                       )
                     : item.isDeleted == 1
-                        ? Container() // return dialog box instead ?
-                        : ProductWidget(
-                            pantryItem: item,
-                            enableCheckbox: true,
-                            refreshPantryList: refresh,
+                        ? Container()
+                        : SizedBox(
+                            height: item.isDeleted == 1 ? 0.0 : null,
+                            child: ProductWidget(
+                              pantryItem: item,
+                              enableCheckbox: true,
+                              refreshPantryList: refresh,
+                            ),
                           );
               },
-            );
-    };
+            ),
+          );
   }
 
   Widget _buildAddButton() {
