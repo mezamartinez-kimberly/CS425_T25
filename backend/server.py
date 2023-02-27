@@ -535,9 +535,16 @@ def updatePantryItem():
         if request.json['name']:
             product.name = request.json['name']
         if request.json['date_added']:
-            pantry.date_added = request.json['date_added']
+
+            # convert the date ISO8601 format to a datetime object
+            date_added = datetime.strptime(request.json['date_added'], '%Y-%m-%dT%H:%M:%S.%f')
+
+            pantry.date_added = date_added
         if request.json['date_removed']:
-            pantry.date_removed = request.json['date_removed']
+            # convert the date ISO8601 format to a datetime object
+            date_removed = datetime.strptime(request.json['date_removed'], '%Y-%m-%dT%H:%M:%S.%f')
+
+            pantry.date_removed = date_removed
         if request.json['location']:
             if request.json['location'] == '1':
                 location = "pantry"
@@ -552,24 +559,33 @@ def updatePantryItem():
         if request.json['plu']:
             product.plu = request.json['plu']
         if request.json['expiration_date']:
+            
+            # convert the date ISO8601 format to a datetime object
+            expiration_date = datetime.strptime(request.json['expiration_date'], '%Y-%m-%dT%H:%M:%S.%f')
+    
             if location == 'pantry':
                 # calculate the difference between date adeed and expiration date
-                expiration.expiration_time_pantry = (request.json['expiration_date'] - pantry.date_added).days
+                expiration.expiration_time_pantry = (expiration_date - pantry.date_added).days
             elif location == 'fridge':
                 # calculate the difference between date adeed and expiration date
-                expiration.expiration_time_fridge = (request.json['expiration_date'] - pantry.date_added).days
+                expiration.expiration_time_fridge = (expiration_date - pantry.date_added).days
             elif location == 'freezer':
                 # calculate the difference between date adeed and expiration date
-                expiration.expiration_time_freezer = (request.json['expiration_date'] - pantry.date_added).days
+                expiration.expiration_time_freezer = (expiration_date - pantry.date_added).days
         if request.json['quantity']:
             pantry.quantity = request.json['quantity']
         if request.json['is_deleted']:
             pantry.is_deleted = request.json['is_deleted']
 
-        # commit the changes to the pantry item/ product/ expiration
-        db.session.add(pantry)
-        db.session.add(product)
-        db.session.add(expiration)
+        # add the changes to the pantry item/ product/ expiration if not Null/None
+        if pantry != None:
+            db.session.add(pantry)
+        if product != None:
+            db.session.add(product)
+        if expiration != None:
+            db.session.add(expiration)
+
+        # commit the changes to the database
         db.session.commit()
 
         return jsonify({'message': 'Pantry item updated successfully'}), 201
