@@ -10,6 +10,7 @@
 * https://api.flutter.dev/flutter/widgets/ListView-class.html
 */
 
+import 'package:edna/backend_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart';
 import 'package:google_fonts/google_fonts.dart'; // fonts
@@ -127,8 +128,7 @@ class PantryPageState extends State<PantryPage> {
   Widget _listAllItems() {
     return Center(
       child: FutureBuilder<List<Pantry>>(
-          future: PantryDatabase.instance.getAllPantry(),
-          builder: _buildPantryList()!),
+          future: BackendUtils.getAllPantry(), builder: _buildPantryList()!),
     );
   }
 

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:edna/dbs/pantry_db.dart';
 import 'package:http/http.dart' as http;
 
 class BackendUtils {
@@ -187,6 +188,78 @@ class BackendUtils {
       return "New Password cant be the same as old password";
     } else {
       return "Email not registered";
+    }
+  }
+
+// // Create a upc get function to get the upc data
+  static Future<String> addPantry(Pantry pantryItem) async {
+    const String apiUrl = 'http://10.0.2.2:5000/addPantry';
+
+    // create a map called "message" that contains the data to be sent to the backend
+    final Map<String, dynamic> message = {
+      'name': pantryItem.name,
+      'date_added': pantryItem.dateAdded.toString(),
+      'upc': pantryItem.upc,
+      'plu': pantryItem.plu,
+      'quantity': pantryItem.quantity,
+      'location': pantryItem.storageLocation,
+      'is_delte': pantryItem.isDeleted,
+    };
+
+    // convert the map to a JSON string
+    final String jsonPayload = json.encode(message);
+
+    // send the request to the backend as POST request
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': "Bearer $sessionToken",
+        'Content-Type': 'application/json',
+      },
+      body: jsonPayload,
+    );
+
+    if (response.statusCode == 200) {
+      return "Item added to pantry";
+    } else {
+      return "Item not added to pantry";
+    }
+  }
+
+  static Future<List<Pantry>> getAllPantry() async {
+    const String apiUrl = 'http://10.0.2.2:5000/getAllPantry';
+
+    // create a get request to the backend with the auth header
+    final http.Response response = await http.get(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': "Bearer $sessionToken",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      // grab the body of the response and convert it to a list of maps
+      final List<dynamic> responseBody = json.decode(response.body);
+
+      //define a list of pantry items
+      List<Pantry> pantryList = [];
+
+      // loop through the list of maps and convert each map to a pantry item
+      for (var item in responseBody) {
+        // create a pantry item from the map
+        Pantry pantryItem = Pantry.fromMap(item);
+
+        // print the enitre contents of the pantry item
+        print(pantryItem.name);
+
+        // add the pantry item to the list
+        pantryList.add(pantryItem);
+      }
+      // return the list of pantry items
+      return pantryList;
+    } else {
+      // Registration failed
+      return [];
     }
   }
 }

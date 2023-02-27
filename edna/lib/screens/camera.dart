@@ -23,6 +23,7 @@ import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // product widget
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
 
+// ignore: must_be_immutable
 class CameraPage extends StatefulWidget {
   List<ProductWidget>? itemsToInsert;
   void addItem(ProductWidget product) {
@@ -143,27 +144,37 @@ class _CameraPageState extends State<CameraPage> {
           borderRadius: BorderRadius.circular(18.0),
         ),
       ),
-      onPressed: () {
+      onPressed: () async {
         // insert scanned items into pantry database
         for (ProductWidget product in widget.itemsToInsert!) {
-          PantryDatabase.instance.insert(product.pantryItem);
+          String backendResult =
+              await BackendUtils.addPantry(product.pantryItem);
+          // add to pantry db
+          // PantryDatabase.instance.insert(product.pantryItem);
+          if (!mounted) return;
+
+          // if sucess do nothing else show error with the name and allow the user to edit it
+          if (backendResult != "Item added to pantry") {
+            // show edit widget
+            // showDialog(
+            //     context: context,
+            //     builder: (context) {
+            //       return EditWidget(
+            //         pantryItem: product.pantryItem,
+            //         callingWidget: widget,
+            //         updateProductWidget: () {},
+            //         refreshPantryList: () {},
+            //         refreshCameraPage: refresh,
+            //       );
+            //     });
+          } else {
+            // if sucess show a snackbar
+            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+              content: Text("Item added to pantry"),
+              duration: Duration(seconds: 2),
+            ));
+          }
         }
-        showDialog(
-            context: context,
-            builder: (context) {
-              // wait 0.5 sec
-              Future.delayed(const Duration(milliseconds: 500), () {
-                // clear scanned list
-                widget.itemsToInsert!.clear();
-                // refresh page
-                refresh(); // resets state
-                // close dialog
-                Navigator.of(context).pop(true);
-              });
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            });
       },
       icon: const Icon(Icons.check),
       label: const Text(
@@ -301,14 +312,11 @@ class _CameraPageState extends State<CameraPage> {
           return Text("UPC ${result!.code} not found");
         } else {
           if (!itemAdded) {
-            // convert upc code to int
-            int upc = int.parse(result!.code as String);
-
             // create new pantry item with values
             Pantry newPantryItem = Pantry(
               name: productName as String,
               dateAdded: DateTime.now(),
-              upc: upc,
+              upc: result!.code as String,
               isDeleted: 0,
             );
 

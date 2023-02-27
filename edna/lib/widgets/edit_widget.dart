@@ -347,7 +347,8 @@ class _EditWidgetState extends State<EditWidget> {
       initialValue: initValue,
       onChanged: (value) {
         if (value != "") {
-          widget.pantryItem.upc = int.parse(value);
+          widget.pantryItem.upc =
+              value.length <= 12 ? value : widget.pantryItem.upc;
         } else {
           // if user deletes all text
           widget.pantryItem.upc = null;
@@ -361,7 +362,7 @@ class _EditWidgetState extends State<EditWidget> {
           hintText: widget.pantryItem.upc == null ? "Enter UPC Code" : ""),
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
-        FilteringTextInputFormatter.digitsOnly, // only allow nums
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), // only allow nums
         LengthLimitingTextInputFormatter(12) // 12 digits
       ],
     );
@@ -376,7 +377,8 @@ class _EditWidgetState extends State<EditWidget> {
       initialValue: initValue,
       onChanged: (value) {
         if (value != "") {
-          widget.pantryItem.plu = int.parse(value);
+          widget.pantryItem.plu =
+              value.length <= 4 ? value : widget.pantryItem.plu;
         } else {
           // if user deletes all text
           widget.pantryItem.plu = null;
@@ -387,10 +389,10 @@ class _EditWidgetState extends State<EditWidget> {
       decoration: InputDecoration(
           contentPadding: const EdgeInsets.all(0),
           // only show hint text if upc null
-          hintText: widget.pantryItem.upc == null ? "Enter PLU Code" : ""),
+          hintText: widget.pantryItem.plu == null ? "Enter PLU Code" : ""),
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
-        FilteringTextInputFormatter.digitsOnly, // only allow nums
+        FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), // only allow nums
         LengthLimitingTextInputFormatter(4) // 4 digits
       ],
     );

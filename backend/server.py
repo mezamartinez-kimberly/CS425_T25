@@ -29,6 +29,8 @@ from urllib.error import HTTPError, URLError
 import json
 import csv
 
+from datetime import datetime # for date formatting
+
 # create Json Web Token (JWT) for authentication
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import get_jwt_identity
@@ -199,10 +201,10 @@ def resetPassword():
 
 # create a quick debug route that will delete all info from all tables
 @app.route('/delete_all', methods=['DELETE'])
-def delete_all():
-    db.session.query(User).delete()
-    db.session.query(UserPreference).delete()
-    db.session.query(Person).delete()
+def deleteAll():
+    # deltet the pantry table
+    Pantry.query.delete()
+
     db.session.commit()
     return jsonify({'message': 'All tables have been cleared'}), 200
 
@@ -295,48 +297,193 @@ def login():
 # create a route that will query the upc API and return the data
 @app.route('/upc', methods=['POST'])
 # @jwt_required() # authentication Required
-def upc():
-    try:
+def upc(parameterUPC=None):
+
+    if parameterUPC is None:
+        # if we are using it as a route, we will get the upc from the json input
         upc = request.json['upc']
-        api_key = 'd20cfa73c6e8943592d96091a7469ccad33c7b60d59ab8a7923d0adc573bf5d8'
+    else:
+        # if we are using it as a function, we will get the upc from the parameter
+        upc = parameterUPC
 
-        req = Request('https://go-upc.com/api/v1/code/' + upc)
-        req.add_header('Authorization', 'Bearer ' + api_key)
+    # check to see if the upc is already in the database
+    product = Product.query.filter_by(upc=upc).first()
 
-        content = urlopen(req).read()
-        data = json.loads(content.decode())
+    if product is None:
+        # if the product is not in the database, query the API
+        try:
+            api_key = 'd20cfa73c6e8943592d96091a7469ccad33c7b60d59ab8a7923d0adc573bf5d8'
 
-        product_name = data["product"]["name"]
+            req = Request('https://go-upc.com/api/v1/code/' + upc)
+            req.add_header('Authorization', 'Bearer ' + api_key)
+
+            content = urlopen(req).read()
+            data = json.loads(content.decode())
+
+            product_name = data["product"]["name"]
+            
+
+            # save data to a csv file located in the JSON Output Folder
+            with open('JSON Output/UPC.csv', 'a', encoding="utf-8") as f:
+                writer = csv.writer(f)
+                writer.writerow([upc, data])
+
+            # search to see if the product is already in the database
+            product = Product.query.filter_by(upc=upc).first()
+
         
-
-        # save data to a csv file located in the JSON Output Folder
-        with open('JSON Output/UPC.csv', 'a', encoding="utf-8") as f:
-            writer = csv.writer(f)
-            writer.writerow([upc, data])
-
-
-        product = Product(upc=upc, name=product_name, logical_delete=0, plu=None)
-        db.session.add(product)
-        db.session.commit()
-
-        print(product_name)
-
+        # All the possible errors:
+        except HTTPError as e:
+            print(e)
+            return jsonify({'error': f'HTTP error: {e.code} {e.reason}'}), 500
+        except URLError as e:
+            print(e)
+            return jsonify({'error': f'URL error: {e.reason}'}), 500
+        except (KeyError, TypeError) as e:
+            print(e)
+            return jsonify({'error': 'Invalid UPC code or API response'}), 400
+        except Exception as e:
+            print(e)
+            return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
+    else:
+        # if the product is in the database, return the name
+        product_name = product.name
         return jsonify({'message': 'UPC API call successful', 'name': product_name}), 200
     
-    # All the possible errors:
-    except HTTPError as e:
-        print(e)
-        return jsonify({'error': f'HTTP error: {e.code} {e.reason}'}), 500
-    except URLError as e:
-        print(e)
-        return jsonify({'error': f'URL error: {e.reason}'}), 500
-    except (KeyError, TypeError) as e:
-        print(e)
-        return jsonify({'error': 'Invalid UPC code or API response'}), 400
-    except Exception as e:
-        print(e)
-        return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
 
-# @app.route('/addpantry', methods=['POST'])
-# @jwt_required() # authentication Required
-# def upc():
+@app.route('/addPantry', methods=['POST'])
+@jwt_required() # authentication Required
+def addPantry():
+    # expected input:
+    # {
+    #     "name": "Apple",
+    #     "date_added": "2020-01-01",
+    #     "location": "pantry",
+    #     "upc": "123456789012",
+    #     "plu": "1",
+    #    "quantity": "1"
+    # }
+
+    name = request.json['name']
+    date_added = request.json['date_added']
+    location = request.json['location']
+    parameterUPC = request.json['upc']
+    parameterUPC = str(parameterUPC)
+    plu = request.json['plu']
+    quantity = request.json['quantity']
+
+    # print the type and content of each variable
+
+    # get the session token from the authorization html header
+    session_token = request.headers.get('Authorization').split()[1]
+    # get the user id from the session token
+    user_id = User.query.filter_by(session_token=session_token).first().id
+    
+    # Seach for the UPC or PLU in the database, depending on which one is not null, to get the product id
+    # if on search there is no upc found then we will add the product to the database via the upc api
+    if parameterUPC:
+
+        print(parameterUPC)
+
+        # query the product table to see if a product with the upc exists, if yes get the product id ONLLY of the first match
+        product = Product.query.filter_by(upc=parameterUPC).first()
+
+        if not product:
+            # call the upc route function
+            product = Product.query.filter_by(upc=parameterUPC).first()
+
+    elif plu:
+        product = Product.query.filter_by(plu=plu).first()
+        if not product:
+            return jsonify({'error': 'PLU not found'}), 404
+    else:
+        return jsonify({'error': 'No UPC or PLU provided'}), 400
+
+    
+    # convert the date_added string to a datetime object
+    date_added = datetime.strptime(date_added, '%Y-%m-%d %H:%M:%S.%f')
+
+    print(product)
+
+    # ok so by here we have the plu or upc and the product id, as well as the date created
+    # now we need to add the product to the pantry
+    pantry = Pantry(user_id=user_id,
+                    product_id=product.id,
+                    date_added=date_added,
+                    date_removed=None,
+                    # if the location is not provided, we will default it to pantry
+                    location=location if location else 'pantry',
+                    quantity=quantity,
+                    is_deleted=False)
+    
+    db.session.add(pantry)
+    db.session.commit()
+
+    return jsonify({'message': 'Pantry item added successfully'}), 201
+
+@app.route('/getAllPantry', methods=['GET'])
+@jwt_required() # authentication Required
+def getAllPantry():
+    # get the session token from the authorization html header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user id from the session token
+    user_id = User.query.filter_by(session_token=session_token).first().id
+
+    # get all the pantry items for the user
+    pantry = Pantry.query.filter_by(user_id=user_id).all()
+
+    # check to see if the user has any pantry items
+    if not pantry:
+        return jsonify({'error': 'No pantry items found'}), 401
+    else:
+        # create a list of pantry items
+        pantry_list = []
+
+        # loop through each pantry item
+        for item in pantry:
+            # get the product details
+            product = Product.query.filter_by(id=item.product_id).first()
+
+            # search the expiration table for the product for the product id
+            expiration = ExpirationData.query.filter_by(product_id=item.product_id).first()
+
+            if expiration != None:
+                # where is the food stored?
+                if item.location == 'pantry' and expiration.expiration_time_pantry != None:
+                    expiration_date = item.date_added + datetime(days=expiration.expiration_time_pantry)
+                elif item.location == 'fridge' and expiration.expiration_time_fridge != None:
+                    expiration_date = item.date_added + datetime(days=expiration.expiration_time_fridge)
+                elif item.location == 'freezer' and expiration.expiration_time_freezer != None:
+                    expiration_date = item.date_added + datetime(days=expiration.expiration_time_freezer)
+            else:
+                expiration_date = None
+
+
+            if item.location == 'pantry':
+                location = 1
+            elif item.location == 'fridge':
+                location = 2
+            elif item.location == 'freezer':
+                location = 3
+            else:
+                location = 0
+    
+            # create a dictionary of the pantry item details
+            pantry_item = {
+                'id': item.id,
+                'name': product.name,
+                # if none type then return null
+                'date_added': item.date_added.isoformat() if item.date_added else None,
+                'date_removed': item.date_removed.isoformat() if item.date_removed else None,
+                'location': location,
+                'quantity': item.quantity,
+                'expiration_date': expiration_date.isoformat() if expiration_date else None,
+                'is_deleted': int(item.is_deleted)
+            }
+
+            # add the dictionary to the list
+            pantry_list.append(pantry_item)
+
+        # return the list of pantry items
+        return jsonify(pantry_list), 200
