@@ -38,9 +38,10 @@ class PantryPageState extends State<PantryPage> {
 
   refresh() {
     // wait 400 ms
-    Future.delayed(const Duration(milliseconds: 400), () {
-      setState(() {});
-    });
+    // Future.delayed(const Duration(milliseconds: 400), () {
+    //   setState(() {});
+    // });
+    setState(() {});
   }
 
   @override
@@ -84,8 +85,8 @@ class PantryPageState extends State<PantryPage> {
 
   Widget _buildHeader() {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Padding(
-        padding: const EdgeInsets.only(left: 20, bottom: 15, top: 15),
+      const Padding(
+        padding: EdgeInsets.only(left: 20, bottom: 15, top: 15),
         // child: Text('Pantry',
         //   style: GoogleFonts.notoSerif(fontSize: 35, color: Colors.black)),
       ),
@@ -133,11 +134,12 @@ class PantryPageState extends State<PantryPage> {
   }
 
   Widget _listActiveItems() {
-    return Center(
-      child: FutureBuilder<List<Pantry>>(
-          future: PantryDatabase.instance.getActivePantry(),
-          builder: _buildPantryList()!),
-    );
+    return Container();
+    // return Center(
+    //   child: FutureBuilder<List<Pantry>>(
+    //       future: PantryDatabase.instance.getActivePantry(),
+    //       builder: _buildPantryList()!),
+    // );
   }
 
   _buildPantryList() {
@@ -190,18 +192,9 @@ class PantryPageState extends State<PantryPage> {
                   ),
                   updateProductWidget: () {},
                   refreshPantryList: refresh,
+                  callingWidget: widget,
                 );
               });
-          // count++; // debugging
-          // await PantryDatabase.instance.insert(
-          //   Pantry(
-          //     name: "#$count",
-          //     dateAdded: DateTime.now(),
-          //     isDeleted: 0,
-          //   ),
-          // );
-          // // refresh list
-          // setState(() {});
         },
         elevation: 2.0,
         child: const Icon(

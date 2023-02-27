@@ -7,6 +7,7 @@
 
 // ignore_for_file: avoid_print
 
+import 'package:edna/backend_utils.dart';
 import 'package:edna/dbs/pantry_db.dart';
 import 'package:edna/dbs/storage_location_db.dart';
 import 'package:edna/screens/all.dart';
@@ -49,7 +50,7 @@ class _EditWidgetState extends State<EditWidget> {
   // for exp date
   TextEditingController dateController = TextEditingController();
 
-  Color tempPink = Color.fromARGB(255, 255, 180, 205);
+  Color tempPink = const Color.fromARGB(255, 255, 180, 205);
 
   // init state
   @override
@@ -77,39 +78,37 @@ class _EditWidgetState extends State<EditWidget> {
               return Future.value(true);
             },
             child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
               alignment: Alignment.center,
               scrollable: true,
-              content: SizedBox(
-                // height: // fit to half screen height
-                //     MediaQuery.of(context).size.height / 2,
-                width: MediaQuery.of(context).size.width,
+              content: SingleChildScrollView(
+                // padding around content in dialog
                 child: Padding(
-                  padding: const EdgeInsets.all(
-                      5.0), // spacing around content inside dialog
-                  child: SingleChildScrollView(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const SizedBox(height: 10), // spacing
-                        _buildNameField(), // name
+                  padding: const EdgeInsets.all(5.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 10), // spacing
+                      _buildNameField(), // name
 
-                        const SizedBox(height: 25), // spacing
-                        _buildDatePicker(), // date
+                      const SizedBox(height: 25), // spacing
+                      _buildDatePicker(), // date
 
-                        const SizedBox(height: 25),
-                        _buildStorageDropdown(), // storage location
+                      const SizedBox(height: 25),
+                      _buildStorageDropdown(), // storage location
 
-                        const SizedBox(height: 25),
-                        const Text("Manual Code Entry"),
-                        const SizedBox(height: 5),
-                        _buildCodeInput(), // upc/plu code
+                      const SizedBox(height: 25),
+                      const Text("Manual Code Entry"),
+                      const SizedBox(height: 5),
+                      _buildCodeInput(), // upc/plu code
 
-                        const SizedBox(height: 25),
-                        const Text("Quantity"),
-                        _buildQuantityPicker(), // quantity
-                      ],
-                    ),
+                      const SizedBox(height: 25),
+                      const Text("Quantity"),
+                      _buildQuantityPicker(), // quantity
+                    ],
                   ),
                 ),
               ),
@@ -248,7 +247,8 @@ class _EditWidgetState extends State<EditWidget> {
 
         // if user is creating widget on pantry page, add product to pantry
         else if (widget.callingWidget.runtimeType == PantryPage) {
-          await PantryDatabase.instance.insert(
+          // add to pantry
+          await BackendUtils.addPantry(
             Pantry(
               name: widget.pantryItem.name,
               expirationDate: widget.pantryItem.expirationDate,
@@ -259,13 +259,16 @@ class _EditWidgetState extends State<EditWidget> {
               isDeleted: 0,
             ),
           );
-          setState(() {}); // refresh list
+          // refresh pantry list
+          widget.refreshPantryList!();
         }
+
         // else, user is editing a product widget, so update existing
         else if (widget.callingWidget.runtimeType == ProductWidget) {
           setState(() {
             // update pantry item with new values
-            PantryDatabase.instance.update(widget.pantryItem);
+            //PantryDatabase.instance.update(widget.pantryItem);
+            BackendUtils.updatePantryItem(widget.pantryItem);
             // update product widget
             widget.updateProductWidget!();
           });

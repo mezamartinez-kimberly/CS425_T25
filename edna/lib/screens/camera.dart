@@ -102,34 +102,6 @@ class _CameraPageState extends State<CameraPage> {
                         return Container();
                       }
                     }),
-                // FutureBuilder(
-                //   future: _getProductName(),
-                //   builder: (context, snapshot) {
-                //     if (snapshot.hasData) {
-                //       // _buildItemList();
-                //       return ListView.builder(
-                //         shrinkWrap: true, // prevents overflow
-                //         itemCount: widget.itemsToInsert?.length,
-                //         itemBuilder: (context, index) {
-                //           return widget.itemsToInsert![index];
-                //         },
-                //       );
-                //     }
-
-                //     //   return Expanded(
-                //     //     child: ListView.builder(
-                //     //       itemCount: widget.itemsToInsert!.length,
-                //     //       itemBuilder: (context, index) {
-                //     //         return widget.itemsToInsert![index];
-                //     //       },
-                //     //     ),
-                //     //   );
-                //     else {
-                //       return Container();
-                //     }
-                //   },
-                // ),
-
                 _buildItemList(),
               ],
             ),
@@ -221,6 +193,7 @@ class _CameraPageState extends State<CameraPage> {
           }
         }
         // show loading indicator for 0.5 sec
+        // ignore: use_build_context_synchronously
         showDialog(
             context: context,
             builder: (context) {
@@ -391,13 +364,13 @@ class _CameraPageState extends State<CameraPage> {
     // itemAdded is used to prevent items from being added multiple times
     if (!itemAdded) {
       // convert upc code to int
-      int upc = int.parse(result!.code as String);
+      //  int upc = int.parse(result!.code as String);
 
       // create new pantry item with values
       Pantry newPantryItem = Pantry(
         name: productName,
         dateAdded: DateTime.now(),
-        upc: upc,
+        upc: result!.code,
         isDeleted: 0,
       );
 
