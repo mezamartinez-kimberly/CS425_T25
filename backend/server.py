@@ -381,9 +381,7 @@ def addPantry():
     
     # Seach for the UPC or PLU in the database, depending on which one is not null, to get the product id
     # if on search there is no upc found then we will add the product to the database via the upc api
-    if parameterUPC:
-
-        print(parameterUPC)
+    if parameterUPC != "None":
 
         # query the product table to see if a product with the upc exists, if yes get the product id ONLLY of the first match
         product = Product.query.filter_by(upc=parameterUPC).first()
@@ -403,7 +401,6 @@ def addPantry():
     # convert the date_added string to a datetime object
     date_added = datetime.strptime(date_added, '%Y-%m-%d %H:%M:%S.%f')
 
-    print(product)
 
     # ok so by here we have the plu or upc and the product id, as well as the date created
     # now we need to add the product to the pantry

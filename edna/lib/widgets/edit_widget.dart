@@ -5,13 +5,18 @@
 // https://stackoverflow.com/questions/70927812/flutter-textfield-should-open-when-button-is-pressed
 // https://api.flutter.dev/flutter/material/ToggleButtons-class.html
 
+// ignore_for_file: avoid_print
+
+import 'package:edna/backend_utils.dart';
 import 'package:edna/dbs/pantry_db.dart';
 import 'package:edna/dbs/storage_location_db.dart';
 import 'package:edna/screens/all.dart';
 import 'package:edna/widgets/product_widget.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart'; // material design
 import 'package:intl/intl.dart';
-import 'package:flutter/services.dart'; // input formatter
+import 'package:flutter/services.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart'; // input formatter
 
 class EditWidget extends StatefulWidget {
   @override
@@ -42,20 +47,30 @@ class _EditWidgetState extends State<EditWidget> {
   // for upc/plu input
   final List<bool> _selectedCodeType = <bool>[false, false];
   final List<Widget> codeTypes = <Widget>[const Text('UPC'), const Text('PLU')];
-
+  // for exp date
   TextEditingController dateController = TextEditingController();
+
+  Color tempPink = const Color.fromARGB(255, 255, 180, 205);
+
+  // init state
+  @override
+  void initState() {
+    super.initState();
+    // set initial values for code type
+    // if pantry item has upc/plu, show in text field
+    if (widget.pantryItem.upc != null) {
+      _selectedCodeType[0] = true;
+    } else if (widget.pantryItem.plu != null) {
+      _selectedCodeType[1] = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-        height: // fit to screen height
-            MediaQuery.of(context).size.height,
-        width: // fit to screen width
-            MediaQuery.of(context).size.width,
-        child: createNewMessage());
+    return SizedBox(child: createEditDialog());
   }
 
-  createNewMessage() {
+  createEditDialog() {
     return StatefulBuilder(
       builder: (context, setState) {
         return WillPopScope(
@@ -63,35 +78,45 @@ class _EditWidgetState extends State<EditWidget> {
               return Future.value(true);
             },
             child: AlertDialog(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              alignment: Alignment.center,
               scrollable: true,
-              content: SizedBox(
-                height: // fit to half screen height
-                    MediaQuery.of(context).size.height / 2,
-                width: MediaQuery.of(context).size.width,
-                child: SingleChildScrollView(
+              content: SingleChildScrollView(
+                // padding around content in dialog
+                child: Padding(
+                  padding: const EdgeInsets.all(5.0),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      const SizedBox(height: 10), // spacing
                       _buildNameField(), // name
-                      _buildDatePicker(), // date
-                      _buildQuantityPicker(), // quantity
-                      //  _buildStorageDropdown(), // storage location
-                      // _buildNotesField(), // notes
-                      _buildCodeInput(), // upc/plu code
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.end,
-                      //   children: [
 
-                      //   ],
-                      // )
+                      const SizedBox(height: 25), // spacing
+                      _buildDatePicker(), // date
+
+                      const SizedBox(height: 25),
+                      _buildStorageDropdown(), // storage location
+
+                      const SizedBox(height: 25),
+                      const Text("Manual Code Entry"),
+                      const SizedBox(height: 5),
+                      _buildCodeInput(), // upc/plu code
+
+                      const SizedBox(height: 25),
+                      const Text("Quantity"),
+                      _buildQuantityPicker(), // quantity
                     ],
                   ),
                 ),
               ),
               actions: [
                 _buildCancelButton(),
+                const SizedBox(), // spacing
                 _buildSaveButton(),
+                const SizedBox(),
               ],
             ));
       },
@@ -104,25 +129,26 @@ class _EditWidgetState extends State<EditWidget> {
     if (widget.pantryItem.name != "") {
       initValue = widget.pantryItem.name;
     }
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 0),
-      child: TextFormField(
-          initialValue: initValue,
-          decoration: InputDecoration(
-              contentPadding: const EdgeInsets.all(0),
-              icon: const Icon(Icons.shopping_cart),
-              // only show hint text if name null
-              hintText: widget.pantryItem.name == "" ? "Enter Name" : ""),
-          onChanged: (value) {
-            if (value != "") {
-              widget.pantryItem.name = value;
-            } else {
-              // if user deletes all text
-              widget.pantryItem.name = "";
-            }
-            setState(() {});
-          }),
-    );
+    return TextFormField(
+        initialValue: initValue,
+        decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
+          labelText: "Food Name",
+          suffixIcon: Icon(Icons.shopping_cart),
+          // icon: const Icon(Icons.shopping_cart),
+          // only show hint text if name null
+          // hintText: widget.pantryItem.name == "" ? "Enter Name" : ""
+        ),
+        onChanged: (value) {
+          if (value != "") {
+            widget.pantryItem.name = value;
+          } else {
+            // if user deletes all text
+            widget.pantryItem.name = "";
+          }
+          setState(() {});
+        });
   }
 
   Widget _buildDatePicker() {
@@ -136,8 +162,10 @@ class _EditWidgetState extends State<EditWidget> {
     return TextField(
         controller: dateController,
         decoration: const InputDecoration(
-            contentPadding: EdgeInsets.all(5),
-            icon: Icon(Icons.calendar_today),
+            border: OutlineInputBorder(),
+            contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 13),
+            labelText: "Expiration Date",
+            suffixIcon: Icon(Icons.calendar_today),
             hintText: "Enter Expiration Date"),
         readOnly: true, // text cannot be modified by keyboard
         onTap: () async {
@@ -165,9 +193,7 @@ class _EditWidgetState extends State<EditWidget> {
     return TextField(
       //controller: TextEditingController()..text = widget.notes ?? "Notes",
       decoration: const InputDecoration(
-          contentPadding: EdgeInsets.all(0),
-          icon: Icon(Icons.notes),
-          hintText: "Enter Notes"),
+          icon: Icon(Icons.notes), hintText: "Enter Notes"),
       onChanged: (value) {
         widget.notes = value;
       },
@@ -176,7 +202,8 @@ class _EditWidgetState extends State<EditWidget> {
 
   Widget _buildCancelButton() {
     return TextButton(
-      child: const Text('Cancel'),
+      child: const Text('Cancel',
+          style: TextStyle(fontSize: 20, color: Colors.black)),
       onPressed: () {
         // set is not editing
         widget.isEditing = false;
@@ -187,10 +214,9 @@ class _EditWidgetState extends State<EditWidget> {
 
   Widget _buildSaveButton() {
     return TextButton(
-      child: const Text('Save'),
+      child: const Text('Save',
+          style: TextStyle(fontSize: 20, color: Colors.black)),
       onPressed: () async {
-        widget.isEditing = false; // is not editing
-
         // if user just scanned item, add to list on camera page
         if (widget.callingWidget.runtimeType == CameraPage) {
           CameraPage cameraPage = widget.callingWidget as CameraPage;
@@ -220,8 +246,9 @@ class _EditWidgetState extends State<EditWidget> {
         }
 
         // if user is creating widget on pantry page, add product to pantry
-        if (widget.callingWidget.runtimeType == PantryPage) {
-          await PantryDatabase.instance.insert(
+        else if (widget.callingWidget.runtimeType == PantryPage) {
+          // add to pantry
+          await BackendUtils.addPantry(
             Pantry(
               name: widget.pantryItem.name,
               expirationDate: widget.pantryItem.expirationDate,
@@ -232,119 +259,152 @@ class _EditWidgetState extends State<EditWidget> {
               isDeleted: 0,
             ),
           );
-          setState(() {}); // refresh list
+          // refresh pantry list
+          widget.refreshPantryList!();
         }
+
         // else, user is editing a product widget, so update existing
-        setState(() {
-          // update pantry item with new values
-          PantryDatabase.instance.update(widget.pantryItem);
-          // update product widget
-          widget.updateProductWidget!();
-        });
+        else if (widget.callingWidget.runtimeType == ProductWidget) {
+          setState(() {
+            // update pantry item with new values
+            //PantryDatabase.instance.update(widget.pantryItem);
+            BackendUtils.updatePantryItem(widget.pantryItem);
+            // update product widget
+            widget.updateProductWidget!();
+          });
+        } else {
+          print(
+              "Error: no actions specified for calling widget ${widget.callingWidget.runtimeType}");
+        }
         // refresh pantry list
         widget.refreshPantryList!();
         // close dialog box
         Navigator.of(context).pop();
+        // no longer editing
+        widget.isEditing = false;
       },
     );
   }
 
   Widget _buildQuantityPicker() {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      // const Text("Quantity: ", style: TextStyle(fontSize: 20)),
       Card(
-        elevation: 5,
+        color: tempPink, // temp color
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(15.0),
+          borderRadius: BorderRadius.circular(20),
         ),
-        child: Row(
-          children: [
-            IconButton(
-              icon: const Icon(// minus circle outline
-                  Icons.remove_circle_rounded),
-              onPressed: () {
-                setState(() {
-                  widget.pantryItem.quantity = widget.pantryItem.quantity! - 1;
-                });
-              },
-            ),
+        child: SizedBox(
+          width: 240,
+          // height: 50,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              // decrement button
+              IconButton(
+                icon: const Icon(Icons.remove_circle_rounded),
+                onPressed: () {
+                  setState(() {
+                    if (widget.pantryItem.quantity! > 1) {
+                      // cannot have quantity = 0
+                      widget.pantryItem.quantity =
+                          widget.pantryItem.quantity! - 1;
+                    }
+                  });
+                },
+              ),
 
-            // output quantity
-            Text(widget.pantryItem.quantity.toString()),
-            // increment button
-            IconButton(
-              icon: const Icon(Icons.add_circle_rounded),
-              onPressed: () {
-                setState(() {
-                  widget.pantryItem.quantity = widget.pantryItem.quantity! + 1;
-                });
-              },
-            ),
-          ],
+              // output quantity
+              Text(widget.pantryItem.quantity.toString(),
+                  style: const TextStyle(fontSize: 20)),
+              // increment button
+              IconButton(
+                icon: const Icon(Icons.add_circle_rounded),
+                onPressed: () {
+                  setState(() {
+                    widget.pantryItem.quantity =
+                        widget.pantryItem.quantity! + 1;
+                  });
+                },
+              ),
+            ],
+          ),
         ),
       ),
     ]);
   }
 
   Widget _buildCodeInput() {
-    return Card(
-      elevation: 5,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 10.0), // distance buttons from top
-        child: Center(
-          child: Column(
-            children: [
-              SizedBox(
-                // upc and plu buttons
-                child: ToggleButtons(
-                  direction: Axis.horizontal,
-                  onPressed: (int index) {
-                    setState(() {
-                      // The button that is tapped is set to true, and the others to false.
-                      for (int i = 0; i < _selectedCodeType.length; i++) {
-                        _selectedCodeType[i] = i == index;
-                      }
-                    });
-                  },
-                  borderRadius: const BorderRadius.all(Radius.circular(8)),
-                  constraints: const BoxConstraints(
-                    // button sizes
-                    minHeight: 40.0,
-                    minWidth: 80.0,
-                  ),
-                  isSelected: _selectedCodeType,
-                  children: codeTypes,
-                ),
-              ),
-              // text field for code input
-              SizedBox(
-                // resize text field
-                height: 55,
-                width: 150,
-                child: Padding(
-                    padding: const EdgeInsets.only(
-                        bottom: 15), // distance text from bottom
-                    child: (_selectedCodeType[0]) // if upc code is selected
-                        ? _takeUPCInput()
-                        : _takePLUInput()),
-              ),
-            ],
+    Color borderColor = const Color.fromARGB(255, 34, 34, 34);
+
+    // return Card(
+    //   color: tempPink,
+    //   child: SizedBox(
+    //     width: 320,
+    //     height: 150,
+    //child:
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        SizedBox(
+          // upc and plu buttons
+          child: ToggleButtons(
+            borderColor: borderColor,
+            selectedBorderColor: borderColor,
+            textStyle: const TextStyle(
+                fontSize: 20, fontWeight: FontWeight.w400), // button text size
+            fillColor: tempPink,
+            selectedColor: const Color.fromARGB(255, 0, 0, 0), // black text
+            direction: Axis.horizontal,
+            onPressed: (int index) {
+              setState(() {
+                // The button that is tapped is set to true, and the others to false.
+                for (int i = 0; i < _selectedCodeType.length; i++) {
+                  _selectedCodeType[i] = i == index;
+                }
+              });
+            },
+            borderRadius: const BorderRadius.all(Radius.circular(5)),
+            constraints: const BoxConstraints(
+              // button sizes
+              minHeight: 45.0,
+              minWidth: 125.0,
+            ),
+            isSelected: _selectedCodeType,
+            children: codeTypes,
           ),
         ),
-      ),
+        const SizedBox(height: 10), //spacing
+        // text field for code input
+        SizedBox(
+          // resize text field
+          child: (_selectedCodeType[0]) // if upc code is selected
+              ? _takeUPCInput()
+              : _takePLUInput(),
+        ),
+      ],
+      //   ),
+      // ),
     );
   }
 
   Widget _takeUPCInput() {
-    String initValue = "";
+    TextEditingController controller = TextEditingController();
     if (widget.pantryItem.upc != null) {
-      initValue = widget.pantryItem.upc.toString();
+      controller.text = widget.pantryItem.upc.toString();
     }
-    return TextFormField(
-      initialValue: initValue,
+    return TextField(
+      style: const TextStyle(fontSize: 20),
+      textAlign: TextAlign.center,
+      controller: controller,
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        suffixIcon: Icon(CupertinoIcons.barcode_viewfinder),
+        contentPadding: EdgeInsets.all(15),
+        labelText: "UPC Code",
+        // only show hint text if upc null
+        //hintText: widget.pantryItem.upc == null ? "Enter UPC Code" : ""
+      ),
       onChanged: (value) {
         if (value != "") {
           widget.pantryItem.upc =
@@ -353,13 +413,7 @@ class _EditWidgetState extends State<EditWidget> {
           // if user deletes all text
           widget.pantryItem.upc = null;
         }
-        setState(() {});
       },
-      textAlign: TextAlign.center,
-      decoration: InputDecoration(
-          contentPadding: const EdgeInsets.all(0),
-          // only show hint text if upc null
-          hintText: widget.pantryItem.upc == null ? "Enter UPC Code" : ""),
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), // only allow nums
@@ -369,12 +423,22 @@ class _EditWidgetState extends State<EditWidget> {
   }
 
   Widget _takePLUInput() {
-    String initValue = "";
+    TextEditingController controller = TextEditingController();
     if (widget.pantryItem.plu != null) {
-      initValue = widget.pantryItem.plu.toString();
+      controller.text = widget.pantryItem.plu.toString();
     }
-    return TextFormField(
-      initialValue: initValue,
+    return TextField(
+      style: const TextStyle(fontSize: 20),
+      textAlign: TextAlign.center,
+      controller: controller,
+      decoration: const InputDecoration(
+        border: OutlineInputBorder(),
+        suffixIcon: Icon(CupertinoIcons.barcode_viewfinder),
+        contentPadding: EdgeInsets.all(15),
+        labelText: "PLU Code",
+        // only show hint text if upc null
+        // hintText: widget.pantryItem.plu == null ? "Enter PLU Code" : ""
+      ),
       onChanged: (value) {
         if (value != "") {
           widget.pantryItem.plu =
@@ -383,13 +447,7 @@ class _EditWidgetState extends State<EditWidget> {
           // if user deletes all text
           widget.pantryItem.plu = null;
         }
-        setState(() {});
       },
-      textAlign: TextAlign.center,
-      decoration: InputDecoration(
-          contentPadding: const EdgeInsets.all(0),
-          // only show hint text if upc null
-          hintText: widget.pantryItem.plu == null ? "Enter PLU Code" : ""),
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), // only allow nums
@@ -399,34 +457,49 @@ class _EditWidgetState extends State<EditWidget> {
   }
 
   Widget _buildStorageDropdown() {
-    // get storage location, if null, set to pantry
+    // get storage location, if null, set to "pantry" (default)
     int storageLocation = widget.pantryItem.storageLocation ??=
-        StorageLocation.idFromName("pantry");
+        StorageLocation.idFromName("Pantry");
+
+    // get list of storage locations as dropdown menu items
+    List<DropdownMenuItem<String>> locationsList = StorageLocation.values
+        .map<DropdownMenuItem<String>>((StorageLocation location) {
+      return DropdownMenuItem<String>(
+        value: location.name,
+        child: Text(location.name),
+      );
+    }).toList();
+
+    // find current storage location in dropdown menu list
+    DropdownMenuItem<String> dropdownValue = locationsList.firstWhere(
+        (element) =>
+            element.value == StorageLocation.nameFromId(storageLocation));
 
     // drop down displaying storage options
-    return DropdownButton<String>(
-      //  value: StorageLocation.nameFromId(storageLocation),
+    return DropdownButtonFormField<String>(
+      alignment: Alignment.center,
+      value: dropdownValue.value,
       icon: const Icon(Icons.arrow_downward),
       iconSize: 24,
-      elevation: 16,
-      style: const TextStyle(color: Colors.deepPurple),
-      underline: Container(
-        height: 2,
-        color: Colors.deepPurpleAccent,
-      ),
+      isDense: true,
+      style: const TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)),
+      //underline: Container(height: 2),
       onChanged: (String? newValue) {
         setState(() {
           widget.pantryItem.storageLocation =
               StorageLocation.idFromName(newValue!);
         });
       },
-      items: <String>['Fridge', 'Freezer', 'Pantry']
-          .map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
+      items: locationsList,
+      borderRadius: const BorderRadius.all(Radius.circular(20)),
+      decoration: const InputDecoration(
+        labelText: "Storage Location",
+        contentPadding: EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+        border: OutlineInputBorder(),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color.fromARGB(255, 0, 0, 0)),
+        ),
+      ),
     );
   }
 }

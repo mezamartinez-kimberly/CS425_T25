@@ -40,9 +40,10 @@ class PantryPageState extends State<PantryPage> {
 
   refresh() {
     // wait 400 ms
-    Future.delayed(const Duration(milliseconds: 400), () {
-      setState(() {});
-    });
+    // Future.delayed(const Duration(milliseconds: 400), () {
+    //   setState(() {});
+    // });
+    setState(() {});
   }
 
   @override
@@ -192,18 +193,9 @@ class PantryPageState extends State<PantryPage> {
                   ),
                   updateProductWidget: () {},
                   refreshPantryList: refresh,
+                  callingWidget: widget,
                 );
               });
-          // count++; // debugging
-          // await PantryDatabase.instance.insert(
-          //   Pantry(
-          //     name: "#$count",
-          //     dateAdded: DateTime.now(),
-          //     isDeleted: 0,
-          //   ),
-          // );
-          // // refresh list
-          // setState(() {});
         },
         elevation: 2.0,
         child: const Icon(
