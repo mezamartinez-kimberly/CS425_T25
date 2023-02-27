@@ -487,3 +487,93 @@ def getAllPantry():
 
         # return the list of pantry items
         return jsonify(pantry_list), 200
+
+
+# create a route to update an item in the pantry
+@app.route('/updatePantryItem', methods=['POST'])
+@jwt_required() # authentication Required
+def updatePantryItem():
+# expected input:
+# {
+#     "id": "1",
+#     "name": "Apple",
+#     "date_added": "",
+#     "date_removed": "",
+#     "expiration_date": "2020-01-01"
+#     "quantity": "1"
+#     "location": "pantry",
+#     "upc": "123456789012",
+#     "plu": "1",
+#     "expiration_date": "2020-01-01"
+#    "is_deleted": "0"
+# }
+
+
+    # get the session token from the authorization html header
+    session_token = request.headers.get('Authorization').split()[1]
+    
+    # get the user id from the session token
+    user_id = User.query.filter_by(session_token=session_token).first().id
+
+    # get the id of the pantry item to update
+    id = request.json['id']
+
+    # get the pantry item to update
+    pantry = Pantry.query.filter_by(id=id).first()
+
+    # check to see if the pantry item exists
+    if not pantry:
+        return jsonify({'error': 'Pantry item not found'}), 404
+    else:
+        # get the product details
+        product = Product.query.filter_by(id=pantry.product_id).first()
+
+        # get the expiration details
+        expiration = ExpirationData.query.filter_by(product_id=pantry.product_id).first()
+
+        # now add the new information to the pantry item/ product/ expiration if not Null/None
+        if request.json['name']:
+            product.name = request.json['name']
+        if request.json['date_added']:
+            pantry.date_added = request.json['date_added']
+        if request.json['date_removed']:
+            pantry.date_removed = request.json['date_removed']
+        if request.json['location']:
+            if request.json['location'] == '1':
+                location = "pantry"
+            elif request.json['location'] == '2':
+                location = "fridge"
+            elif request.json['location'] == '3':
+                location = "freezer"
+            else:
+                location = "pantry"
+        if request.json['upc']:
+            product.upc = request.json['upc']
+        if request.json['plu']:
+            product.plu = request.json['plu']
+        if request.json['expiration_date']:
+            if location == 'pantry':
+                # calculate the difference between date adeed and expiration date
+                expiration.expiration_time_pantry = (request.json['expiration_date'] - pantry.date_added).days
+            elif location == 'fridge':
+                # calculate the difference between date adeed and expiration date
+                expiration.expiration_time_fridge = (request.json['expiration_date'] - pantry.date_added).days
+            elif location == 'freezer':
+                # calculate the difference between date adeed and expiration date
+                expiration.expiration_time_freezer = (request.json['expiration_date'] - pantry.date_added).days
+        if request.json['quantity']:
+            pantry.quantity = request.json['quantity']
+        if request.json['is_deleted']:
+            pantry.is_deleted = request.json['is_deleted']
+
+        # commit the changes to the pantry item/ product/ expiration
+        db.session.add(pantry)
+        db.session.add(product)
+        db.session.add(expiration)
+        db.session.commit()
+
+        return jsonify({'message': 'Pantry item updated successfully'}), 201
+    
+
+        
+

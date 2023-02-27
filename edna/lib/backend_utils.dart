@@ -203,7 +203,7 @@ class BackendUtils {
       'plu': pantryItem.plu,
       'quantity': pantryItem.quantity,
       'location': pantryItem.storageLocation,
-      'is_delte': pantryItem.isDeleted,
+      'is_delete': pantryItem.isDeleted,
     };
 
     // convert the map to a JSON string
@@ -260,6 +260,32 @@ class BackendUtils {
     } else {
       // Registration failed
       return [];
+    }
+  }
+
+  static Future<String> updatePantryItem(Pantry pantryItem) async {
+    const String apiUrl = 'http://10.0.2.2:5000/updatePantryItem';
+
+    // use the pantry item to create a map
+    final Map<String, dynamic> pantryMap = pantryItem.toMap();
+
+    // convert the map to a JSON string
+    final String jsonString = json.encode(pantryMap);
+
+    // create a post request to the backend with the auth header and JSON message
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': "Bearer $sessionToken",
+        'Content-Type': 'application/json',
+      },
+      body: jsonString,
+    );
+
+    if (response.statusCode == 201) {
+      return "Pantry item updated successfully.";
+    } else {
+      return "Error updating pantry item.";
     }
   }
 }

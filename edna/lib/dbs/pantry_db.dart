@@ -51,16 +51,16 @@ class Pantry {
   Map<String, dynamic> toMap() => {
         "id": id,
         "name": name,
-        "dateAdded": dateAdded == null ? null : dateAdded!.toIso8601String(),
-        "dateRemoved":
+        "date_added": dateAdded == null ? null : dateAdded!.toIso8601String(),
+        "date_removed":
             dateRemoved == null ? null : dateRemoved!.toIso8601String(),
-        "expirationDate":
+        "expiration_date":
             expirationDate == null ? null : expirationDate!.toIso8601String(),
         "quantity": quantity,
         "upc": upc,
         "plu": plu,
-        "storageLocation": storageLocation,
-        "isDeleted": isDeleted,
+        "location": storageLocation,
+        "is_deleted": isDeleted,
       };
 }
 

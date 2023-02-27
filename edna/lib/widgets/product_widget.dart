@@ -2,6 +2,7 @@ import 'package:edna/dbs/pantry_db.dart';
 import 'package:edna/widgets/edit_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // DateFormat
+import 'package:edna/backend_utils.dart';
 
 class ProductWidget extends StatefulWidget {
   @override
@@ -141,7 +142,9 @@ class _ProductWidgetState extends State<ProductWidget> {
                     setState(() {
                       _isChecked = false;
                       widget.pantryItem.isDeleted = 0;
-                      PantryDatabase.instance.undoDelete(widget.pantryItem.id!);
+                      // refresh the pantry item in the backend
+                      BackendUtils.updatePantryItem(widget.pantryItem);
+
                       widget.refreshPantryList!();
                     });
                   }
@@ -151,7 +154,7 @@ class _ProductWidgetState extends State<ProductWidget> {
                     setState(() {
                       _isChecked = true;
                       widget.pantryItem.isDeleted = 1;
-                      PantryDatabase.instance.delete(widget.pantryItem.id!);
+                      BackendUtils.updatePantryItem(widget.pantryItem);
                       widget.refreshPantryList!();
                     });
                   },
