@@ -25,7 +25,7 @@ import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
 
 class CameraPage extends StatefulWidget {
   List<ProductWidget>? itemsToInsert;
-  void addItem(ProductWidget product) {
+  addItem(ProductWidget product) {
     itemsToInsert ??= []; // initialize if null
     itemsToInsert?.add(product);
   }
@@ -40,7 +40,7 @@ class _CameraPageState extends State<CameraPage> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
-  String? productName = '';
+  String productName = '';
   bool _flashOn = false;
 
   bool itemAdded = false;
@@ -71,25 +71,71 @@ class _CameraPageState extends State<CameraPage> {
       ),
       body: Column(
         children: <Widget>[
+          // scan area
           Expanded(flex: 1, child: _buildQrView(context)),
+          // items list
           Expanded(
             flex: 2,
-            // child: FittedBox(
-            //   fit: BoxFit.contain,
-            // child: SingleChildScrollView(
-
             child: Column(
-              // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              // mainAxisSize: MainAxisSize.min,
-
               children: <Widget>[
-                _upcLookup(),
-                _buildScannedList(),
+                FutureBuilder(
+                    // get product name from UPC code
+                    future: _getProductName(),
+                    builder: (context, snapshot) {
+                      // while not scanning, return empty container
+                      if (result == null) {
+                        return Container();
+                      }
+                      // while waiting for API call to UPC db to complete, show loading indicator
+                      if (snapshot.data == null) {
+                        return const CircularProgressIndicator();
+                      } else if (snapshot.hasError) {
+                        return Text('Error: ${snapshot.error}');
+                      } else if (snapshot.data == 'UPC not found') {
+                        return Text("UPC ${result!.code} not found");
+                      } else {
+                        // if UPC found, add product to camera page's list of items
+                        _addItemToList();
+
+                        // return empty container so return value is a widget
+                        return Container();
+                      }
+                    }),
+                // FutureBuilder(
+                //   future: _getProductName(),
+                //   builder: (context, snapshot) {
+                //     if (snapshot.hasData) {
+                //       // _buildItemList();
+                //       return ListView.builder(
+                //         shrinkWrap: true, // prevents overflow
+                //         itemCount: widget.itemsToInsert?.length,
+                //         itemBuilder: (context, index) {
+                //           return widget.itemsToInsert![index];
+                //         },
+                //       );
+                //     }
+
+                //     //   return Expanded(
+                //     //     child: ListView.builder(
+                //     //       itemCount: widget.itemsToInsert!.length,
+                //     //       itemBuilder: (context, index) {
+                //     //         return widget.itemsToInsert![index];
+                //     //       },
+                //     //     ),
+                //     //   );
+                //     else {
+                //       return Container();
+                //     }
+                //   },
+                // ),
+
+                _buildItemList(),
               ],
             ),
 
             // ),
           ),
+          // buttons
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
             child: Row(
@@ -107,7 +153,6 @@ class _CameraPageState extends State<CameraPage> {
 
   Widget _buildManualButton() {
     return ElevatedButton.icon(
-      // rounded
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18.0),
@@ -126,6 +171,7 @@ class _CameraPageState extends State<CameraPage> {
                 callingWidget: widget,
                 updateProductWidget: () {},
                 refreshPantryList: () {},
+                // on camera page, so only need refresh function for camera page
                 refreshCameraPage: refresh,
               );
             });
@@ -137,7 +183,6 @@ class _CameraPageState extends State<CameraPage> {
 
   Widget _buildSubmitButton() {
     return ElevatedButton.icon(
-      // rounded
       style: ElevatedButton.styleFrom(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(18.0),
@@ -148,11 +193,12 @@ class _CameraPageState extends State<CameraPage> {
         for (ProductWidget product in widget.itemsToInsert!) {
           PantryDatabase.instance.insert(product.pantryItem);
         }
+        // show loading indicator for 0.5 sec
         showDialog(
             context: context,
             builder: (context) {
               // wait 0.5 sec
-              Future.delayed(Duration(milliseconds: 500), () {
+              Future.delayed(const Duration(milliseconds: 500), () {
                 // clear scanned list
                 widget.itemsToInsert!.clear();
                 // refresh page
@@ -280,82 +326,85 @@ class _CameraPageState extends State<CameraPage> {
   Function get onError => // print error message
       (error) => printYellow("error = $error");
 
-  Future _getProductName() async {
-    return productName = await BackendUtils.getUpcData(result!.code as String);
-    // return productName =
-    // await BackendUtils.getUpcData("096619295203").catchError(onError);
-  }
-
-  _upcLookup() {
+  _getProductName() async {
+    // if successfully scanned
     if (result != null) {
+      // if code can be found in UPC database
       if (result!.format == BarcodeFormat.ean13 ||
           result!.format == BarcodeFormat.ean8 ||
           result!.format == BarcodeFormat.upcA ||
-          result!.format == BarcodeFormat.upcE) {}
-
-      _getProductName().then((value) => productName = value);
-
-      // when something returned for product name
-      if (productName != '') {
-        if (productName == 'UPC not found') {
-          return Text("UPC ${result!.code} not found");
-        } else {
-          if (!itemAdded) {
-            // convert upc code to int
-            int upc = int.parse(result!.code as String);
-
-            // create new pantry item with values
-            Pantry newPantryItem = Pantry(
-              name: productName as String,
-              dateAdded: DateTime.now(),
-              upc: upc,
-              isDeleted: 0,
-            );
-
-            // create product widget with new pantry item
-            ProductWidget newProductWidget = ProductWidget(
-                pantryItem: newPantryItem,
-                enableCheckbox: false,
-                // no need to refresh pantry since we're still on camera page
-                refreshPantryList: () {});
-            // add to scanned list on camera page
-            widget.addItem(newProductWidget);
-
-            itemAdded = true;
-          }
-
-          // refresh camera page
-          refresh();
-          // wait 5 seconds before user can scan another item
-          // this way item doesn't duplicate over and over
-          Future.delayed(const Duration(seconds: 5), () {
-            itemAdded = false;
-          });
-
-          return Container();
-        }
+          result!.format == BarcodeFormat.upcE) {
+        return productName =
+            await BackendUtils.getUpcData(result!.code as String);
       }
-      // when nothing returned for product name
-      else {
-        return const CircularProgressIndicator();
-      }
-    } else {
-      return const Text('Scan a code');
     }
   }
 
-  _buildScannedList() {
-    //return Text("product name = $productName");
+  _upcLookup() {
+    return FutureBuilder(
+        future: _getProductName(),
+        builder: (context, snapshot) {
+          // while waiting for API call, show loading indicator
+          if (snapshot.data == null) {
+            return const CircularProgressIndicator();
+          } else if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          } else if (snapshot.data == 'UPC not found') {
+            return Text("UPC ${result!.code} not found");
+          } else {
+            _addItemToList();
+
+            // return empty container so return value is a widget
+            return Container();
+          }
+        });
+  }
+
+  _addItemToList() {
+    // itemAdded is used to prevent items from being added multiple times
+    if (!itemAdded) {
+      // convert upc code to int
+      int upc = int.parse(result!.code as String);
+
+      // create new pantry item with values
+      Pantry newPantryItem = Pantry(
+        name: productName,
+        dateAdded: DateTime.now(),
+        upc: upc,
+        isDeleted: 0,
+      );
+
+      // create product widget with new pantry item
+      ProductWidget newProductWidget = ProductWidget(
+          pantryItem: newPantryItem,
+          enableCheckbox: false,
+          // no need to refresh pantry since we're on camera page
+          refreshPantryList: () {});
+
+      // add to camera page's list of items
+      widget.addItem(newProductWidget);
+      // toggle itemAdded so item doesn't duplicate
+      itemAdded = true;
+    } else {
+      // wait 5 seconds before user can scan another item
+      // this way item doesn't duplicate over and over
+      Future.delayed(const Duration(seconds: 5), () {
+        itemAdded = false;
+      });
+    }
+  }
+
+  _buildItemList() {
+    // if there are items to insert, return list of items
     return widget.itemsToInsert != null
         ? Expanded(
             child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: widget.itemsToInsert?.length,
-              itemBuilder: (context, index) {
-                return widget.itemsToInsert![index];
-              },
-            ),
-          )
+            shrinkWrap: true, // prevents overflow
+            itemCount: widget.itemsToInsert?.length,
+            itemBuilder: (context, index) {
+              return widget.itemsToInsert![index];
+            },
+          ))
         : Container();
   }
 }
