@@ -16,7 +16,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'; // material design
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart'; // input formatter
+import 'package:another_flushbar/flushbar.dart'; // snackbars
+import 'package:another_flushbar/flushbar_helper.dart'; // snackbars
+import 'package:another_flushbar/flushbar_route.dart'; // snackbars
 
 class EditWidget extends StatefulWidget {
   @override
@@ -74,51 +76,52 @@ class _EditWidgetState extends State<EditWidget> {
     return StatefulBuilder(
       builder: (context, setState) {
         return WillPopScope(
-            onWillPop: () {
-              return Future.value(true);
-            },
-            child: AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              alignment: Alignment.center,
-              scrollable: true,
-              content: SingleChildScrollView(
-                // padding around content in dialog
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 10), // spacing
-                      _buildNameField(), // name
+          onWillPop: () {
+            return Future.value(true);
+          },
+          child: AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            alignment: Alignment.center,
+            scrollable: true,
+            content: SingleChildScrollView(
+              // padding around content in dialog
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 10), // spacing
+                    _buildNameField(), // name
 
-                      const SizedBox(height: 25), // spacing
-                      _buildDatePicker(), // date
+                    const SizedBox(height: 25), // spacing
+                    _buildDatePicker(), // date
 
-                      const SizedBox(height: 25),
-                      _buildStorageDropdown(), // storage location
+                    const SizedBox(height: 25),
+                    _buildStorageDropdown(), // storage location
 
-                      const SizedBox(height: 25),
-                      const Text("Manual Code Entry"),
-                      const SizedBox(height: 5),
-                      _buildCodeInput(), // upc/plu code
+                    const SizedBox(height: 25),
+                    const Text("Manual Code Entry"),
+                    const SizedBox(height: 5),
+                    _buildCodeInput(), // upc/plu code
 
-                      const SizedBox(height: 25),
-                      const Text("Quantity"),
-                      _buildQuantityPicker(), // quantity
-                    ],
-                  ),
+                    const SizedBox(height: 25),
+                    const Text("Quantity"),
+                    _buildQuantityPicker(), // quantity
+                  ],
                 ),
               ),
-              actions: [
-                _buildCancelButton(),
-                const SizedBox(), // spacing
-                _buildSaveButton(),
-                const SizedBox(),
-              ],
-            ));
+            ),
+            actions: [
+              _buildCancelButton(),
+              const SizedBox(), // spacing
+              _buildSaveButton(),
+              const SizedBox(),
+            ],
+          ),
+        );
       },
     );
   }
@@ -217,6 +220,26 @@ class _EditWidgetState extends State<EditWidget> {
       child: const Text('Save',
           style: TextStyle(fontSize: 20, color: Colors.black)),
       onPressed: () async {
+        // if no upc/plu code, show error
+        if (widget.pantryItem.upc == null && widget.pantryItem.plu == null) {
+          createErrorMessage("Please enter a code.");
+          return;
+        }
+
+        // if upc is not 12 digits, show error
+        if (widget.pantryItem.upc != null &&
+            widget.pantryItem.upc!.length != 12) {
+          createErrorMessage("UPC code must be 12 digits.");
+          return;
+        }
+
+        // if plu is not 4 digits, show error
+        if (widget.pantryItem.plu != null &&
+            widget.pantryItem.plu!.length != 4) {
+          createErrorMessage("PLU code must be 4 digits.");
+          return;
+        }
+
         // if user just scanned item, add to list on camera page
         if (widget.callingWidget.runtimeType == CameraPage) {
           CameraPage cameraPage = widget.callingWidget as CameraPage;
@@ -501,5 +524,25 @@ class _EditWidgetState extends State<EditWidget> {
         ),
       ),
     );
+  }
+
+  createErrorMessage(errorMsg) {
+    var errorText = const Color.fromARGB(255, 88, 15, 15);
+    var errorBackground = const Color.fromARGB(255, 238, 37, 37);
+
+    Flushbar(
+      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+      message: errorMsg,
+      messageSize: 25,
+      messageColor: Theme.of(context).brightness == Brightness.dark
+          ? Colors.white
+          : errorText,
+      duration: const Duration(seconds: 3),
+      backgroundColor: errorBackground,
+      flushbarPosition: FlushbarPosition.BOTTOM,
+      flushbarStyle: FlushbarStyle.FLOATING,
+      //  margin: const EdgeInsets.symmetric(horizontal: 30.0, vertical: 50),
+      //borderRadius: BorderRadius.circular(30.0),
+    ).show(context);
   }
 }

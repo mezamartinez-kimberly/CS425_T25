@@ -163,52 +163,57 @@ class _CameraPageState extends State<CameraPage> {
       ),
       onPressed: () async {
         // insert scanned items into pantry database
-        for (ProductWidget product in widget.itemsToInsert!) {
-          // add to pantry db
-          String backendResult =
-              await BackendUtils.addPantry(product.pantryItem);
-          if (!mounted) return;
+        if (widget.itemsToInsert != null) {
+          for (ProductWidget product in widget.itemsToInsert!) {
+            // add to pantry db
+            String backendResult =
+                await BackendUtils.addPantry(product.pantryItem);
 
-          // if sucess do nothing else show error with the name and allow the user to edit it
-          if (backendResult != "Item added to pantry") {
-            // show edit widget
-            // showDialog(
-            //     context: context,
-            //     builder: (context) {
-            //       return EditWidget(
-            //         pantryItem: product.pantryItem,
-            //         callingWidget: widget,
-            //         updateProductWidget: () {},
-            //         refreshPantryList: () {},
-            //         refreshCameraPage: refresh,
-            //       );
-            //     });
-          } else {
-            // if sucess show a snackbar
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-              content: Text("Item added to pantry"),
-              duration: Duration(seconds: 2),
-            ));
+            if (!mounted) return;
+
+            print(backendResult);
+
+            // if sucess do nothing else show error with the name and allow the user to edit it
+            if (backendResult != "Item added to pantry") {
+              // show edit widget
+              // showDialog(
+              //     context: context,
+              //     builder: (context) {
+              //       return EditWidget(
+              //         pantryItem: product.pantryItem,
+              //         callingWidget: widget,
+              //         updateProductWidget: () {},
+              //         refreshPantryList: () {},
+              //         refreshCameraPage: refresh,
+              //       );
+              //     });
+            } else {
+              // if success show a snackbar
+              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                content: Text("Item added to pantry"),
+                duration: Duration(seconds: 2),
+              ));
+            }
           }
-        }
-        // show loading indicator for 0.5 sec
-        // ignore: use_build_context_synchronously
-        showDialog(
-            context: context,
-            builder: (context) {
-              // wait 0.5 sec
-              Future.delayed(const Duration(milliseconds: 500), () {
-                // clear scanned list
-                widget.itemsToInsert!.clear();
-                // refresh page
-                refresh(); // resets state
-                // close dialog
-                Navigator.of(context).pop(true);
+          // show loading indicator for 0.5 sec
+          // ignore: use_build_context_synchronously
+          showDialog(
+              context: context,
+              builder: (context) {
+                // wait 0.5 sec
+                Future.delayed(const Duration(milliseconds: 500), () {
+                  // clear scanned list
+                  widget.itemsToInsert!.clear();
+                  // refresh page
+                  refresh(); // resets state
+                  // close dialog
+                  Navigator.of(context).pop(true);
+                });
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               });
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            });
+        }
       },
       icon: const Icon(Icons.check),
       label: const Text(
@@ -337,26 +342,6 @@ class _CameraPageState extends State<CameraPage> {
             await BackendUtils.getUpcData(result!.code as String);
       }
     }
-  }
-
-  _upcLookup() {
-    return FutureBuilder(
-        future: _getProductName(),
-        builder: (context, snapshot) {
-          // while waiting for API call, show loading indicator
-          if (snapshot.data == null) {
-            return const CircularProgressIndicator();
-          } else if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          } else if (snapshot.data == 'UPC not found') {
-            return Text("UPC ${result!.code} not found");
-          } else {
-            _addItemToList();
-
-            // return empty container so return value is a widget
-            return Container();
-          }
-        });
   }
 
   _addItemToList() {

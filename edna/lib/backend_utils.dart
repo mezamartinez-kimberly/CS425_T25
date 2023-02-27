@@ -219,9 +219,7 @@ class BackendUtils {
       body: jsonPayload,
     );
 
-    print(response.statusCode);
-
-    if (response.statusCode == 200) {
+    if (response.statusCode == 200 || response.statusCode == 201) {
       return "Item added to pantry";
     } else {
       return "Item not added to pantry";

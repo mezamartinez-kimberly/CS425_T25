@@ -56,6 +56,8 @@ dependencies:
   http: ^0.13.5
   # States
   provider: ^6.0.5
+  # show errors over dialog box
+  another_flushbar: ^1.12.29
 
 
 
