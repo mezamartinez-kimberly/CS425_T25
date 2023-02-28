@@ -120,6 +120,7 @@ class Pantry(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     date_added = db.Column(db.DateTime, nullable=False)
     date_removed = db.Column(db.DateTime, nullable=True)
+    expiration_date = db.Column(db.DateTime, nullable=True)
     location = db.Column(db.String(30), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     is_deleted = db.Column(db.Boolean, nullable=False)
