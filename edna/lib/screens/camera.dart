@@ -73,16 +73,39 @@ class _CameraPageState extends State<CameraPage> {
       body: Column(
         children: <Widget>[
           // scan area
-          Expanded(flex: 1, child: _buildQrView(context)),
+          Expanded(flex: 2, child: _buildQrView(context)),
           // items list
           Expanded(
-            flex: 2,
+            flex: 3,
             child: Column(
               children: <Widget>[
                 FutureBuilder(
                     // get product name from UPC code
                     future: _getProductName(),
                     builder: (context, snapshot) {
+                      // if not scanning and list is empty
+                      if (widget.itemsToInsert == null && result == null) {
+                        return Padding(
+                          // spacing between card edges and page edges
+                          padding: const EdgeInsets.all(30),
+                          child: Card(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: const Expanded(
+                              child: Padding(
+                                // spacing between card edges and text
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: 30, vertical: 30),
+                                child: Text('Scan or manually enter an item.',
+                                    textAlign: TextAlign.center,
+                                    // text size
+                                    style: TextStyle(fontSize: 35)),
+                              ),
+                            ),
+                          ),
+                        );
+                      }
                       // while not scanning, return empty container
                       if (result == null) {
                         return Container();

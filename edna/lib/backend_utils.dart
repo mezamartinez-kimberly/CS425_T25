@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:edna/dbs/pantry_db.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 class BackendUtils {
@@ -234,6 +235,8 @@ class BackendUtils {
       Uri.parse(apiUrl),
       headers: {
         'Authorization': "Bearer $sessionToken",
+        // so connection doesn't close while retrieving data
+        "Connection": "Keep-Alive",
       },
     );
 

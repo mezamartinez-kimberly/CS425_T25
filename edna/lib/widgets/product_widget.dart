@@ -155,16 +155,48 @@ class _ProductWidgetState extends State<ProductWidget> {
                       _isChecked = true;
                       widget.pantryItem.isDeleted = 1;
                       BackendUtils.updatePantryItem(widget.pantryItem);
-                      
-                      // wait 0.4 sec before deleting on page
-                      Future.delayed(const Duration(milliseconds: 400), () {
-                        widget.refreshPantryList!();
-                      });
+
+                      _showIsExpiredDialog();
                     });
                   },
           )
         : // if checkmark disabled, return empty container
         const SizedBox();
+  }
+
+  _showIsExpiredDialog() {
+    // ask user if item is expired or not
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text("Is this item expired?"),
+            actions: [
+              TextButton(
+                child: const Text("Yes"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+
+                  // wait 0.4 sec before deleting on page
+                  Future.delayed(const Duration(milliseconds: 400), () {
+                    widget.refreshPantryList!();
+                  });
+                },
+              ),
+              TextButton(
+                child: const Text("No"),
+                onPressed: () {
+                  Navigator.of(context).pop();
+
+                  // wait 0.4 sec before deleting on page
+                  Future.delayed(const Duration(milliseconds: 400), () {
+                    widget.refreshPantryList!();
+                  });
+                },
+              ),
+            ],
+          );
+        });
   }
 
   String _formatDate() {
