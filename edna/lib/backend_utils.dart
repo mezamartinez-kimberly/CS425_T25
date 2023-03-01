@@ -193,7 +193,7 @@ class BackendUtils {
   }
 
 // // Create a upc get function to get the upc data
-  static Future<String> addPantry(Pantry pantryItem) async {
+  static Future<http.Response> addPantry(Pantry pantryItem) async {
     const String apiUrl = 'http://10.0.2.2:5000/addPantry';
 
     // create a map called "message" that contains the data to be sent to the backend
@@ -220,11 +220,13 @@ class BackendUtils {
       body: jsonPayload,
     );
 
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      return "Item added to pantry";
-    } else {
-      return "Item not added to pantry";
-    }
+    // if (response.statusCode == 200 || response.statusCode == 201) {
+    //   return "Item added to pantry";
+    // } else {
+    //   return "Item not added to pantry";
+    // }
+
+    return response;
   }
 
   static Future<List<Pantry>> getAllPantry() async {

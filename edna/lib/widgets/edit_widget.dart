@@ -10,15 +10,13 @@
 import 'package:edna/backend_utils.dart';
 import 'package:edna/dbs/pantry_db.dart';
 import 'package:edna/dbs/storage_location_db.dart';
+import 'package:edna/main.dart';
 import 'package:edna/screens/all.dart';
 import 'package:edna/widgets/product_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'; // material design
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
-import 'package:another_flushbar/flushbar.dart'; // snackbars
-import 'package:another_flushbar/flushbar_helper.dart'; // snackbars
-import 'package:another_flushbar/flushbar_route.dart'; // snackbars
 
 class EditWidget extends StatefulWidget {
   @override
@@ -222,21 +220,23 @@ class _EditWidgetState extends State<EditWidget> {
       onPressed: () async {
         // if no upc/plu code, show error
         if (widget.pantryItem.upc == null && widget.pantryItem.plu == null) {
-          createErrorMessage("Please enter a code.");
+          const MyApp().createErrorMessage(context, "Please enter a code.");
           return;
         }
 
         // if upc is not 12 digits, show error
         if (widget.pantryItem.upc != null &&
             widget.pantryItem.upc!.length != 12) {
-          createErrorMessage("UPC code must be 12 digits.");
+          const MyApp()
+              .createErrorMessage(context, "UPC code must be 12 digits.");
           return;
         }
 
         // if plu is not 4 digits, show error
         if (widget.pantryItem.plu != null &&
             widget.pantryItem.plu!.length != 4) {
-          createErrorMessage("PLU code must be 4 digits.");
+          const MyApp()
+              .createErrorMessage(context, "PLU code must be 4 digits.");
           return;
         }
 
@@ -524,25 +524,5 @@ class _EditWidgetState extends State<EditWidget> {
         ),
       ),
     );
-  }
-
-  createErrorMessage(errorMsg) {
-    var errorText = const Color.fromARGB(255, 88, 15, 15);
-    var errorBackground = const Color.fromARGB(255, 238, 37, 37);
-
-    Flushbar(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-      message: errorMsg,
-      messageSize: 25,
-      messageColor: Theme.of(context).brightness == Brightness.dark
-          ? Colors.white
-          : errorText,
-      duration: const Duration(seconds: 3),
-      backgroundColor: errorBackground,
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-      borderRadius: BorderRadius.circular(30.0),
-    ).show(context);
   }
 }

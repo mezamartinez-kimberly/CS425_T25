@@ -14,6 +14,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:edna/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
@@ -189,33 +190,21 @@ class _CameraPageState extends State<CameraPage> {
         if (widget.itemsToInsert != null) {
           for (ProductWidget product in widget.itemsToInsert!) {
             // add to pantry db
-            String backendResult =
+            var backendResult =
                 await BackendUtils.addPantry(product.pantryItem);
 
             if (!mounted) return;
 
             print(backendResult);
 
-            // if sucess do nothing else show error with the name and allow the user to edit it
-            if (backendResult != "Item added to pantry") {
-              // show edit widget
-              // showDialog(
-              //     context: context,
-              //     builder: (context) {
-              //       return EditWidget(
-              //         pantryItem: product.pantryItem,
-              //         callingWidget: widget,
-              //         updateProductWidget: () {},
-              //         refreshPantryList: () {},
-              //         refreshCameraPage: refresh,
-              //       );
-              //     });
+            // if success do nothing else show error with the name and allow the user to edit it
+            if (backendResult.statusCode != 200 &&
+                backendResult.statusCode != 201) {
+              const MyApp().createErrorMessage(context,
+                  "Error ${backendResult.statusCode}: ${backendResult.body}");
             } else {
-              // if success show a snackbar
-              ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                content: Text("Item added to pantry"),
-                duration: Duration(seconds: 2),
-              ));
+              const MyApp()
+                  .createSuccessMessage(context, "Item added to pantry");
             }
           }
           // show loading indicator for 0.5 sec
