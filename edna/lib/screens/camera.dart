@@ -376,6 +376,7 @@ class _CameraPageState extends State<CameraPage> {
 
       // create product widget with new pantry item
       ProductWidget newProductWidget = ProductWidget(
+          key: UniqueKey(),
           pantryItem: newPantryItem,
           enableCheckbox: false,
           // no need to refresh pantry since we're on camera page

@@ -203,6 +203,8 @@ def resetPassword():
 @app.route('/delete_all', methods=['DELETE'])
 def deleteAll():
     # deltet the pantry table
+    Product.query.delete()
+    #delte the pantry table
     Pantry.query.delete()
 
     db.session.commit()
@@ -294,22 +296,9 @@ def login():
 
     return jsonify({'message': 'User logged in successfully', 'session_token': session_token}), 201
 
-# create a route that will query the upc API and return the data
-@app.route('/upc', methods=['POST'])
-# @jwt_required() # authentication Required
-def upc(parameterUPC=None):
 
-    if parameterUPC is None:
-        # if we are using it as a route, we will get the upc from the json input
-        upc = request.json['upc']
-    else:
-        # if we are using it as a function, we will get the upc from the parameter
-        upc = parameterUPC
+def apiCall(upc):
 
-    # check to see if the upc is already in the database
-    product = Product.query.filter_by(upc=upc).first()
-
-    if product is None:
         # if the product is not in the database, query the API
         try:
             api_key = 'd20cfa73c6e8943592d96091a7469ccad33c7b60d59ab8a7923d0adc573bf5d8'
@@ -328,28 +317,54 @@ def upc(parameterUPC=None):
                 writer = csv.writer(f)
                 writer.writerow([upc, data])
 
-            # search to see if the product is already in the database
-            product = Product.query.filter_by(upc=upc).first()
-
+            # return the data as a tuple with the first item being the data and the second being the error code
+            return (product_name, 200)
         
-        # All the possible errors:
+
+        # account for all possible errors and 
+        # return the error message as a tuple with the 
+        # first item being the string message and the 
+        # econd being the error code
         except HTTPError as e:
-            print(e)
-            return jsonify({'error': f'HTTP error: {e.code} {e.reason}'}), 500
+            return (str(e), 400)
         except URLError as e:
-            print(e)
-            return jsonify({'error': f'URL error: {e.reason}'}), 500
-        except (KeyError, TypeError) as e:
-            print(e)
-            return jsonify({'error': 'Invalid UPC code or API response'}), 400
+            return (str(e), 400)
+        except ValueError as e:
+            return (str(e), 400)
+        except KeyError as e:
+            return (str(e), 400)
         except Exception as e:
-            print(e)
-            return jsonify({'error': f'Unexpected error: {str(e)}'}), 500
+            return (str(e), 400)
+
+
+# create a route that will query the upc API and return the data
+@app.route('/upc', methods=['POST'])
+# @jwt_required() # authentication Required
+def upc():
+    
+    # if we are using it as a route, we will get the upc from the json input
+    upc = request.json['upc']
+
+    # check to see if the upc is already in the database
+    product = Product.query.filter_by(upc=upc).first()
+
+    # if its not in the database, query the API
+    if product is None:
+        response_tuple = apiCall(upc)
+
+        # if the API call was successful, save the data to the database
+        if response_tuple[1] == 200:
+            product = Product(name=response_tuple[0], upc=upc, plu=None, logical_delete=False)
+            db.session.add(product)
+            db.session.commit()
+            return jsonify({'message': 'UPC API call successful', 'name': response_tuple[0]}), 200
+        else:
+            return jsonify({'error': response_tuple[0]}), response_tuple[1]
     else:
-        # if the product is in the database, return the name
+    # if the product is in the database, return the name
         product_name = product.name
         return jsonify({'message': 'UPC API call successful', 'name': product_name}), 200
-    
+   
 
 @app.route('/addPantry', methods=['POST'])
 @jwt_required() # authentication Required
@@ -358,21 +373,28 @@ def addPantry():
     # {
     #     "name": "Apple",
     #     "date_added": "2020-01-01",
+    #     "expiration_date": "2020-01-01",
     #     "location": "pantry",
     #     "upc": "123456789012",
     #     "plu": "1",
     #    "quantity": "1"
     # }
 
+    
     name = request.json['name']
-    date_added = request.json['date_added']
     location = request.json['location']
     parameterUPC = request.json['upc']
     parameterUPC = str(parameterUPC)
     plu = request.json['plu']
     quantity = request.json['quantity']
 
-    # print the type and content of each variable
+    # convert all the time strings to datetime objects
+    if request.json['date_added'] != None:
+        date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
+    if request.json['expiration_date'] != None:
+        expiration_date = datetime.strptime(str(request.json['expiration_date']), '%Y-%m-%dT%H:%M:%S.%f')
+    else:
+        expiration_date = None
 
     # get the session token from the authorization html header
     session_token = request.headers.get('Authorization').split()[1]
@@ -386,20 +408,28 @@ def addPantry():
         # query the product table to see if a product with the upc exists, if yes get the product id ONLLY of the first match
         product = Product.query.filter_by(upc=parameterUPC).first()
 
+        # product doesnt currently exist in the database
         if not product:
-            # call the upc route function
-            product = Product.query.filter_by(upc=parameterUPC).first()
+            # call the upc route function and capture the response
+            response_tuple = apiCall(parameterUPC)
 
+            if response_tuple[1] != 200:
+                # if the product name is not null, then we will add the product to the database
+                if name != None and name != "":
+                    # add the product to the database
+                    product = Product(name=name,
+                                    upc=parameterUPC, plu = None, logical_delete=False)
+                    db.session.add(product)
+                    db.session.commit()
+            else:
+                # get the product id from the newly added upc from the database
+                product = Product.query.filter_by(upc=parameterUPC).first()
     elif plu:
         product = Product.query.filter_by(plu=plu).first()
         if not product:
             return jsonify({'error': 'PLU not found'}), 404
     else:
         return jsonify({'error': 'No UPC or PLU provided'}), 400
-
-    
-    # convert the date_added string to a datetime object
-    date_added = datetime.strptime(date_added, '%Y-%m-%d %H:%M:%S.%f')
 
 
     # ok so by here we have the plu or upc and the product id, as well as the date created
@@ -410,6 +440,7 @@ def addPantry():
                     date_removed=None,
                     # if the location is not provided, we will default it to pantry
                     location=location if location else 'pantry',
+                    expiration_date=expiration_date,
                     quantity=quantity,
                     is_deleted=False)
     
@@ -417,6 +448,7 @@ def addPantry():
     db.session.commit()
 
     return jsonify({'message': 'Pantry item added successfully'}), 201
+
 
 @app.route('/getAllPantry', methods=['GET'])
 @jwt_required() # authentication Required
@@ -442,21 +474,24 @@ def getAllPantry():
             # get the product details
             product = Product.query.filter_by(id=item.product_id).first()
 
-            # search the expiration table for the product for the product id
-            expiration = ExpirationData.query.filter_by(product_id=item.product_id).first()
 
-            if expiration != None:
-                # where is the food stored?
-                if item.location == 'pantry' and expiration.expiration_time_pantry != None:
-                    expiration_date = item.date_added + datetime(days=expiration.expiration_time_pantry)
-                elif item.location == 'fridge' and expiration.expiration_time_fridge != None:
-                    expiration_date = item.date_added + datetime(days=expiration.expiration_time_fridge)
-                elif item.location == 'freezer' and expiration.expiration_time_freezer != None:
-                    expiration_date = item.date_added + datetime(days=expiration.expiration_time_freezer)
+            if item.expiration_date != None:
+                expiration_date = item.expiration_date
             else:
-                expiration_date = None
+                # search the expiration table for the product for the product id
+                expiration = ExpirationData.query.filter_by(product_id=item.product_id).first()
 
-
+                if expiration != None:
+                    # where is the food stored?
+                    if item.location == 'pantry' and expiration.expiration_time_pantry != None:
+                        expiration_date = item.date_added + datetime(days=expiration.expiration_time_pantry)
+                    elif item.location == 'fridge' and expiration.expiration_time_fridge != None:
+                        expiration_date = item.date_added + datetime(days=expiration.expiration_time_fridge)
+                    elif item.location == 'freezer' and expiration.expiration_time_freezer != None:
+                        expiration_date = item.date_added + datetime(days=expiration.expiration_time_freezer)
+                else:
+                    expiration_date = None
+          
             if item.location == 'pantry':
                 location = 1
             elif item.location == 'fridge':
@@ -471,16 +506,18 @@ def getAllPantry():
                 'id': item.id,
                 'name': product.name,
                 # if none type then return null
-                'date_added': item.date_added.isoformat() if item.date_added else None,
-                'date_removed': item.date_removed.isoformat() if item.date_removed else None,
+                'date_added': item.date_added,
+                'date_removed': item.date_removed,
                 'location': location,
                 'quantity': item.quantity,
-                'expiration_date': expiration_date.isoformat() if expiration_date else None,
+                'expiration_date': expiration_date,
                 'is_deleted': int(item.is_deleted)
             }
 
             # add the dictionary to the list
             pantry_list.append(pantry_item)
+
+            print(pantry_item)
 
         # return the list of pantry items
         return jsonify(pantry_list), 200
@@ -556,19 +593,7 @@ def updatePantryItem():
         if request.json['plu']:
             product.plu = request.json['plu']
         if request.json['expiration_date']:
-            
-            # convert the date ISO8601 format to a datetime object
-            expiration_date = datetime.strptime(request.json['expiration_date'], '%Y-%m-%dT%H:%M:%S.%f')
-    
-            if location == 'pantry':
-                # calculate the difference between date adeed and expiration date
-                expiration.expiration_time_pantry = (expiration_date - pantry.date_added).days
-            elif location == 'fridge':
-                # calculate the difference between date adeed and expiration date
-                expiration.expiration_time_fridge = (expiration_date - pantry.date_added).days
-            elif location == 'freezer':
-                # calculate the difference between date adeed and expiration date
-                expiration.expiration_time_freezer = (expiration_date - pantry.date_added).days
+            pantry.expiration_date = datetime.strptime(request.json['expiration_date'], '%Y-%m-%dT%H:%M:%S.%f')
         if request.json['quantity']:
             pantry.quantity = request.json['quantity']
         if request.json['is_deleted'] == 0 or request.json['is_deleted'] == 1:
@@ -589,6 +614,4 @@ def updatePantryItem():
 
         return jsonify({'message': 'Pantry item updated successfully'}), 201
     
-
-        
 
