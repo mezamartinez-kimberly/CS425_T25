@@ -207,6 +207,11 @@ def deleteAll():
     #delte the pantry table
     Pantry.query.delete()
 
+    # delete user and person table
+    User.query.delete()
+    Person.query.delete()
+    
+
     db.session.commit()
     return jsonify({'message': 'All tables have been cleared'}), 200
 
