@@ -47,7 +47,7 @@ import random # for generating random numbers for OTP
 
 
 # Import the database object and the Model Classes from the models.py file
-from models import db, User, UserPreference, Person, Product, ExpirationData, Pantry
+from models import db, User, UserPreference, Person, Product, ExpirationData, Pantry, Alias
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # how to create the virtual environment/ install flask & dotenv
@@ -410,7 +410,7 @@ def addPantry():
     # if on search there is no upc found then we will add the product to the database via the upc api
     if parameterUPC != "None":
 
-        # query the product table to see if a product with the upc exists, if yes get the product id ONLLY of the first match
+        # query the product table to see if a product with the upc exists, if yes get the product id ONLY of the first match
         product = Product.query.filter_by(upc=parameterUPC).first()
 
         # product doesnt currently exist in the database
@@ -442,6 +442,24 @@ def addPantry():
             return jsonify({'error': 'PLU not found'}), 404
     else:
         return jsonify({'error': 'No UPC or PLU provided'}), 400
+    
+
+    # now we have to see if the name provided matches the name of the product in the database 
+    # if they are different then we will create a new entry in the User's alias table
+    # if an alias for the product id already exists, then we will replace the alias with the new one
+    if name != product.name:
+        # check to see if there is already an alias for the product
+        alias = Alias.query.filter_by(user_id=user_id, product_id=product.id).first()
+        # if there is an alias, then we will update it
+        if alias:
+            alias.alias = name
+            db.session.commit()
+        # if there is no alias, then we will create one
+        else:
+            alias = Alias(user_id=user_id, product_id=product.id, alias=name)
+            db.session.add(alias)
+            db.session.commit()
+
 
 
     # ok so by here we have the plu or upc and the product id, as well as the date created
@@ -504,6 +522,7 @@ def getAllPantry():
                 else:
                     expiration_date = None
           
+            # check to see where the food is stored and conver to int for the front end
             if item.location == 'pantry':
                 location = 1
             elif item.location == 'fridge':
@@ -512,11 +531,21 @@ def getAllPantry():
                 location = 3
             else:
                 location = 0
+
+            # Check the alias table to see if an alias exists for the product given the user id
+            alias = Alias.query.filter_by(user_id=user_id, product_id=item.product_id).first()
+
+            # if an alias exists, then we will use that instead of the product name
+            if alias:
+                name = alias.alias
+            else:
+                name = product.name
+
     
             # create a dictionary of the pantry item details
             pantry_item = {
                 'id': item.id,
-                'name': product.name,
+                'name': name,
                 # if none type then return null
                 'date_added': item.date_added,
                 'date_removed': item.date_removed,
