@@ -1,8 +1,7 @@
 PLU,Food,Specific Food,Pantry,Fridge,Freezer
-PLU,food,Name,nan,nan,nan
 4514,alfalfa sprouts,Alfalfa Sprouts,,,
-4924,almonds,Almonds,,,
-4925,almonds,Retailer Assigned Almonds,,,
+4924,almonds,Almonds,21, 270,360
+4925,almonds,Retailer Assigned Almonds,21, 270,360
 3064,aloe vera leaves,Aloe Vera Leaves,,,
 3463,amaranth/callaloo/een choy,Amaranth/Callaloo/Een Choy,,,
 3338,anise,Anise,,,

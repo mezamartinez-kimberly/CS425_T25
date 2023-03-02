@@ -99,6 +99,42 @@ time_confimation_otp_was_sent = 0
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~ ROUTE SETUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+# lets create a route to load the the Product table with PLU data from a csv file
+@app.route("/loadPLU", methods=["GET"])
+def loadPLU():
+    # open the csv file "PLU with Exp.csv"
+    with open("PLU with Exp.csv", "r") as file:
+        # create a csv reader
+        reader = csv.reader(file)
+        # skip the first row
+        next(reader)
+        # iterate through the rows
+        for row in reader:
+            # create a new product object
+            product = Product(name = row[1], 
+                              plu = row[0], 
+                              logical_delete=False, 
+                              upc=None)
+
+            db.session.add(product)
+            db.session.commit()
+
+            # query the database to get the product id
+            product = Product.query.filter_by(plu=row[0]).first()
+
+            # create a new expiration data object
+            expirationData = ExpirationData(product_id=product.id, 
+                                            user_id=-1,
+                                            expiration_time_pantry=row[2], 
+                                            expiration_time_fridge=row[3], 
+                                            expiration_time_freezer=row[4])
+
+            # commit expiration data to the database
+            db.session.add(expirationData)
+            db.session.commit()
+
+    return jsonify({'message': 'PLU data loaded'}), 200
+
 @app.route("/sendOTP", methods=["POST"])
 def sendOTP():
 
@@ -138,9 +174,6 @@ def sendOTP():
         db.session.commit()
 
         return jsonify({'message': 'OTP sent successfully'}),201
-
-
-
 
 # create an approute to verify the otp
 @app.route("/verifyOTP", methods=["POST"])
@@ -195,8 +228,6 @@ def resetPassword():
                 db.session.commit()
 
                 return jsonify({'message': 'Password updated successfully'}), 200
-
-
 
 
 # create a quick debug route that will delete all info from all tables
