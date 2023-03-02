@@ -282,6 +282,11 @@ class _RegisterPageState extends State<RegisterPage> {
           // send the validated data to the registerUser function
           String result = await BackendUtils.registerUser(
               firstName, lastName, email, password);
+
+          // Resolved an async + navigation issue
+          // https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html
+          if (!mounted) return;
+
           if (result == "Registration successful") {
             // create an alert dialog to show the user that they have successfully registered
             showDialog(
