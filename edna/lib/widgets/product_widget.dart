@@ -6,6 +6,7 @@ import 'package:edna/backend_utils.dart';
 
 class ProductWidget extends StatefulWidget {
   @override
+  // ignore: library_private_types_in_public_api
   _ProductWidgetState createState() => _ProductWidgetState();
 
   final Pantry pantryItem;

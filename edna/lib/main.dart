@@ -1,7 +1,6 @@
 import 'package:edna/screens/register.dart';
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart'; // all screens
-import 'package:edna/utils/database_helper.dart'; // database helper
 import 'package:another_flushbar/flushbar.dart'; // snackbars
 import 'package:another_flushbar/flushbar_helper.dart'; // snackbars
 import 'package:another_flushbar/flushbar_route.dart'; // snackbars
