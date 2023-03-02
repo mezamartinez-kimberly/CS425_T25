@@ -120,16 +120,18 @@ class Pantry(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
     date_added = db.Column(db.DateTime, nullable=False)
     date_removed = db.Column(db.DateTime, nullable=True)
+    expiration_date = db.Column(db.DateTime, nullable=True)
     location = db.Column(db.String(30), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     is_deleted = db.Column(db.Boolean, nullable=False)
 
     # define the constructor
-    def __init__(self, user_id, product_id, date_added, date_removed, location, quantity, is_deleted):
+    def __init__(self, user_id, product_id, date_added, date_removed, expiration_date, location, quantity, is_deleted):
         self.user_id = user_id
         self.product_id = product_id
         self.date_added = date_added
         self.date_removed = date_removed
+        self.expiration_date = expiration_date
         self.location = location
         self.quantity = quantity
         self.is_deleted = is_deleted

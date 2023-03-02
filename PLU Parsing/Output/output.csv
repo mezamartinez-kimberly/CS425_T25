@@ -1,0 +1,1526 @@
+PLU,Food,Specific Food,Pantry,Fridge,Freezer
+PLU,food,Name,nan,nan,nan
+4514,alfalfa sprouts,Alfalfa Sprouts,,,
+4924,almonds,Almonds,,,
+4925,almonds,Retailer Assigned Almonds,,,
+3064,aloe vera leaves,Aloe Vera Leaves,,,
+3463,amaranth/callaloo/een choy,Amaranth/Callaloo/Een Choy,,,
+3338,anise,Anise,,,
+4860,apple slices,Dried Apple Slices,,,
+3000,apples,Alkmene Apples,6,30,330
+3001,apples,Small Aurora/Southern Rose Apples,6,30,330
+3002,apples,Cantared Apples,6,30,330
+3003,apples,D'Estivale Apples,6,30,330
+3004,apples,Discovery Apples,6,30,330
+3005,apples,Golden Delicious Blush Apples,6,30,330
+3006,apples,Ingrid Marie Apples,6,30,330
+3007,apples,Lochbuie Apples,6,30,330
+3008,apples,Rubinette Apples,6,30,330
+3009,apples,Russet Apples,6,30,330
+3010,apples,Small Cripps Red Apples,6,30,330
+3011,apples,Worcester Apples,6,30,330
+3065,apples,Small Cameo Apples,6,30,330
+3066,apples,Large Cameo Apples,6,30,330
+3067,apples,Small Swiss Gourmet Apples,6,30,330
+3068,apples,Large Swiss Gourmet Apples,6,30,330
+3069,apples,"Small Gravenstein, Red Apples",6,30,330
+3070,apples,"Large Gravenstein, Red Apples",6,30,330
+3071,apples,"Granny Smith, Red Apples",6,30,330
+3072,apples,Lady Apples,6,30,330
+3073,apples,Macoun Apples,6,30,330
+3074,apples,Greening (Ri) Apples,6,30,330
+3075,apples,Baldwin Apples,6,30,330
+3076,apples,Melrose Apples,6,30,330
+3077,apples,Northern Spy Apples,6,30,330
+3078,apples,Liberty Apples,6,30,330
+3104,apples,Roho 3615 Apples,6,30,330
+3271,apples,Virginia Gold Apples,6,30,330
+3272,apples,Sommerfeld Apples,6,30,330
+3283,apples,Large Honeycrisp Apples,6,30,330
+3284,apples,Extra-Large Red Delicious Apples,6,30,330
+3285,apples,Extra-Large Golden Delicious Apples,6,30,330
+3290,apples,Large Aurora/Southern Rose Apples,6,30,330
+3291,apples,Small Boskoop/Belle De Boskoop Apples,6,30,330
+3292,apples,Large Boskoop/Belle De Boskoop Apples,6,30,330
+3293,apples,Small Scifresh Apples,6,30,330
+3294,apples,Large Scifresh Apples,6,30,330
+3295,apples,Small Sciearly Apples,6,30,330
+3296,apples,Large Sciearly Apples,6,30,330
+3297,apples,Scired Apples,6,30,330
+3298,apples,Redfield Apples,6,30,330
+3299,apples,Small Sonya Apples,6,30,330
+3300,apples,Large Sonya Apples,6,30,330
+3301,apples,Large Cripps Red Apples,6,30,330
+3315,apples,Small Scilate Apples,6,30,330
+3339,apples,Belchard - Chantecler Apples,6,30,330
+3340,apples,Bertanne/Golden Russet Apples,6,30,330
+3341,apples,Charles Ross Apples,6,30,330
+3342,apples,Delblush Apples,6,30,330
+3343,apples,Dessert Apples,6,30,330
+3344,apples,Small Gloster Apples,6,30,330
+3345,apples,Large Gloster Apples,6,30,330
+3346,apples,Holstein Apples,6,30,330
+3347,apples,Laxtons Fortune Apples,6,30,330
+3348,apples,Lord Lambourne Apples,6,30,330
+3349,apples,Michaelmas Red Apples,6,30,330
+3350,apples,Small Reine Des Reinettes/King Of The Pippins Apples,6,30,330
+3351,apples,Large Reine Des Reinettes/King Of The Pippins Apples,6,30,330
+3352,apples,Canada Blanc Reinette Du Mans Apples,6,30,330
+3353,apples,St Edmunds Pippin Apples,6,30,330
+3435,apples,Pinova Apples,6,30,330
+3438,apples,Ambrosia Apples,6,30,330
+3442,apples,New York 1 Apples,6,30,330
+3443,apples,New York 2 Apples,6,30,330
+3444,apples,Green Dragon Apples,6,30,330
+3445,apples,Ds 3 Apples,6,30,330
+3447,apples,Ds 22 Apples,6,30,330
+3460,apples,Red Jonaprince Apples,6,30,330
+3461,apples,Lady Williams Apples,6,30,330
+3467,apples,Regal 13-82 Apples,6,30,330
+3468,apples,Small Honeycrisp Apples,6,30,330
+3484,apples,Dalinette Apples,6,30,330
+3486,apples,Cn121 Apples,6,30,330
+3487,apples,Mn 55 Apples,6,30,330
+3490,apples,Maia 1 Apples,6,30,330
+3507,apples,Wa 38 Apples,6,30,330
+3510,apples,Small Ambrosia Apples,6,30,330
+3511,apples,Wa 2 Apples,6,30,330
+3513,apples,Shinano Gold Apples,6,30,330
+3514,apples,Fengapi Apples,6,30,330
+3515,apples,Small Prema 153 Apples,6,30,330
+3516,apples,Large Prema 153 Apples,6,30,330
+3519,apples,R10-45 Apples,6,30,330
+3521,apples,Regal D5-100 Apples,6,30,330
+3523,apples,Sq 159 Apples,6,30,330
+3525,apples,Small Cn121 Apples,6,30,330
+3526,apples,Howell Tc2 Apples,6,30,330
+3527,apples,Howell Tc3 Apples,6,30,330
+3528,apples,Regal D17-121 Apples,6,30,330
+3529,apples,Prema 129 Apples,6,30,330
+3537,apples,Maia-L Apples,6,30,330
+3538,apples,Ipador Apples,6,30,330
+3539,apples,Ifored Y Series Apples,6,30,330
+3540,apples,Ifored R Series Apples,6,30,330
+3541,apples,Civm49 Apples,6,30,330
+3542,apples,Regal D27-16 Apples,6,30,330
+3600,apples,Antares Apples,6,30,330
+3601,apples,Huaguan Apples,6,30,330
+3602,apples,Belgica Apples,6,30,330
+3603,apples,Minneiska Apples,6,30,330
+3604,apples,Emmons Apples,6,30,330
+3605,apples,Nicoter Apples,6,30,330
+3607,apples,Mariri Red Apples,6,30,330
+3608,apples,Large Sciros Apples,6,30,330
+3612,apples,Nicogreen Apples,6,30,330
+3613,apples,Fuji Brak Apples,6,30,330
+3615,apples,Civni Apples,6,30,330
+3616,apples,Large Scilate Apples,6,30,330
+3618,apples,Opal Apples,6,30,330
+3619,apples,Milwa Apples,6,30,330
+3620,apples,Plumac Apples,6,30,330
+3625,apples,Minnewashta Apples,6,30,330
+3627,apples,Large Prema17 Apples,6,30,330
+3628,apples,Prema280 Apples,6,30,330
+3629,apples,Civg198 Apples,6,30,330
+3630,apples,Co-Op 43 Apples,6,30,330
+4015,apples,Small Red Delicious Apples,6,30,330
+4016,apples,Large Red Delicious Apples,6,30,330
+4017,apples,Large Granny Smith Apples,6,30,330
+4018,apples,Large Granny Smith Apples,6,30,330
+4019,apples,Large Mcintosh Apples,6,30,330
+4020,apples,Large Golden Delicious Apples,6,30,330
+4021,apples,Small Golden Delicious Apples,6,30,330
+4057,apples,Small Haralson Apples,6,30,330
+4058,apples,Large Haralson Apples,6,30,330
+4096,apples,Large Ginger Gold Apples,6,30,330
+4097,apples,Small Ginger Gold Apples,6,30,330
+4098,apples,Small Akane Apples,6,30,330
+4099,apples,Large Akane Apples,6,30,330
+4100,apples,Small Fireside Apples,6,30,330
+4101,apples,Small Braeburn Apples,6,30,330
+4102,apples,Large Fireside Apples,6,30,330
+4103,apples,Large Braeburn Apples,6,30,330
+4104,apples,Small Cortland Apples,6,30,330
+4105,apples,Cox Orange Pippin Apples,6,30,330
+4106,apples,Large Cortland Apples,6,30,330
+4107,apples,Crab Apples,6,30,330
+4108,apples,Small Crispin/Mutsu Apples,6,30,330
+4109,apples,Small Crispin/Mutsu Apples,6,30,330
+4110,apples,Large Crispin/Mutsu Apples,6,30,330
+4111,apples,Large Crispin/Mutsu Apples,6,30,330
+4112,apples,Small Regent Apples,6,30,330
+4113,apples,Small Criterion Apples,6,30,330
+4114,apples,Large Regent Apples,6,30,330
+4115,apples,Large Criterion Apples,6,30,330
+4116,apples,Small Early Apples,6,30,330
+4117,apples,Small Early Apples,6,30,330
+4118,apples,Large Early Apples,6,30,330
+4119,apples,Large Early Apples,6,30,330
+4120,apples,Fiesta Apples,6,30,330
+4121,apples,Small Elstar Apples,6,30,330
+4122,apples,Small Sciros Apples,6,30,330
+4123,apples,Large Elstar Apples,6,30,330
+4124,apples,Small Empire Apples,6,30,330
+4125,apples,Small Empire Apples,6,30,330
+4126,apples,Large Empire Apples,6,30,330
+4127,apples,Large Empire Apples,6,30,330
+4128,apples,Small Cripps Pink Apples,6,30,330
+4129,apples,Small Fuji Apples,6,30,330
+4130,apples,Large Cripps Pink Apples,6,30,330
+4131,apples,Large Fuji Apples,6,30,330
+4132,apples,Small Gala Apples,6,30,330
+4133,apples,Small Gala Apples,6,30,330
+4134,apples,Large Gala Apples,6,30,330
+4135,apples,Large Gala Apples,6,30,330
+4136,apples,Small Golden Delicious Apples,6,30,330
+4137,apples,Large Golden Delicious Apples,6,30,330
+4138,apples,Small Granny Smith Apples,6,30,330
+4139,apples,Small Granny Smith Apples,6,30,330
+4140,apples,Small Idared Apples,6,30,330
+4141,apples,Small Jonamac Apples,6,30,330
+4142,apples,Large Idared Apples,6,30,330
+4143,apples,Large Jonamac Apples,6,30,330
+4144,apples,Small Jonagold Apples,6,30,330
+4145,apples,Small Jonagold Apples,6,30,330
+4146,apples,Large Jonagold Apples,6,30,330
+4147,apples,Large Jonagold Apples,6,30,330
+4148,apples,Small Jonathan Apples,6,30,330
+4149,apples,Small Jonathan Apples,6,30,330
+4150,apples,Large Jonathan Apples,6,30,330
+4151,apples,Large Jonathan Apples,6,30,330
+4152,apples,Small Mcintosh Apples,6,30,330
+4153,apples,Small Mcintosh Apples,6,30,330
+4154,apples,Large Mcintosh Apples,6,30,330
+4155,apples,Small Paulared Apples,6,30,330
+4156,apples,Small Gravenstein Apples,6,30,330
+4157,apples,Large Paulared Apples,6,30,330
+4158,apples,Large Gravenstein Apples,6,30,330
+4160,apples,Small Pippin Apples,6,30,330
+4162,apples,Large Pippin Apples,6,30,330
+4167,apples,Small Red Delicious Apples,6,30,330
+4168,apples,Large Red Delicious Apples,6,30,330
+4169,apples,Small Rome Apples,6,30,330
+4170,apples,Small Rome Apples,6,30,330
+4171,apples,Large Rome Apples,6,30,330
+4172,apples,Large Rome Apples,6,30,330
+4173,apples,Small Royal Gala Apples,6,30,330
+4174,apples,Large Royal Gala Apples,6,30,330
+4176,apples,Southern Snap Apples,6,30,330
+4177,apples,Small Spartan Apples,6,30,330
+4178,apples,Small Spartan Apples,6,30,330
+4179,apples,Large Spartan Apples,6,30,330
+4180,apples,Large Spartan Apples,6,30,330
+4181,apples,Small Stayman Apples,6,30,330
+4182,apples,Sturmer Pippin Apples,6,30,330
+4183,apples,Large Stayman Apples,6,30,330
+4185,apples,Small York Apples,6,30,330
+4187,apples,Large York Apples,6,30,330
+4189,apples,Small Winesap Apples,6,30,330
+4190,apples,Small Winesap Apples,6,30,330
+4191,apples,Large Winesap Apples,6,30,330
+4192,apples,Large Winesap Apples,6,30,330
+4193,apples,Retailer Assigned Apples,6,30,330
+4194,apples,Retailer Assigned Apples,6,30,330
+4195,apples,Retailer Assigned Apples,6,30,330
+4196,apples,Retailer Assigned Apples,6,30,330
+4197,apples,Retailer Assigned Apples,6,30,330
+4198,apples,Retailer Assigned Apples,6,30,330
+4199,apples,Retailer Assigned Apples,6,30,330
+4200,apples,Retailer Assigned Apples,6,30,330
+4201,apples,Retailer Assigned Apples,6,30,330
+4202,apples,Retailer Assigned Apples,6,30,330
+4203,apples,Retailer Assigned Apples,6,30,330
+4204,apples,Retailer Assigned Apples,6,30,330
+4205,apples,Retailer Assigned Apples,6,30,330
+4206,apples,Retailer Assigned Apples,6,30,330
+4207,apples,Retailer Assigned Apples,6,30,330
+4208,apples,Retailer Assigned Apples,6,30,330
+4209,apples,Retailer Assigned Apples,6,30,330
+4210,apples,Retailer Assigned Apples,6,30,330
+4211,apples,Retailer Assigned Apples,6,30,330
+4212,apples,Retailer Assigned Apples,6,30,330
+4213,apples,Retailer Assigned Apples,6,30,330
+4214,apples,Retailer Assigned Apples,6,30,330
+4215,apples,Retailer Assigned Apples,6,30,330
+4216,apples,Retailer Assigned Apples,6,30,330
+4217,apples,Retailer Assigned Apples,6,30,330
+3044,apricots,Black Velvet Apricots,2,4,330
+3302,apricots,Large Regular Apricots,2,4,330
+3422,apricots,Interspecific Apricots,2,4,330
+3614,apricots,Red Apricots,2,4,330
+4218,apricots,Small Regular Apricots,2,4,330
+4219,apricots,Retailer Assigned Apricots,2,4,330
+4861,apricots,Dried Apricots,2,4,330
+3390,arracach,Arracach,,,
+3391,artichokes,Rouge Salambo (Red) Artichokes,nan,6, 360
+4084,artichokes,Large Artichokes,nan,6, 360
+4516,artichokes,Small Artichokes,nan,6, 360
+4517,artichokes,Small Purple Artichokes,nan,6, 360
+4518,artichokes,Large Purple Artichokes,nan,6, 360
+4519,artichokes,Baby/Cocktail Artichokes,nan,6, 360
+4520,artichokes,Retailer Assigned Artichokes,nan,6, 360
+4762,artichokes,Extra-Large Artichokes,nan,6, 360
+4884,arugula/rocket,Arugula/Rocket,,,
+3079,asparagus,Purple Asparagus,nan,3,450
+3392,asparagus,Green - Bunch Asparagus,nan,3,450
+3393,asparagus,White - Bunch Asparagus,nan,3,450
+3394,asparagus,Purple - Bunch Asparagus,nan,3,450
+4080,asparagus,Small Green Asparagus,nan,3,450
+4521,asparagus,Large Green Asparagus,nan,3,450
+4522,asparagus,Small White Asparagus,nan,3,450
+4523,asparagus,Large White Asparagus,nan,3,450
+4524,asparagus,Tips Asparagus,nan,3,450
+4525,asparagus,Retailer Assigned Asparagus,nan,3,450
+4526,asparagus,Retailer Assigned Asparagus,nan,3,450
+4220,atemoyas,Atemoyas,,,
+3080,avocados,Pinkerton Avocados,5,4,120
+3354,avocados,Ripe/Ready-To-Eat Avocados,5,4,120
+3509,avocados,Gem Avocados,5,4,120
+4046,avocados,Small Hass Avocados,5,4,120
+4221,avocados,Small Green Avocados,5,4,120
+4222,avocados,Small Green Avocados,5,4,120
+4223,avocados,Large Green Avocados,5,4,120
+4224,avocados,Large Green Avocados,5,4,120
+4225,avocados,Large Hass Avocados,5,4,120
+4226,avocados,Cocktail/Seedless Avocados,5,4,120
+4227,avocados,Retailer Assigned Avocados,5,4,120
+4228,avocados,Retailer Assigned Avocados,5,4,120
+4770,avocados,Hass Avocados,5,4,120
+4771,avocados,Medium Green Avocados,5,4,120
+3303,babaco,Babaco,,,
+3287,bananas,Hawaiian Plantain Bananas,3,6,60
+4011,bananas,Yellow (Includes Cavendish) Bananas,3,6,60
+4186,bananas,Small Yellow (Includes Cavendish) Bananas,3,6,60
+4229,bananas,Burro Bananas,3,6,60
+4230,bananas,Dominique Bananas,3,6,60
+4231,bananas,Green Bananas,3,6,60
+4232,bananas,Leaves Bananas,3,6,60
+4233,bananas,Apple/Manzano Bananas,3,6,60
+4234,bananas,Baby/Nino Bananas,3,6,60
+4235,bananas,Plantain/Macho Bananas,3,6,60
+4236,bananas,Red Bananas,3,6,60
+4237,bananas,Retailer Assigned Bananas,3,6,60
+4238,bananas,Retailer Assigned Bananas,3,6,60
+4885,basil,Basil,,,
+4886,basil,Opal Basil,,,
+4887,basil,Sweet Basil,,,
+3062,bay leaves,Bay Leaves,,,
+4536,bean sprouts,Mung Bean Sprouts Bean Sprouts,,,
+3048,beans,Helda/Flat Beans,nan,6,450
+3049,beans,Fine Beans,nan,6,450
+4066,beans,Green/French Beans,nan,6,450
+4527,beans,Chinese Long/Snake Beans,nan,6,450
+4528,beans,Fava/Broad Beans,nan,6,450
+4529,beans,Lima Beans,nan,6,450
+4530,beans,Pole/Runner/Stick Beans,nan,6,450
+4531,beans,Purple Hull Beans,nan,6,450
+4532,beans,Shell Beans,nan,6,450
+4533,beans,Wax/Yellow Beans,nan,6,450
+4534,beans,Winged Beans,nan,6,450
+4535,beans,Retailer Assigned Beans,nan,6,450
+4542,beet greens,Beet Greens,,,
+3273,beets,Golden Beets,nan,14,450
+4537,beets,Baby Golden Beets,nan,14,450
+4538,beets,Baby Red Beets,nan,14,450
+4539,beets,Bunch Beets,nan,14,450
+4540,beets,Loose Beets,nan,14,450
+4541,beets,Retailer Assigned Beets,nan,14,450
+3395,belgian endive (witloof chicory),Red Belgian Endive (Witloof Chicory),,,
+4543,belgian endive (witloof chicory),Belgian Endive (Witloof Chicory),,,
+3081,berries,Saskatoon Berries,nan,7,360
+3304,berries,Loganberries Berries,nan,7,360
+3355,berries,Strawberries - Nominal 500G/1 Litre Berries,nan,7,360
+3356,berries,Strawberries - Nominal250G/1/2 Litre Berries,nan,7,360
+4028,berries,Pint Strawberries Berries,nan,7,360
+4054,berries,Raspberries - Red Berries,nan,7,360
+4239,berries,Blackberries Berries,nan,7,360
+4240,berries,Blueberries Berries,nan,7,360
+4241,berries,Boysenberries Berries,nan,7,360
+4242,berries,Cranberries Berries,nan,7,360
+4243,berries,Gooseberries Berries,nan,7,360
+4244,berries,Raspberries - Black Berries,nan,7,360
+4245,berries,Raspberries - Golden Berries,nan,7,360
+4246,berries,Pint Strawberries Berries,nan,7,360
+4247,berries,Quart Strawberries Berries,nan,7,360
+4248,berries,Quart Strawberries Berries,nan,7,360
+4249,berries,Bulk 3-pack (3 pints) Strawberries Berries,nan,7,360
+4250,berries,Bulk 3-pack (3 pints) Strawberries Berries,nan,7,360
+4251,berries,Long-Stemmed Strawberries Berries,nan,7,360
+4252,berries,Retailer Assigned Berries,nan,7,360
+4253,berries,Retailer Assigned Berries,nan,7,360
+4323,berries,Bulk Strawberries Berries,nan,7,360
+4783,"bitter melon/bitter gourd, foo qua","Foo Qua Bitter Melon/Bitter Gourd, Foo Qua",,,
+3163,bok choy (pak choi),Shanghai Bok Choy (Pak Choi),,,
+4544,bok choy (pak choi),Small/Baby Bok Choy (Pak Choi),,,
+4545,bok choy (pak choi),Bok Choy (Pak Choi),,,
+4546,boniato,See Also Sweet Potato Boniato,,,
+3419,borage,Borage,,,
+4926,brazilnuts,Brazilnuts,,,
+4254,breadfruit,Breadfruit,,,
+3082,broccoli,Crowns Broccoli,nan,4,450
+3277,broccoli,Baby Broccoli,nan,4,450
+4060,broccoli,Broccoli,nan,4,450
+4547,broccoli,Broccoli Rabe (Italian Rapini)/ Chinese Broccoli (Gai Lan) Broccoli,nan,4,450
+4548,broccoli,Florettes Broccoli,nan,4,450
+4549,broccoli,Retailer Assigned Broccoli,nan,4,450
+3083,brussels sprouts,Stalk Brussels Sprouts,,,
+4550,brussels sprouts,Brussels Sprouts,,,
+4551,brussels sprouts,Retailer Assigned Brussels Sprouts,,,
+3050,cabbage,Dutch White/Winter White Cabbage,nan,30,450
+3051,cabbage,Spring Cabbage/Spring Greens Cabbage,nan,30,450
+3166,cabbage,Tuscan Cabbage,nan,30,450
+3396,cabbage,"Savoy, Red Cabbage",nan,30,450
+3397,cabbage,Summer Cabbage - Pointed Type Cabbage,nan,30,450
+4069,cabbage,Green Cabbage,nan,30,450
+4552,cabbage,Chinese/Napa/Wong Bok Cabbage,nan,30,450
+4554,cabbage,Red Cabbage,nan,30,450
+4555,cabbage,"Savoy, Green Cabbage",nan,30,450
+4556,cabbage,Retailer Assigned Cabbage,nan,30,450
+4557,cabbage,Retailer Assigned Cabbage,nan,30,450
+3471,cactus leaves (nopales/cactus pads),Baby Cactus Leaves (Nopales/Cactus Pads),nan,10,nan
+4558,cactus leaves (nopales/cactus pads),Cactus Leaves (Nopales/Cactus Pads),nan,10,nan
+4255,cactus pear (prickly pear),Cactus Pear (Prickly Pear),3,2,330
+4256,carambola (starfruit),Carambola (Starfruit),3,6,330
+4559,cardoon (cardoni),Cardoon (Cardoni),,,
+3424,carrots,Purple/Red - Beta Sweet Carrots,nan,14,450
+4094,carrots,Bunch Carrots,nan,14,450
+4560,carrots,Baby Carrots,nan,14,450
+4561,carrots,French Carrots,nan,14,450
+4562,carrots,Loose Carrots,nan,14,450
+4563,carrots,Carrot Sticks Carrots,nan,14,450
+4564,carrots,Retailer Assigned Carrots,nan,14,450
+4565,carrots,Retailer Assigned Carrots,nan,14,450
+3105,cashews,Cashews,,,
+3320,cauliflower,Romanesco/Broccoflower/Caulibroc Cauliflower,nan,7,450
+3436,cauliflower,Orange Cauliflower,nan,7,450
+4079,cauliflower,Small Cauliflower,nan,7,450
+4566,cauliflower,Florettes Cauliflower,nan,7,450
+4567,cauliflower,Green Cauliflower,nan,7,450
+4568,cauliflower,Purple Cauliflower,nan,7,450
+4569,cauliflower,Retailer Assigned Cauliflower,nan,7,450
+4570,cauliflower,Retailer Assigned Cauliflower,nan,7,450
+4571,cauliflower,Retailer Assigned Cauliflower,nan,7,450
+4572,cauliflower,Large Cauliflower,nan,7,450
+4573,cauliflower,Baby Cauliflower,nan,7,450
+4070,celery,Small Bunch Celery,nan,7,450
+4071,celery,Small Bunch Celery,nan,7,450
+4575,celery,Hearts Celery,nan,7,450
+4576,celery,Celery Sticks Celery,nan,7,450
+4577,celery,Retailer Assigned Celery,nan,7,450
+4578,celery,Retailer Assigned Celery,nan,7,450
+4579,celery,Retailer Assigned Celery,nan,7,450
+4580,celery,Retailer Assigned Celery,nan,7,450
+4581,celery,Retailer Assigned Celery,nan,7,450
+4582,celery,Large Bunch Celery,nan,7,450
+4583,celery,Large Bunch Celery,nan,7,450
+3321,celery root/celeriac,With Leaves Attached Celery Root/Celeriac,,,
+4585,celery root/celeriac,Celery Root/Celeriac,,,
+4586,chard (swiss chard)/silverbeet,Green Chard (Swiss Chard)/Silverbeet,,,
+4587,chard (swiss chard)/silverbeet,Red Chard (Swiss Chard)/Silverbeet,,,
+4588,chard (swiss chard)/silverbeet,Retailer Assigned Chard (Swiss Chard)/Silverbeet,,,
+4257,cherimoya,Cherimoya,3,1,330
+3357,cherries,Small Regular/Red/Black Cherries,nan,7,330
+3358,cherries,Large Regular/Red/Black Cherries,nan,7,330
+3448,cherries,Tip Top Cherries,nan,7,330
+4045,cherries,Regular/Red/Black Cherries,nan,7,330
+4258,cherries,Golden/Rainier/White Cherries,nan,7,330
+4259,cherries,Retailer Assigned Cherries,nan,7,330
+3084,chervil,Chervil,,,
+4927,chestnuts,Chestnuts,,,
+3398,chickpeas,Chickpeas/Garbanzo Chickpeas,,,
+3479,chipilin leaf,Chipilin Leaf,,,
+3462,chives,Garlic/Chinese Chives,,,
+4888,chives,Chives,,,
+3322,choy sum/pak choi sum,Choy Sum/Pak Choi Sum,,,
+3323,choy sum/pak choi sum,Baby Choy Sum/Pak Choi Sum,,,
+4889,cilantro (chinese parsley/coriander),Cilantro (Chinese Parsley/Coriander),,,
+4260,coconuts,In Husk/Waternut Coconuts,,,
+4261,coconuts,Husked Coconuts,,,
+4262,coconuts,Retailer Assigned Coconuts,,,
+3085,corn,"Large Indian, Decorative Corn",nan,2,240
+3086,corn,Mini Indian. Decorative Corn,nan,2,240
+3087,corn,"Indian, Strawberry Corn",nan,2,240
+4077,corn,"Sweet Corn, White Corn",nan,2,240
+4078,corn,"Sweet Corn, Yellow Corn",nan,2,240
+4589,corn,"Sweet Corn, Baby Corn",nan,2,240
+4590,corn,"Sweet Corn, Bi-Color Corn",nan,2,240
+4591,corn,Retailer Assigned Corn,nan,2,240
+4062,cucumber,Green/Ridge/Short Cucumber,nan,7,nan
+4592,cucumber,Armenian Cucumber,nan,7,nan
+4593,cucumber,English/Hot House/Long Seedless/Telegraph/Continental Cucumber,nan,7,nan
+4594,cucumber,Japanese/White Cucumber,nan,7,nan
+4595,cucumber,Lemon Cucumber,nan,7,nan
+4596,cucumber,Pickling/Gherkin Cucumber,nan,7,nan
+4597,cucumber,Retailer Assigned Cucumber,nan,7,nan
+3088,currants,Red Currants,,,
+3305,currants,Black Currants,,,
+4598,daikon,(See Also Radish) Daikon,,,
+3045,dates,"Fresh, On Branch Dates",60, 360,720
+3046,dates,"Fresh, Frozen Dates",60, 360,720
+3047,dates,Medjool Dates,60, 360,720
+4263,dates,Fresh - Regular Dates,60, 360,720
+4264,dates,Fresh - Retailer Assigned Dates,60, 360,720
+4862,dates,Dried Dates,60, 360,720
+4863,dates,Retailer Assigned - Dried Dates,60, 360,720
+4891,dill,Dill,,,
+4892,dill,Baby Dill,,,
+4893,dill,Pickling Dill,,,
+3089,eggplant (aubergine),Chinese Eggplant (Aubergine),,,
+3090,eggplant (aubergine),Thai Eggplant (Aubergine),,,
+4081,eggplant (aubergine),Regular Eggplant (Aubergine),,,
+4599,eggplant (aubergine),Baby Eggplant (Aubergine),,,
+4600,eggplant (aubergine),Baby White Eggplant (Aubergine),,,
+4601,eggplant (aubergine),Japanese Eggplant (Aubergine),,,
+4602,eggplant (aubergine),White Eggplant (Aubergine),,,
+4603,eggplant (aubergine),Retailer Assigned Eggplant (Aubergine),,,
+4604,endive/chicory,Endive/Chicory,,,
+3473,epazote,Epazote,,,
+3324,escarole/batavian chicory,Red Escarole/Batavian Chicory,,,
+4605,escarole/batavian chicory,Green Escarole/Batavian Chicory,,,
+4265,feijoa,Feijoa,2,1,330
+4515,fennel,Florence/Sweet Fennel/Fennel Bulb Fennel,nan,8,330
+3063,fennel leaves,Fennel Leaves,,,
+4606,fiddlehead ferns,Fiddlehead Ferns,,,
+3337,figs,(Dried Fruit) Figs,nan,1,330
+4266,figs,Black Figs,nan,1,330
+4267,figs,Brown Figs,nan,1,330
+4268,figs,White/Green Figs,nan,1,330
+4269,figs,Retailer Assigned Figs,nan,1,330
+4928,filberts,Cobnut/Hazelnut Filberts,,,
+3170,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3171,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3172,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3173,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3174,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3175,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3176,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3177,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3178,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3179,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3180,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3181,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3182,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3183,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3184,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3185,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3186,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3187,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3188,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3189,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3190,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3191,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3192,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3193,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3194,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3195,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3196,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3197,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3198,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3199,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3200,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3201,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3202,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3203,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3204,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3205,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3206,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3207,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3208,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3209,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3210,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3211,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3212,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3213,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3214,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3215,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3216,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3217,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3218,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3219,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3220,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3221,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3222,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3223,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3224,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3225,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3226,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3227,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3228,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3229,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3230,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3231,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3232,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3233,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3234,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3235,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3236,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3237,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3238,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3239,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3240,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3241,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3242,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3243,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3244,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3245,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3246,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3247,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3248,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3249,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3250,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3251,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3252,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3253,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3254,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3255,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3256,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3257,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3258,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3259,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3260,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3261,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3262,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3263,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3264,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3265,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3266,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3267,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3268,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3269,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3270,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+4460,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+4461,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+4462,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+4463,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+4464,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+4465,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+4466,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+4467,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+4468,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+4469,for use with all commodities,Retailer Assigned For Use With All Commodities,,,
+3167,frisee,Frisee,,,
+3161,gai (gui) choy (chinese or indian mustard),Baby - Chinese Or Indian Mustard Gai (Gui) Choy (Chinese Or Indian Mustard),,,
+4607,gai (gui) choy (chinese or indian mustard),Chinese Or Indian Mustard Gai (Gui) Choy (Chinese Or Indian Mustard),,,
+3160,gai lan,Synonymous With Chinese Broccoli Gai Lan,,,
+3453,galangal root,Galangal Root,,,
+3052,garlic,String Garlic,120,6,330
+3399,garlic,Regular - Fresh/Semi-Dried With Leaves Attached Garlic,120,6,330
+3400,garlic,Regular - Smoked Garlic,120,6,330
+3401,garlic,One-Clove Types Garlic,120,6,330
+4608,garlic,Regular Garlic,120,6,330
+4609,garlic,Elephant Garlic,120,6,330
+4610,garlic,Retailer Assigned Garlic,120,6,330
+4611,garlic,Retailer Assigned Garlic,120,6,330
+4612,ginger root,Regular Ginger Root,nan,35,60
+4613,ginger root,Retailer Assigned Ginger Root,nan,35,60
+3091,gobo root/burdock,Gobo Root/Burdock,,,
+3135,gourd,Ornamental Gourd,,,
+3092,grapefruit,Oroblanco/Sweetie Grapefruit,7,21,330
+3129,grapefruit,Pummelo - Red Grapefruit,7,21,330
+3152,grapefruit,Melogold Grapefruit,7,21,330
+3157,grapefruit,Extra-Large White Grapefruit,7,21,330
+3158,grapefruit,Extra-Large White Grapefruit,7,21,330
+3159,grapefruit,Extra-Large White Grapefruit,7,21,330
+3361,grapefruit,Without P/Harvest Treatment Grapefruit,7,21,330
+4027,grapefruit,"Small Ruby/Red/Pink (Includes Ray Ruby, Ruby, Ruby Red) Grapefruit",7,21,330
+4047,grapefruit,"Small Ruby/Red/Pink (Includes Ray Ruby, Ruby, Ruby Red) Grapefruit",7,21,330
+4279,grapefruit,Pummelo - White Grapefruit,7,21,330
+4280,grapefruit,"Small Ruby/Red/Pink (Includes Ray Ruby, Ray, Ruby Red) Grapefruit",7,21,330
+4281,grapefruit,"Large Ruby/Red/Pink (Ncludes Ray Ruby, Ruby, Ruby Red) Grapefruit",7,21,330
+4282,grapefruit,"Large Ruby/Red/Pink (Includes Ray Ruby, Ruby, Ruby Red) Grapefruit",7,21,330
+4283,grapefruit,"Large Ruby/Red/Pink (Includes Ray Ruby, Ray, Ruby Red) Grapefruit",7,21,330
+4284,grapefruit,Small Deep Red Grapefruit,7,21,330
+4285,grapefruit,Small Deep Red Grapefruit,7,21,330
+4286,grapefruit,Small Deep Red Grapefruit,7,21,330
+4287,grapefruit,Large Deep Red Grapefruit,7,21,330
+4288,grapefruit,Large Deep Red Grapefruit,7,21,330
+4289,grapefruit,Large Deep Red Grapefruit,7,21,330
+4290,grapefruit,Small White Grapefruit,7,21,330
+4291,grapefruit,Small White Grapefruit,7,21,330
+4292,grapefruit,Small White Grapefruit,7,21,330
+4293,grapefruit,Large White Grapefruit,7,21,330
+4294,grapefruit,Large White Grapefruit,7,21,330
+4295,grapefruit,Large White Grapefruit,7,21,330
+4296,grapefruit,Retailer Assigned Grapefruit,7,21,330
+4297,grapefruit,Retailer Assigned Grapefruit,7,21,330
+4298,grapefruit,Retailer Assigned Grapefruit,7,21,330
+4491,grapefruit,"Extra-Large Ruby/Red/Pink (Includes Ray Ruby, Ruby, Ruby Red) Grapefruit",7,21,330
+4492,grapefruit,"Extra-Large Ruby/Red/Pink (Includes Ray Ruby, Ruby, Ruby Red) Grapefruit",7,21,330
+4493,grapefruit,"Extra-Large Ruby/Red/Pink (Includes Ray Ruby, Ruby, Ruby Red) Grapefruit",7,21,330
+4494,grapefruit,Extra-Large Deep Red Grapefruit,7,21,330
+4495,grapefruit,Extra-Large Deep Red Grapefruit,7,21,330
+4496,grapefruit,Extra-Large Deep Red Grapefruit,7,21,330
+3043,grapes,"Italia, Seeded Grapes",nan,10,330
+3093,grapes,Retailer Assigned Grapes,nan,10,330
+3094,grapes,Retailer Assigned Grapes,nan,10,330
+3359,grapes,Chasselas Grapes,nan,10,330
+3360,grapes,Muscat De Hambourg Grapes,nan,10,330
+3449,grapes,Sugrathirteen Grapes,nan,10,330
+3450,grapes,Sugranineteen Grapes,nan,10,330
+3451,grapes,Sugrathirtyfour Grapes,nan,10,330
+3452,grapes,Sugrathirtyfive Grapes,nan,10,330
+3469,grapes,Sugrasixteen Grapes,nan,10,330
+3491,grapes,Arra Fifteen Grapes,nan,10,330
+3492,grapes,Arra Twentynine Grapes,nan,10,330
+3496,grapes,Ifg Core Red Seedless Grapes,nan,10,330
+3497,grapes,Ifg Core Black Seedless Grapes,nan,10,330
+3498,grapes,Ifg Core Green Seedless Grapes,nan,10,330
+3499,grapes,Ifg Novelty Red Seedless Grapes,nan,10,330
+3500,grapes,Ifg Novelty Black Seedless Grapes,nan,10,330
+3501,grapes,Ifg Novelty Green Seedless Grapes,nan,10,330
+3502,grapes,Arra Twentyseven Grapes,nan,10,330
+3503,grapes,Arra Twentyeight Grapes,nan,10,330
+3504,grapes,Arra Thirty Grapes,nan,10,330
+3505,grapes,Arra Thirtytwo Grapes,nan,10,330
+3506,grapes,Sweet Scarlet Grapes,nan,10,330
+3508,grapes,Thomcord Grapes,nan,10,330
+3530,grapes,Jupiter Grapes,nan,10,330
+3531,grapes,Sugra Family Black Seedless Grapes,nan,10,330
+3532,grapes,Sugra Family Green Seedless Grapes,nan,10,330
+3533,grapes,Sugra Family Novelty Seedless Grapes,nan,10,330
+3534,grapes,Sugra Family Red Seedless Grapes,nan,10,330
+4022,grapes,White/Green Seedless - Peerlette Seedless/Thompson Seedless Grapes,nan,10,330
+4023,grapes,Red Seedless - Flame/Ruby/Emperatriz Grapes,nan,10,330
+4056,grapes,Blue/Black Seedless (All Other Varieties Not Listed Above Including Beauty And Autumn Royal) Grapes,nan,10,330
+4270,grapes,Blue/Black Seeded (Ribier/Exotic/Niabel) Grapes,nan,10,330
+4271,grapes,Champagne Grapes,nan,10,330
+4272,grapes,Concord Grapes,nan,10,330
+4273,grapes,Red Seeded (Cardinal/Emperor/Queen/Christmas Rose) Grapes,nan,10,330
+4274,grapes,White/Green Seeded (All Others Not Listed) Grapes,nan,10,330
+4275,grapes,Retailer Assigned Grapes,nan,10,330
+4276,grapes,Retailer Assigned Grapes,nan,10,330
+4277,grapes,Retailer Assigned Grapes,nan,10,330
+4278,grapes,Retailer Assigned Grapes,nan,10,330
+4497,grapes,Sugraone Grapes,nan,10,330
+4498,grapes,White/Green Seedless (All Others Not Listed Above (Including Autumn King)) Grapes,nan,10,330
+4499,grapes,Crimson/Majestic Grapes,nan,10,330
+4635,grapes,Red Seedless Grapes,nan,10,330
+4636,grapes,Red Globe Grapes,nan,10,330
+4637,grapes,Red Seeded Grapes,nan,10,330
+4638,grapes,Fantasy/Marroo Grapes,nan,10,330
+4957,grapes,Blue/Black Seeded (All Others Not Listed Above) Grapes,nan,10,330
+4614,greens,Collard Greens,,,
+4615,greens,Dandelion Greens,,,
+4616,greens,Mustard (Synonymous With Gai (Gui) Choy) Greens,,,
+4617,greens,Polk Greens Greens,,,
+4618,greens,Texas Mustard Greens,,,
+4619,greens,Turnip Greens,,,
+4620,greens,Retailer Assigned Greens,,,
+4621,greens,Retailer Assigned Greens,,,
+4622,greens,Retailer Assigned Greens,,,
+4623,greens,Retailer Assigned Greens,,,
+4624,greens,Retailer Assigned Greens,,,
+4299,guava,Guava,nan,3,330
+4300,homli fruit,Homli Fruit,,,
+4625,horseradish root,Horseradish Root,nan,30,nan
+3454,jackfruit,Green Jackfruit,,,
+3455,jackfruit,Yellow Jackfruit,,,
+4626,jicama/yam bean,Jicama/Yam Bean,,,
+3095,kale,Multicolor Kale,nan,6,330
+4627,kale,Kale,nan,6,330
+3446,kale sprouts,Kale Sprouts,,,
+4302,kiwano (horned melon),Kiwano (Horned Melon),,,
+3279,kiwifruit,Golden Kiwifruit,,,
+3280,kiwifruit,Jumbo Regular Kiwifruit,,,
+3517,kiwifruit,Retailer Assigned - Gold Derivative Varieties Kiwifruit,,,
+4030,kiwifruit,Regular Kiwifruit,,,
+4301,kiwifruit,Retailer Assigned Kiwifruit,,,
+3096,kohlrabi,Purple/Red/All Other Colors Kohlrabi,nan,4,330
+4628,kohlrabi,Kohlrabi,nan,4,330
+4303,kumquat,Kumquat,,,
+3402,leeks,Regular - Bunch Leeks,nan,10,330
+3403,leeks,Baby - Bunch Leeks,nan,10,330
+4629,leeks,Regular Leeks,nan,10,330
+4630,leeks,Baby Leeks,nan,10,330
+4894,lemongrass,Lemongrass,,,
+3362,lemons,Without Postharvest Treatment Lemons,100,3,90
+3617,lemons,Seedless Lemons,100,3,90
+3626,lemons,Meyer Lemons,100,3,90
+4033,lemons,Small Lemons,100,3,90
+4053,lemons,Large Lemons,100,3,90
+4304,lemons,Retailer Assigned Lemons,100,3,90
+4958,lemons,Medium Lemons,100,3,90
+3097,lettuce,"Romaine, Red Lettuce",nan,nan,3
+3098,lettuce,"Boston, Red Lettuce",nan,nan,3
+3169,lettuce,Catalogna Lettuce,nan,nan,3
+3325,lettuce,Lollo Bionda/Coral - Green Lettuce,nan,nan,3
+3326,lettuce,Lollo Rossa/Coral - Red Lettuce,nan,nan,3
+3327,lettuce,Mignonette (Compact Red-Tinged Butterhead Varieties) Lettuce,nan,nan,3
+3328,lettuce,Mixed Small-Leaf Salad Lettuce,nan,nan,3
+3329,lettuce,Oak Leaf - Green Lettuce,nan,nan,3
+3330,lettuce,Oak Leaf - Reg Lettuce,nan,nan,3
+4061,lettuce,Iceberg Lettuce,nan,nan,3
+4075,lettuce,Red Leaf Lettuce,nan,nan,3
+4076,lettuce,Green Leaf Lettuce,nan,nan,3
+4631,lettuce,Bibb/Flat/Round Lettuce,nan,nan,3
+4632,lettuce,Boston/Butter Lettuce,nan,nan,3
+4633,lettuce,Hydroponic Lettuce,nan,nan,3
+4634,lettuce,Iceberg Lettuce,nan,nan,3
+4639,lettuce,Mache Lettuce,nan,nan,3
+4640,lettuce,Romaine/Cos Lettuce,nan,nan,3
+4641,lettuce,Retailer Assigned Lettuce,nan,nan,3
+4642,lettuce,Retailer Assigned Lettuce,nan,nan,3
+4643,lettuce,Retailer Assigned Lettuce,nan,nan,3
+4328,limequats,Limequats,,,
+4048,limes,"Regular (Incl. Persian, Tahiti & Bearss) Limes",,,
+4305,limes,Key (Incl. Mexican & West Indian) Limes,,,
+4306,limes,Retailer Assigned Limes,,,
+4307,longan,Longan,,,
+4308,loquats,Loquats,,,
+3099,lotus root,Lotus Root,,,
+4309,lychees,Lychees,nan,6,330
+3106,macadamia,Macadamia,,,
+3366,madroña,Madroña,,,
+4644,malanga,Malanga,,,
+4310,mamey,Mamey,,,
+3114,mango,Extra-Large Green Mango,12,5,360
+3363,mango,Kensington Pride Mango,12,5,360
+3364,mango,R2E2 Mango,12,5,360
+3365,mango,Ripe/Ready-To-Eat Mango,12,5,360
+3464,mango,B-74 Mango,12,5,360
+3488,mango,Extra-Large Red Mango,12,5,360
+3621,mango,Francis Mango,12,5,360
+4051,mango,"Small Red (Includes Tommy Atkins, Kent, Palmer, Vandyke, Edward,Hayden) Mango",12,5,360
+4311,mango,Small Green (Includes Keitt And Francis) Mango,12,5,360
+4312,mango,"Small Yellow (Includes Oro, Ataulfo/Honey Manila) Mango",12,5,360
+4313,mango,Retailer Assigned Mango,12,5,360
+4314,mango,Retailer Assigned Mango,12,5,360
+4315,mango,Retailer Assigned Mango,12,5,360
+4316,mango,Retailer Assigned Mango,12,5,360
+4584,mango,Large Green (Includes Keitt And Francis) Mango,12,5,360
+4959,mango,"Large Red (Includes Tommy Atkins, Kent, Palmer Vandyke, Edward, Hayden) Mango",12,5,360
+4961,mango,Large Yellow Mango,12,5,360
+3042,mangosteen,Mangosteen,,,
+4895,marjoram,Marjoram,,,
+3033,melon,Small Charentais Melon,nan,4,330
+3034,melon,Large Charentais Melon,nan,4,330
+3100,melon,Gold Honeydew Melon,nan,4,330
+3101,melon,Piel De Sapo Melon,nan,4,330
+3281,melon,"Watermelon - Orange, Seedless Melon",nan,4,330
+3289,melon,Sprite Melon,nan,4,330
+3306,melon,Medium Charentais Melon,nan,4,330
+3307,melon,Extra-Large Charentais Melon,nan,4,330
+3308,melon,"Watermelon - Orange, Seedless Melon",nan,4,330
+3367,melon,Glasshouse - Netted Varieties Melon,nan,4,330
+3368,melon,Ogen Melon,nan,4,330
+3421,melon,3-7 LBS Watermelon - Mini Seedless Melon,nan,4,330
+3456,melon,Winter Melon,nan,4,330
+3470,melon,"Watermelon - Red, Small Seeds Melon",nan,4,330
+3494,melon,3-7 LBS Watermelon - Yellow Mini Seedless Melon,nan,4,330
+3622,melon,Honey Green Melon,nan,4,330
+3623,melon,Hami Melon,nan,4,330
+3624,melon,Korean Melon,nan,4,330
+4031,melon,Watermelon - Red Melon,nan,4,330
+4032,melon,"Watermelon - Red, Seedless Melon",nan,4,330
+4034,melon,Large Honeydew/White Honeydew Melon,nan,4,330
+4049,melon,Small Cantaloupe/Rockmelon Melon,nan,4,330
+4050,melon,Large Cantaloupe/Rockmelon Melon,nan,4,330
+4317,melon,Canary/Yellow Honeydew Melon,nan,4,330
+4318,melon,Small Cantaloupe/Muskmelon Melon,nan,4,330
+4319,melon,Large Cantaloupe/Muskmelon Melon,nan,4,330
+4320,melon,Casaba Melon,nan,4,330
+4321,melon,Cinnabar Melon,nan,4,330
+4322,melon,Crenshaw Melon,nan,4,330
+4324,melon,French Afternoon Melon,nan,4,330
+4325,melon,French Breakfast Melon,nan,4,330
+4326,melon,Galia Melon,nan,4,330
+4327,melon,Orange Flesh/Cantaline Melon,nan,4,330
+4329,melon,Small Honeydew/White Honeydew Melon,nan,4,330
+4330,melon,Mayan Melon,nan,4,330
+4331,melon,Mickey Lee Watermelon/Sugarbaby Melon,nan,4,330
+4332,melon,Muskmelon Melon,nan,4,330
+4333,melon,Pepino Melon,nan,4,330
+4334,melon,Persian Melon,nan,4,330
+4335,melon,Prince Melon,nan,4,330
+4336,melon,Santa Claus Melon,nan,4,330
+4337,melon,Saticoy Melon,nan,4,330
+4338,melon,Sharlin Melon,nan,4,330
+4339,melon,Spanish/Tendral Melon,nan,4,330
+4340,melon,Watermelon - Yellow Melon,nan,4,330
+4341,melon,"Watermelon - Yellow, Seedless Melon",nan,4,330
+4342,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4343,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4344,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4345,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4346,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4347,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4348,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4349,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4350,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4351,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4352,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4353,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4354,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4355,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4356,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4357,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4358,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4359,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4360,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4361,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4362,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4363,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4364,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4365,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4366,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4367,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4368,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4369,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4370,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4371,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4372,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4373,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4374,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4375,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+4376,melon,Retailer Assigned (Includes Pre-Cut Melons) Melon,nan,4,330
+3475,mint,Peppermint Mint,,,
+4896,mint,Mint,,,
+4929,mixed nuts,Mixed Nuts,,,
+3102,mushrooms,Morel Mushrooms,330,nan,5
+3103,mushrooms,Enoki Mushrooms,330,nan,5
+3404,mushrooms,Cep Mushrooms,330,nan,5
+3405,mushrooms,Fairy Ring Champignon Mushrooms,330,nan,5
+3406,mushrooms,Grey - Tricholoma Mushrooms,330,nan,5
+3407,mushrooms,Grisette Mushrooms,330,nan,5
+3408,mushrooms,Horn Of Plenty/Black Trumpet Mushrooms,330,nan,5
+3409,mushrooms,Pioppino Mushrooms,330,nan,5
+3410,mushrooms,Saffron Milk-Cap Mushrooms,330,nan,5
+3411,mushrooms,Sheep Polypore Mushrooms,330,nan,5
+4085,mushrooms,Large Regular Mushrooms,330,nan,5
+4645,mushrooms,"Small Regular, Button Mushrooms",330,nan,5
+4646,mushrooms,Black Forest Mushrooms,330,nan,5
+4647,mushrooms,Chanterelle Mushrooms,330,nan,5
+4648,mushrooms,Cremini/Brown/Swiss Brown Mushrooms,330,nan,5
+4649,mushrooms,Oyster Mushrooms,330,nan,5
+4650,mushrooms,Portabella Mushrooms,330,nan,5
+4651,mushrooms,Shiitake Mushrooms,330,nan,5
+4652,mushrooms,Wood Ear Mushrooms,330,nan,5
+4653,mushrooms,Retailer Assigned Mushrooms,330,nan,5
+4654,mushrooms,Retailer Assigned Mushrooms,330,nan,5
+3275,name,Yellow (Nyah-May) Name,pantry,fridge,freezer
+3276,name,White (Nyah-May) Name,pantry,fridge,freezer
+4818,name,Retailer Assigned Name,pantry,fridge,freezer
+3035,nectarine,"Large White Flesh, Tree Ripened, Nectarine",2,4,360
+3369,nectarine,Nectavigne (Red Flesh) Nectarine,2,4,360
+3437,nectarine,Flat Yellow Nectarine,2,4,360
+3439,nectarine,White Flesh Flat Nectarine,2,4,360
+4035,nectarine,Small Yellow Flesh Nectarine,2,4,360
+4036,nectarine,Large Yellow Flesh Nectarine,2,4,360
+4188,nectarine,"Small White Flesh, Tree Ripened, Ready-To-Eat Nectarine",2,4,360
+4377,nectarine,"Small Yellow Flesh, Tree Ripened, Ready-To-Eat Nectarine",2,4,360
+4378,nectarine,"Large Yellow Flesh, Tree Ripened, Ready-To-Eat Nectarine",2,4,360
+4379,nectarine,Retailer Assigned Nectarine,2,4,360
+4380,nectarine,Retailer Assigned Nectarine,2,4,360
+4655,okra,Regular (Green) Okra,nan,2,330
+4656,okra,Chinese Okra,nan,2,330
+4657,okra,Red Okra,nan,2,330
+3162,ong choy,Synonymous With Water Spinach Ong Choy,,,
+3286,onions,Sweet Red Italian - Flat Onions,60,60,210
+3331,onions,Red Fresh - Bunch Onions,60,60,210
+3412,onions,Yellow/Brown Fresh - Bunch Onions,60,60,210
+3493,onions,Tearless Sweet Onions,60,60,210
+3520,onions,Sk-20 Onions,60,60,210
+3535,onions,Sweetheart Onions,60,60,210
+4068,onions,Green (Scallions)/Spring Onions,60,60,210
+4082,onions,Red Onions,60,60,210
+4093,onions,Large Yellow/Brown Onions,60,60,210
+4159,onions,Vidalia Onions,60,60,210
+4161,onions,Texas Sweet Onions,60,60,210
+4163,onions,Walla Walla Onions,60,60,210
+4164,onions,Maui Onions,60,60,210
+4165,onions,California Sweet Onions,60,60,210
+4166,onions,Other Sweet Onions,60,60,210
+4658,onions,Boiling Onions,60,60,210
+4659,onions,Bulb Onions,60,60,210
+4660,onions,Pearl Onions,60,60,210
+4661,onions,"Pickling, White Onions",60,60,210
+4662,onions,Shallots Onions,60,60,210
+4663,onions,White Onions,60,60,210
+4665,onions,Small Yellow/Brown Onions,60,60,210
+4666,onions,Retailer Assigned Onions,60,60,210
+4667,onions,Retailer Assigned Onions,60,60,210
+4668,onions,Retailer Assigned Onions,60,60,210
+4669,onions,Retailer Assigned Onions,60,60,210
+4670,onions,Retailer Assigned Onions,60,60,210
+3476,orange tree leaf,Orange Tree Leaf,,,
+3027,oranges,Shamouti Oranges,360,3,330
+3028,oranges,Small Delta Seedless Oranges,360,3,330
+3036,oranges,Small Midknight Oranges,360,3,330
+3107,oranges,Medium Navel Oranges,360,3,330
+3108,oranges,Medium Valencia Oranges,360,3,330
+3109,oranges,Seville (Marmalade Type) Oranges,360,3,330
+3110,oranges,"Navel, Cara Cara (Red) Oranges",360,3,330
+3153,oranges,Medium Delta Seedless Oranges,360,3,330
+3154,oranges,Large Delta Seedless Oranges,360,3,330
+3155,oranges,Medium Midknight Oranges,360,3,330
+3156,oranges,Large Midknight Oranges,360,3,330
+3309,oranges,Lima Oranges,360,3,330
+3310,oranges,Pera Oranges,360,3,330
+3370,oranges,Maltaise Oranges,360,3,330
+3371,oranges,Salustiana Oranges,360,3,330
+3372,oranges,Navelate (And Other Late Navel Varieties) Oranges,360,3,330
+3373,oranges,Navelina (Incl. Newhall) Oranges,360,3,330
+3374,oranges,Without Postharvest Treatment Oranges,360,3,330
+4012,oranges,Large Navel Oranges,360,3,330
+4013,oranges,Small Navel Oranges,360,3,330
+4014,oranges,Small Valencia Oranges,360,3,330
+4014,oranges,Small Valencia Oranges,360,3,330
+4381,oranges,Blood Oranges,360,3,330
+4382,oranges,Juice Oranges,360,3,330
+4384,oranges,Small Navel Oranges,360,3,330
+4385,oranges,Large Navel Oranges,360,3,330
+4386,oranges,Small Temple Oranges,360,3,330
+4387,oranges,Large Temple Oranges,360,3,330
+4388,oranges,Large Valencia Oranges,360,3,330
+4388,oranges,Large Valencia Oranges,360,3,330
+4389,oranges,Retailer Assigned Oranges,360,3,330
+4390,oranges,Retailer Assigned Oranges,360,3,330
+4391,oranges,Retailer Assigned Oranges,360,3,330
+4392,oranges,Retailer Assigned Oranges,360,3,330
+4393,oranges,Retailer Assigned Oranges,360,3,330
+4897,oregano,Oregano,,,
+4870,other dried fruits,Retailer Assigned Other Dried Fruits,,,
+4871,other dried fruits,Retailer Assigned Other Dried Fruits,,,
+4872,other dried fruits,Retailer Assigned Other Dried Fruits,,,
+4873,other dried fruits,Retailer Assigned Other Dried Fruits,,,
+4874,other dried fruits,Retailer Assigned Other Dried Fruits,,,
+4875,other dried fruits,Retailer Assigned Other Dried Fruits,,,
+4876,other dried fruits,Retailer Assigned Other Dried Fruits,,,
+4877,other dried fruits,Retailer Assigned Other Dried Fruits,,,
+4878,other dried fruits,Retailer Assigned Other Dried Fruits,,,
+4879,other dried fruits,Retailer Assigned Other Dried Fruits,,,
+4880,other dried fruits,Retailer Assigned Other Dried Fruits,,,
+4881,other dried fruits,Retailer Assigned Other Dried Fruits,,,
+4882,other dried fruits,Retailer Assigned Other Dried Fruits,,,
+4883,other dried fruits,Retailer Assigned Other Dried Fruits,,,
+4471,other fruits,Retailer Assigned Other Fruits,,,
+4472,other fruits,Retailer Assigned Other Fruits,,,
+4473,other fruits,Retailer Assigned Other Fruits,,,
+4474,other fruits,Retailer Assigned Other Fruits,,,
+4475,other fruits,Retailer Assigned Other Fruits,,,
+4476,other fruits,Retailer Assigned Other Fruits,,,
+4477,other fruits,Retailer Assigned Other Fruits,,,
+4478,other fruits,Retailer Assigned Other Fruits,,,
+4479,other fruits,Retailer Assigned Other Fruits,,,
+4480,other fruits,Retailer Assigned Other Fruits,,,
+4481,other fruits,Retailer Assigned Other Fruits,,,
+4482,other fruits,Retailer Assigned Other Fruits,,,
+4483,other fruits,Retailer Assigned Other Fruits,,,
+4484,other fruits,Retailer Assigned Other Fruits,,,
+4485,other fruits,Retailer Assigned Other Fruits,,,
+4486,other fruits,Retailer Assigned Other Fruits,,,
+4487,other fruits,Retailer Assigned Other Fruits,,,
+4488,other fruits,Retailer Assigned Other Fruits,,,
+4489,other fruits,Retailer Assigned Other Fruits,,,
+4490,other fruits,Retailer Assigned Other Fruits,,,
+4909,other herbs,Retailer Assigned Other Herbs,,,
+4910,other herbs,Retailer Assigned Other Herbs,,,
+4911,other herbs,Retailer Assigned Other Herbs,,,
+4912,other herbs,Retailer Assigned Other Herbs,,,
+4913,other herbs,Retailer Assigned Other Herbs,,,
+4914,other herbs,Retailer Assigned Other Herbs,,,
+4915,other herbs,Retailer Assigned Other Herbs,,,
+4916,other herbs,Retailer Assigned Other Herbs,,,
+4917,other herbs,Retailer Assigned Other Herbs,,,
+4918,other herbs,Retailer Assigned Other Herbs,,,
+4919,other herbs,Retailer Assigned Other Herbs,,,
+4920,other herbs,Retailer Assigned Other Herbs,,,
+4921,other herbs,Retailer Assigned Other Herbs,,,
+4922,other herbs,Retailer Assigned Other Herbs,,,
+4923,other herbs,Retailer Assigned Other Herbs,,,
+4947,other nuts,Retailer Assigned Other Nuts,,,
+4948,other nuts,Retailer Assigned Other Nuts,,,
+4949,other nuts,Retailer Assigned Other Nuts,,,
+4950,other nuts,Retailer Assigned Other Nuts,,,
+4951,other nuts,Retailer Assigned Other Nuts,,,
+4952,other nuts,Retailer Assigned Other Nuts,,,
+4953,other nuts,Retailer Assigned Other Nuts,,,
+4954,other nuts,Retailer Assigned Other Nuts,,,
+4955,other nuts,Retailer Assigned Other Nuts,,,
+4956,other nuts,Retailer Assigned Other Nuts,,,
+4500,other vegetables,Retailer Assigned Other Vegetables,,,
+4501,other vegetables,Retailer Assigned Other Vegetables,,,
+4502,other vegetables,Retailer Assigned Other Vegetables,,,
+4503,other vegetables,Retailer Assigned Other Vegetables,,,
+4504,other vegetables,Retailer Assigned Other Vegetables,,,
+4505,other vegetables,Retailer Assigned Other Vegetables,,,
+4506,other vegetables,Retailer Assigned Other Vegetables,,,
+4507,other vegetables,Retailer Assigned Other Vegetables,,,
+4508,other vegetables,Retailer Assigned Other Vegetables,,,
+4509,other vegetables,Retailer Assigned Other Vegetables,,,
+4510,other vegetables,Retailer Assigned Other Vegetables,,,
+4511,other vegetables,Retailer Assigned Other Vegetables,,,
+4512,other vegetables,Retailer Assigned Other Vegetables,,,
+4513,other vegetables,Retailer Assigned Other Vegetables,,,
+4820,other vegetables,Retailer Assigned Other Vegetables,,,
+4821,other vegetables,Retailer Assigned Other Vegetables,,,
+4822,other vegetables,Retailer Assigned Other Vegetables,,,
+4823,other vegetables,Retailer Assigned Other Vegetables,,,
+4824,other vegetables,Retailer Assigned Other Vegetables,,,
+4825,other vegetables,Retailer Assigned Other Vegetables,,,
+4826,other vegetables,Retailer Assigned Other Vegetables,,,
+4827,other vegetables,Retailer Assigned Other Vegetables,,,
+4828,other vegetables,Retailer Assigned Other Vegetables,,,
+4829,other vegetables,Retailer Assigned Other Vegetables,,,
+4830,other vegetables,Retailer Assigned Other Vegetables,,,
+4831,other vegetables,Retailer Assigned Other Vegetables,,,
+4832,other vegetables,Retailer Assigned Other Vegetables,,,
+4833,other vegetables,Retailer Assigned Other Vegetables,,,
+4834,other vegetables,Retailer Assigned Other Vegetables,,,
+4835,other vegetables,Retailer Assigned Other Vegetables,,,
+4836,other vegetables,Retailer Assigned Other Vegetables,,,
+4837,other vegetables,Retailer Assigned Other Vegetables,,,
+4838,other vegetables,Retailer Assigned Other Vegetables,,,
+4839,other vegetables,Retailer Assigned Other Vegetables,,,
+4840,other vegetables,Retailer Assigned Other Vegetables,,,
+4841,other vegetables,Retailer Assigned Other Vegetables,,,
+4842,other vegetables,Retailer Assigned Other Vegetables,,,
+4843,other vegetables,Retailer Assigned Other Vegetables,,,
+4844,other vegetables,Retailer Assigned Other Vegetables,,,
+4845,other vegetables,Retailer Assigned Other Vegetables,,,
+4846,other vegetables,Retailer Assigned Other Vegetables,,,
+4847,other vegetables,Retailer Assigned Other Vegetables,,,
+4848,other vegetables,Retailer Assigned Other Vegetables,,,
+4849,other vegetables,Retailer Assigned Other Vegetables,,,
+4850,other vegetables,Retailer Assigned Other Vegetables,,,
+4851,other vegetables,Retailer Assigned Other Vegetables,,,
+4852,other vegetables,Retailer Assigned Other Vegetables,,,
+4853,other vegetables,Retailer Assigned Other Vegetables,,,
+4854,other vegetables,Retailer Assigned Other Vegetables,,,
+4855,other vegetables,Retailer Assigned Other Vegetables,,,
+4856,other vegetables,Retailer Assigned Other Vegetables,,,
+4857,other vegetables,Retailer Assigned Other Vegetables,,,
+4858,other vegetables,Retailer Assigned Other Vegetables,,,
+4859,other vegetables,Retailer Assigned Other Vegetables,,,
+4898,oyster plant/salsify,Oyster Plant/Salsify,nan,10,nan
+3477,papalo,Papalo,,,
+3111,papaya/pawpaw,Red-Fleshed (Solo Sunrise) Papaya/Pawpaw,,,
+3112,papaya/pawpaw,Meridol Papaya/Pawpaw,,,
+4052,papaya/pawpaw,Small Regular Papaya/Pawpaw,,,
+4394,papaya/pawpaw,Large Regular Papaya/Pawpaw,,,
+4395,papaya/pawpaw,Cooking/Mexican Papaya/Pawpaw,,,
+4396,papaya/pawpaw,Retailer Assigned Papaya/Pawpaw,,,
+4899,parsley,Regular/Curly Parsley,,,
+4901,parsley,Italian/Continental/French Parsley,,,
+4902,parsley,Retailer Assigned Parsley,,,
+4671,parsley root(hamburg parsley),Parsley Root(Hamburg Parsley),,,
+3053,parsnip,Baby Parsnip,nan,21,330
+4672,parsnip,Parsnip,nan,21,330
+3038,passion fruit,"Granadilla, Orange Passion Fruit",3,6,210
+3311,passion fruit,Curuba/Banana Passion Fruit,3,6,210
+3312,passion fruit,Granadilla - Yellow/Maracuja Passion Fruit,3,6,210
+4397,passion fruit,Purple Passion Fruit,3,6,210
+4398,passion fruit,Retailer Assigned Passion Fruit,3,6,210
+3113,peaches,Flat White Flesh (Saturn Type) Peaches,2,4,330
+3115,peaches,Flat Yellow Flesh Peaches,2,4,330
+3116,peaches,Small Yellow Flesh (Tree Ripened/Ready-To-Eat) Peaches,2,4,330
+3117,peaches,Large Yellow Flesh (Tree Ripened/Ready-To-Eat) Peaches,2,4,330
+3313,peaches,Small White Flesh - Tree Ripened/ Ready-To-Eat Peaches,2,4,330
+3314,peaches,Large White Flesh - Tree Ripened/ Ready-To-Eat Peaches,2,4,330
+3375,peaches,De Vigne & Sanguine (Red Flesh) Peaches,2,4,330
+4037,peaches,Small Yellow Flesh Peaches,2,4,330
+4038,peaches,Large Yellow Flesh Peaches,2,4,330
+4043,peaches,Small Yellow Flesh - Tree Ripened/Ready-To-Eat Peaches,2,4,330
+4044,peaches,Large Yellow Flesh - Tree Ripened/Ready-To-Eat Peaches,2,4,330
+4399,peaches,Indian Peaches,2,4,330
+4400,peaches,Small White Flesh Peaches,2,4,330
+4401,peaches,Large White Flesh Peaches,2,4,330
+4402,peaches,Small Yellow Flesh Peaches,2,4,330
+4403,peaches,Large Yellow Flesh Peaches,2,4,330
+4404,peaches,Retailer Assigned Peaches,2,4,330
+4405,peaches,Retailer Assigned Peaches,2,4,330
+4930,peanuts,Peanuts,,,
+4931,peanuts,Raw Peanuts,,,
+4932,peanuts,Roasted - Salted Peanuts,,,
+4933,peanuts,Roasted - Unsalted Peanuts,,,
+4934,peanuts,Retailer Assigned Peanuts,,,
+4935,peanuts,Retailer Assigned Peanuts,,,
+3012,pears,Abate Fetel Pears,2,6,330
+3013,pears,Beurre Hardy Pears,2,6,330
+3014,pears,Bon Rouge Pears,2,6,330
+3015,pears,Clara Friis Pears,2,6,330
+3016,pears,Concorde Pears,2,6,330
+3017,pears,Conference Pears,2,6,330
+3018,pears,Durondeau Pears,2,6,330
+3019,pears,Flamingo Pears,2,6,330
+3020,pears,General Leclerc Pears,2,6,330
+3021,pears,Guyot Pears,2,6,330
+3022,pears,Josephine Pears,2,6,330
+3023,pears,Small Passe Crassane Pears,2,6,330
+3024,pears,Rocha Pears,2,6,330
+3025,pears,Rosemarie Pears,2,6,330
+3026,pears,Triumph De Vienne Pears,2,6,330
+3118,pears,Starkrimson Pears,2,6,330
+3316,pears,Carmen Pears,2,6,330
+3317,pears,Angelys Pears,2,6,330
+3318,pears,Large Passe Crassane Pears,2,6,330
+3376,pears,Alexander Lucas Pears,2,6,330
+3377,pears,Louise Bonne Pears,2,6,330
+3378,pears,Santa Maria Pears,2,6,330
+3420,pears,Belle Du Jumet Pears,2,6,330
+3434,pears,Tosca Pears,2,6,330
+3466,pears,Cape Rose Pears,2,6,330
+3485,pears,Harovin Sundown Pears,2,6,330
+3489,pears,Cepuna Pears,2,6,330
+3495,pears,Celina Pears,2,6,330
+3518,pears,Oksana Pears,2,6,330
+3522,pears,Hw624 Pears,2,6,330
+3606,pears,Sweet Sensation Pears,2,6,330
+4024,pears,Small Bartlett/Williams/Wbc Pears,2,6,330
+4025,pears,Small Anjou Pears,2,6,330
+4026,pears,Small Bosc/Beurre Bosc Pears,2,6,330
+4406,pears,Asian/Nashi - White Pears,2,6,330
+4407,pears,Asian/Nashi - Yellow Pears,2,6,330
+4408,pears,Asian/Nashi - Brown Pears,2,6,330
+4409,pears,Large Bartlett/Williams/Wbc Pears,2,6,330
+4410,pears,Bartlett - Red/Red Sensation Pears,2,6,330
+4411,pears,Small Bosc/Beurre Bosc Pears,2,6,330
+4412,pears,Large Bosc/Beurre Bosc Pears,2,6,330
+4413,pears,Large Bosc/Beurre Bosc Pears,2,6,330
+4414,pears,Comice/ Doyenne Du Comice Pears,2,6,330
+4415,pears,Red Pears,2,6,330
+4416,pears,Large Anjou Pears,2,6,330
+4417,pears,Anjou - Red Pears,2,6,330
+4418,pears,Forelle/Corella Pears,2,6,330
+4419,pears,French Pears,2,6,330
+4420,pears,King Royal Pears,2,6,330
+4421,pears,Packham/Packhams Triumph Pears,2,6,330
+4422,pears,Seckel Pears,2,6,330
+4423,pears,Tree Ripened Pears,2,6,330
+4424,pears,Winter Nelis/Honey Pears,2,6,330
+4425,pears,Retailer Assigned Pears,2,6,330
+4426,pears,Retailer Assigned Pears,2,6,330
+4553,pears,Taylors Gold Pears,2,6,330
+4890,pears,Chinese Yali Pears,2,6,330
+4960,pears,Fragrant Pears,2,6,330
+4092,peas,Chinese Snow Pea/Pea Pod/Mange Tout Peas,450, green,4
+4673,peas,Blackeyed Peas,450, green,4
+4674,peas,Green Peas,450, green,4
+4675,peas,Sugar Snap Peas,450, green,4
+4676,peas,Retailer Assigned Peas,450, green,4
+4936,pecans,Pecans,,,
+4937,pecans,Retailer Assigned Pecans,,,
+3054,peppers,Elongated (Clovis Red/Lamuyo Red) Peppers,3,10,330
+3055,peppers,Elongated (Clovis Green/Lamuyo Green) Peppers,3,10,330
+3056,peppers,Elongated (Clovis Yellow/Lamuyo Yellow) Peppers,3,10,330
+3057,peppers,Elongated (Clovis Orange/Lamuyo Orange) Peppers,3,10,330
+3058,peppers,Elongated (Clovis White/Lamuyo White) Peppers,3,10,330
+3119,peppers,"Small Bell, Greenhouse - Green Peppers",3,10,330
+3120,peppers,"Large Bell, Greenhouse - Green Peppers",3,10,330
+3121,peppers,"Bell, Greenhouse - Orange Peppers",3,10,330
+3122,peppers,"Bell, Greenhouse - White Peppers",3,10,330
+3123,peppers,"Bell, Greenhouse - Brown Peppers",3,10,330
+3124,peppers,"Bell, Greenhouse - Purple Peppers",3,10,330
+3125,peppers,Habanero Peppers,3,10,330
+3413,peppers,Tabasco Peppers,3,10,330
+3465,peppers,Stripy Bell Peppers,3,10,330
+4065,peppers,"Large Bell, Field Grown - Green Peppers",3,10,330
+4088,peppers,"Bell, Field Grown - Red Peppers",3,10,330
+4677,peppers,Anaheim (Green And Red) Peppers,3,10,330
+4678,peppers,Banana (Yellow Long) Peppers,3,10,330
+4679,peppers,"Bell, Field Grown - Brown Peppers",3,10,330
+4680,peppers,"Bell, Field Grown - Golden (Yellow) Peppers",3,10,330
+4681,peppers,"Small Bell, Field Grown - Green Peppers",3,10,330
+4682,peppers,"Bell, Field Grown - Orange Peppers",3,10,330
+4683,peppers,"Bell, Field Grown - Purple Peppers",3,10,330
+4684,peppers,"Bell, Field Grown - White Peppers",3,10,330
+4685,peppers,Chili - Dried Peppers,3,10,330
+4686,peppers,Chili - Green Peppers,3,10,330
+4687,peppers,Cubanelle Peppers,3,10,330
+4688,peppers,"Bell, Greenhouse - Red Peppers",3,10,330
+4689,peppers,"Bell, Greenhouse - Yellow Peppers",3,10,330
+4690,peppers,Hot (Hungarian Hot) Peppers,3,10,330
+4691,peppers,Hot Mixed Peppers,3,10,330
+4692,peppers,Hungarian Wax Peppers,3,10,330
+4693,peppers,Jalapeno - Green/Mexican Green Peppers,3,10,330
+4694,peppers,Jalapeno - Red/Mexican Red Peppers,3,10,330
+4695,peppers,Japanese - Red Peppers,3,10,330
+4696,peppers,Long Hot - Green Peppers,3,10,330
+4697,peppers,Long Hot - Red Peppers,3,10,330
+4698,peppers,Morita Chili Peppers,3,10,330
+4699,peppers,Negro Peppers,3,10,330
+4700,peppers,New Mexico Peppers,3,10,330
+4701,peppers,Pasilla - Green Peppers,3,10,330
+4702,peppers,Pasilla - Red Peppers,3,10,330
+4703,peppers,Pasilla Pod Peppers,3,10,330
+4704,peppers,Pinole Peppers,3,10,330
+4705,peppers,Poblano Peppers,3,10,330
+4706,peppers,Red Cheese Peppers,3,10,330
+4707,peppers,Red Finger Peppers,3,10,330
+4708,peppers,Red Pimiento/ Red Sweet Long Peppers,3,10,330
+4709,peppers,Serrano Peppers,3,10,330
+4710,peppers,Retailer Assigned Peppers,3,10,330
+4711,peppers,Retailer Assigned Peppers,3,10,330
+4712,peppers,Retailer Assigned Peppers,3,10,330
+4713,peppers,Retailer Assigned Peppers,3,10,330
+4714,peppers,Retailer Assigned Peppers,3,10,330
+4715,peppers,Retailer Assigned Peppers,3,10,330
+4716,peppers,Retailer Assigned Peppers,3,10,330
+4717,peppers,Retailer Assigned Peppers,3,10,330
+4718,peppers,Retailer Assigned Peppers,3,10,330
+4719,peppers,Retailer Assigned Peppers,3,10,330
+4720,peppers,Retailer Assigned Peppers,3,10,330
+4721,peppers,Retailer Assigned Peppers,3,10,330
+4722,peppers,Retailer Assigned Peppers,3,10,330
+4772,peppers,Chili - Yellow Peppers,3,10,330
+3459,persimmon,Shiny Red Persimmon,2,2,330
+4427,persimmon,Regular (American Persimmon) Persimmon,2,2,330
+4428,persimmon,Japanese/Sharonfruit (Kaki) Persimmon,2,2,330
+4429,persimmon,Retailer Assigned Persimmon,2,2,330
+3039,physalis/cape gooseberry/ground cherry,Physalis/Cape Gooseberry/Ground Cherry,,,
+4938,pine nuts (pignoli),Pine Nuts (Pignoli),,,
+3037,pineapple,Queen Pineapple,nan,3,330
+3379,pineapple,Mini Pineapple,nan,3,330
+3380,pineapple,Perola Pineapple,nan,3,330
+4029,pineapple,Small Pineapple,nan,3,330
+4430,pineapple,Large Pineapple,nan,3,330
+4431,pineapple,Small Jet Fresh Pineapple,nan,3,330
+4432,pineapple,Large Jet Fresh Pineapple,nan,3,330
+4433,pineapple,Retailer Assigned Pineapple,nan,3,330
+4864,pineapple,Dried Pineapple,nan,3,330
+4939,pistachio,Natural Pistachio,,,
+4940,pistachio,Red Pistachio,,,
+4941,pistachio,Retailer Assigned Pistachio,,,
+3040,pitahaya,Red (Skin Color) Pitahaya,,,
+3319,pitahaya,Yellow (Skin Color) Pitahaya,,,
+3126,plumcot (interspecific plum),Retailer Assigned Plumcot (Interspecific Plum),,,
+3278,plumcot (interspecific plum),Plumcot (Interspecific Plum),,,
+3609,plumcot (interspecific plum),Red Plumcot (Interspecific Plum),,,
+3610,plumcot (interspecific plum),Green Plumcot (Interspecific Plum),,,
+3611,plumcot (interspecific plum),Black Plumcot (Interspecific Plum),,,
+3457,plums,President Plums,2,4,330
+3536,plums,Sweet Pixie Plums,2,4,330
+4039,plums,Small Black Plums,2,4,330
+4040,plums,Large Black Plums,2,4,330
+4041,plums,Small Red Plums,2,4,330
+4042,plums,Small Red Plums,2,4,330
+4434,plums,"Small Green (Includes Dolly, Kelsey, Wickson) Plums",2,4,330
+4435,plums,"Large Green (Includes Dolly, Kelsey, Wickson) Plums",2,4,330
+4436,plums,Italian Prune/Sugar Plums,2,4,330
+4437,plums,"Small Purple (Includes Queen Rosa, Laroda, Nublana, Queen Ann, Simka, El Dorado) Plums",2,4,330
+4438,plums,"Large Purple (Includes Queen Rosa, Laroda, Nublana, Queen Ann, Simka, El Dorado) Plums",2,4,330
+4439,plums,Small Tree Ripened Plums,2,4,330
+4440,plums,Large Tree Ripened Plums,2,4,330
+4441,plums,Small Yellow (Includes Golden Globe) Plums,2,4,330
+4442,plums,Large Yellow (Includes Golden Globe) Plums,2,4,330
+4443,plums,Retailer Assigned Plums,2,4,330
+4444,plums,Retailer Assigned Plums,2,4,330
+3127,pomegranate,Medium Pomegranate,7,30,330
+3440,pomegranate,Large Pomegranate,7,30,330
+4445,pomegranate,Small Pomegranate,7,30,330
+4446,pomegranate,Retailer Assigned Pomegranate,7,30,330
+3128,potato,Purple Potato,7,21,330
+3414,potato,Baking - White Potato,7,21,330
+3415,potato,Baking - Red And Red Eye Varieties Potato,7,21,330
+4072,potato,Russet Potato,7,21,330
+4073,potato,Red Potato,7,21,330
+4083,potato,White Potato,7,21,330
+4723,potato,Creamer - Red Potato,7,21,330
+4724,potato,Creamer - White Potato,7,21,330
+4725,potato,Russet Potato,7,21,330
+4726,potato,Long - White Potato,7,21,330
+4727,potato,Yellow Potato,7,21,330
+4728,potato,Retailer Assigned Potato,7,21,330
+4729,potato,Retailer Assigned Potato,7,21,330
+4730,potato,Retailer Assigned Potato,7,21,330
+4731,potato,Retailer Assigned Potato,7,21,330
+4732,potato,Retailer Assigned Potato,7,21,330
+4733,potato,Retailer Assigned Potato,7,21,330
+3274,prunes,Fresh Prunes,,,
+4865,prunes,Regular (Dried Fruit) Prunes,,,
+4866,prunes,Pitted (Dried Fruit) Prunes,,,
+4867,prunes,Retailer Assigned - Dried Prunes,,,
+3130,pumpkin,Jumbo Pumpkin,nan,3,330
+3131,pumpkin,Decorative (Painted) Pumpkin,nan,3,330
+3132,pumpkin,White Pumpkin,nan,3,330
+3133,pumpkin,White - Mini Pumpkin,nan,3,330
+3134,pumpkin,Pie Pumpkin Pumpkin,nan,3,330
+3631,pumpkin,Pink Pumpkin,nan,3,330
+4734,pumpkin,Mini Pumpkin,nan,3,330
+4735,pumpkin,Regular Pumpkin,nan,3,330
+4736,pumpkin,Retailer Assigned Pumpkin,nan,3,330
+4737,pumpkin,Retailer Assigned Pumpkin,nan,3,330
+3480,pumpkin vine,Pumpkin Vine,,,
+3483,purple herb,Purple Herb,,,
+3478,quelites,Quelites,,,
+4447,quince,Quince,3,14,330
+3482,rabbit herb,Rabbit Herb,,,
+3165,radicchio,Treviso Radicchio,nan,4,nan
+3168,radicchio,Castlefranco Radicchio,nan,4,nan
+4738,radicchio,Radicchio,nan,4,nan
+4089,radish,Bunched Red Radish,nan,12,nan
+4739,radish,Black Radish,nan,12,nan
+4740,radish,Bunched White Radish,nan,12,nan
+4741,radish,Italian Red Radish,nan,12,nan
+4742,radish,Red Radish,nan,12,nan
+4743,radish,White/Icicle Radish,nan,12,nan
+4744,radish,Retailer Assigned Radish,nan,12,nan
+4868,raisins,Black (Dried Fruit) Raisins,,,
+4869,raisins,Golden/Yellow (Dried Fruit) Raisins,,,
+3041,rambutan,Rambutan,,,
+3416,rhubarb,Bunch Rhubarb,nan,6,330
+4745,rhubarb,Regular Rhubarb,nan,6,330
+4746,rhubarb,Retailer Assigned Rhubarb,nan,6,330
+4903,rosemary,Rosemary,,,
+4747,rutabagas (swede),Regular Rutabagas (Swede),,,
+4748,rutabagas (swede),Retailer Assigned Rutabagas (Swede),,,
+3472,sacred pepper,Sacred Pepper,,,
+4904,sage,Sage,,,
+4470,salad bar,Salad Bar,,,
+3136,sapodillo/nispero,Sapodillo/Nispero,,,
+3137,sapote,White Sapote,3,4,330
+3138,sapote,Black Sapote,3,4,330
+3139,savory,Savory,,,
+4905,sorrel,Sorrel,nan,1,330
+3381,soursop,Soursop,,,
+3332,spinach,Baby Spinach,nan,6,330
+3417,spinach,New Zealand Spinach Spinach,nan,6,330
+4090,spinach,Regular/Bunched Spinach,nan,6,330
+4749,spinach,Retailer Assigned Spinach,nan,6,330
+3059,squash,Crown Prince Squash,nan,3,330
+3060,squash,Vegetable Marrow Squash,nan,3,330
+3140,squash,Cucuzza Squash,nan,3,330
+3141,squash,Opo Squash,nan,3,330
+3142,squash,Carnival Squash,nan,3,330
+3143,squash,Acorn - Baby Squash,nan,3,330
+3418,squash,Zucchini/Courgette - Round Squash,nan,3,330
+3441,squash,Butterkin Squash,nan,3,330
+4067,squash,Zucchini/Courgette Squash,nan,3,330
+4086,squash,Yellow Zucchini/Gold Bar/Yellow Courgette Squash,nan,3,330
+4750,squash,Acorn/Table Queen Squash,nan,3,330
+4751,squash,Acorn - Golden Squash,nan,3,330
+4752,squash,Acorn - Swan White Table Queen Squash,nan,3,330
+4753,squash,Australian Blue Squash,nan,3,330
+4754,squash,Baby Scallopini Squash,nan,3,330
+4755,squash,Baby Summer (Green) Squash,nan,3,330
+4756,squash,Baby Green Zucchini/Courgette Squash,nan,3,330
+4757,squash,Banana Squash,nan,3,330
+4758,squash,Buttercup Squash,nan,3,330
+4759,squash,Butternut Squash,nan,3,330
+4760,squash,Calabaza Squash,nan,3,330
+4761,squash,Chayote/Choko Squash,nan,3,330
+4763,squash,Delicata/Sweet Potato Squash,nan,3,330
+4764,squash,(Sweet) Dumpling Squash,nan,3,330
+4765,squash,Gem Squash,nan,3,330
+4766,squash,Golden Delicious Squash,nan,3,330
+4767,squash,Golden Nugget Squash,nan,3,330
+4768,squash,Hubbard Squash,nan,3,330
+4769,squash,Kabocha Squash,nan,3,330
+4773,squash,Patty Pan/Summer Squash,nan,3,330
+4774,squash,Red Kuri Squash,nan,3,330
+4775,squash,Scallopini Squash,nan,3,330
+4776,squash,Spaghetti/Vegetable Spaghetti Squash,nan,3,330
+4777,squash,Sunburst (Yellow) Squash,nan,3,330
+4779,squash,Sweet Mama Squash,nan,3,330
+4780,squash,Turban Squash,nan,3,330
+4781,squash,White Squash,nan,3,330
+4782,squash,Yellow - Straightneck Squash,nan,3,330
+4784,squash,Yellow - Crookneck Squash,nan,3,330
+4785,squash,Retailer Assigned Squash,nan,3,330
+4786,squash,Retailer Assigned Squash,nan,3,330
+4787,squash,Retailer Assigned Squash,nan,3,330
+4788,squash,Retailer Assigned Squash,nan,3,330
+4789,squash,Retailer Assigned Squash,nan,3,330
+3382,sugar apple,Sugar Apple,,,
+4790,sugar cane,Sugar Cane,,,
+4791,sunchokes (jerusalem artichokes),Sunchokes (Jerusalem Artichokes),,,
+4942,sunflower seeds,Sunflower Seeds,,,
+3288,sweet potato/yam/kumara,Retailer Assigned Sweet Potato/Yam/Kumara,,,
+3333,sweet potato/yam/kumara,Small Red/Orangy White Flesh Sweet Potato/Yam/Kumara,,,
+3334,sweet potato/yam/kumara,Large Red/Orangy White Flesh Sweet Potato/Yam/Kumara,,,
+3474,sweet potato/yam/kumara,Saffron Sweet Potato/Yam/Kumara,,,
+4074,sweet potato/yam/kumara,Small Red/Orangy Red Flesh Sweet Potato/Yam/Kumara,,,
+4091,sweet potato/yam/kumara,White Sweet Potato/Yam/Kumara,,,
+4816,sweet potato/yam/kumara,Golden Sweet Potato/Yam/Kumara,,,
+4817,sweet potato/yam/kumara,Large Red/Orangy Red Flesh Sweet Potato/Yam/Kumara,,,
+4792,tamarillo,Golden Tamarillo,,,
+4793,tamarillo,Red Tamarillo,,,
+4448,tamarind,Tamarind,,,
+4383,tangelo,Minneola Tangelo,,,
+4456,tangelo,Tangelo,,,
+4459,tangelo,Jamaican Tangelo,,,
+3029,tangerines/mandarins,Satsuma Tangerines/Mandarins,7,7,330
+3030,tangerines/mandarins,Nova Tangerines,7,7,330
+3031,tangerines/mandarins,Jamaican Tangor Tangerines,7,7,330
+3032,tangerines/mandarins,Ellendale Tangerines/Mandarins,7,7,330
+3144,tangerines/mandarins,Fall Glo Tangerines/Mandarins,7,7,330
+3383,tangerines/mandarins,Small Clementine Tangerines/Mandarins,7,7,330
+3384,tangerines/mandarins,Medium Clementine Tangerines/Mandarins,7,7,330
+3385,tangerines/mandarins,Large Clementine Tangerines/Mandarins,7,7,330
+3386,tangerines/mandarins,Clementine (With Leaves Attached) Tangerines/Mandarins,7,7,330
+3387,tangerines/mandarins,Clementine (Without P/Harvest Treatment) Tangerines/Mandarins,7,7,330
+3388,tangerines/mandarins,Satsuma -Clauselina Tangerines/Mandarins,7,7,330
+3389,tangerines/mandarins,Satsuma Tangerines/Mandarins,7,7,330
+3425,tangerines/mandarins,Small Ellendale Tangerines/Mandarins,7,7,330
+3426,tangerines/mandarins,Medium Ellendale Tangerines/Mandarins,7,7,330
+3427,tangerines/mandarins,Large Ellendale Tangerines/Mandarins,7,7,330
+3428,tangerines/mandarins,Small Honey/Murcott Tangerines/Mandarins,7,7,330
+3429,tangerines/mandarins,Medium Honey/Murcott Tangerines/Mandarins,7,7,330
+3430,tangerines/mandarins,Large Honey/Murcott Tangerines/Mandarins,7,7,330
+3431,tangerines/mandarins,Small Imperial Tangerines/Mandarins,7,7,330
+3432,tangerines/mandarins,Medium Imperial Tangerines/Mandarins,7,7,330
+3433,tangerines/mandarins,Large Imperial Tangerines/Mandarins,7,7,330
+3524,tangerines/mandarins,C37 Tangerines/Mandarins,7,7,330
+3632,tangerines/mandarins,Dekopon Tangerines/Mandarins,7,7,330
+4055,tangerines/mandarins,Tangerines/Mandarins,7,7,330
+4449,tangerines/mandarins,Sunburst Tangerines/Mandarins,7,7,330
+4450,tangerines/mandarins,Clementine (Includes Fortune) Tangerines/Mandarins,7,7,330
+4451,tangerines/mandarins,Dancy Tangerines/Mandarins,7,7,330
+4452,tangerines/mandarins,Fairchild Tangerines/Mandarins,7,7,330
+4453,tangerines/mandarins,Honey/Murcott Tangerines/Mandarins,7,7,330
+4454,tangerines/mandarins,Kinnow Tangerines/Mandarins,7,7,330
+4455,tangerines/mandarins,Mandarin/Royal Tangerines/Mandarins,7,7,330
+4457,tangerines/mandarins,Retailer Assigned Tangerines/Mandarins,7,7,330
+4458,tangerines/mandarins,Retailer Assigned Tangerines/Mandarins,7,7,330
+4794,taro root (dasheen),Small Taro Root (Dasheen),,,
+4795,taro root (dasheen),Large Taro Root (Dasheen),,,
+4906,tarragon,Tarragon,,,
+4907,thyme,Thyme,,,
+3061,tomatoes,Beef/Beefsteak Tomatoes,4, 6,90
+3145,tomatoes,Plum/Italian/Saladette/Roma (Yellow) Tomatoes,4, 6,90
+3146,tomatoes,"Cherry - Red, On The Vine Tomatoes",4, 6,90
+3147,tomatoes,"Cherry - Yellow, On The Vine Tomatoes",4, 6,90
+3148,tomatoes,"Regular - Yelllow, On The Vine (Truss) Tomatoes",4, 6,90
+3149,tomatoes,"Regular - Orange, On The Vine Tomatoes",4, 6,90
+3150,tomatoes,Cocktail/Intermediate - Red Tomatoes,4, 6,90
+3151,tomatoes,"Large Vine Ripe, Regular - Red Tomatoes",4, 6,90
+3282,tomatoes,Plum/Italian/Saladette/Roma On The Vine - Red Tomatoes,4, 6,90
+3335,tomatoes,Cocktail/Intermediate - Red/On The Vine (Truss) Tomatoes,4, 6,90
+3336,tomatoes,Roma On The Vine Tomatoes,4, 6,90
+3423,tomatoes,Heirloom Tomatoes,4, 6,90
+3458,tomatoes,Cherry - Orange Tomatoes,4, 6,90
+3512,tomatoes,Round Tomatoes,4, 6,90
+4063,tomatoes,Small Regular - Red Tomatoes,4, 6,90
+4064,tomatoes,Large Regular - Red Tomatoes,4, 6,90
+4087,tomatoes,Plum/Italian/Saladette/Roma - Red Tomatoes,4, 6,90
+4664,tomatoes,"Regular - Red, On The Vine (Truss) Tomatoes",4, 6,90
+4778,tomatoes,Regular - Yellow Tomatoes,4, 6,90
+4796,tomatoes,Cherry - Red Tomatoes,4, 6,90
+4797,tomatoes,Cherry - Yellow Tomatoes,4, 6,90
+4798,tomatoes,Small Greenhouse/Hydroponic/Regular - Red Tomatoes,4, 6,90
+4799,tomatoes,Large Greenhouse/Hydroponic/Regular - Red Tomatoes,4, 6,90
+4800,tomatoes,Native/Home Grown Tomatoes,4, 6,90
+4801,tomatoes,Tomatillos/Husk Tomatoes Tomatoes,4, 6,90
+4802,tomatoes,Dried Tomatoes,4, 6,90
+4803,tomatoes,Teardrop/Pear - Red Tomatoes,4, 6,90
+4804,tomatoes,Teardrop/Pear - Yellow Tomatoes,4, 6,90
+4805,tomatoes,"Small Vine Ripe, Regular - Red Tomatoes",4, 6,90
+4806,tomatoes,Retailer Assigned Tomatoes,4, 6,90
+4807,tomatoes,Retailer Assigned Tomatoes,4, 6,90
+4808,tomatoes,Retailer Assigned Tomatoes,4, 6,90
+4095,turnip,Yellow Turnip,nan,14,270
+4809,turnip,Baby Turnip,nan,14,270
+4810,turnip,Bunch/Banded Turnip,nan,14,270
+4811,turnip,Purple Top Turnip,nan,14,270
+4812,turnip,White Turnip,nan,14,270
+4813,turnip,Retailer Assigned Turnip,nan,14,270
+4908,vanilla bean,Vanilla Bean,,,
+4943,walnuts,Regular Walnuts,30,360,720
+4944,walnuts,Black Walnuts,30,360,720
+4945,walnuts,White Walnuts,30,360,720
+4946,walnuts,Retailer Assigned Walnuts,30,360,720
+4814,water chestnuts,Water Chestnuts,nan,8,nan
+4815,watercress,Watercress,nan,2,nan
+3481,xpelon,Xpelon,,,
+3164,yu choy,Yu Choy,,,
+4819,yuca root/cassava/manioc,Yuca Root/Cassava/Manioc,,,

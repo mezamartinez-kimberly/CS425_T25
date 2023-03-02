@@ -22,8 +22,8 @@ class ProductWidget extends StatefulWidget {
 }
 
 class _ProductWidgetState extends State<ProductWidget> {
-  bool _isChecked = false;
   bool _isEditing = false;
+  bool _isChecked = false;
 
   @override
   void initState() {

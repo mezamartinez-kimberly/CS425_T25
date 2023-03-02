@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:edna/dbs/pantry_db.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart'; // DateFormat
 
 class BackendUtils {
   static String sessionToken = '';
@@ -92,6 +93,7 @@ class BackendUtils {
       // grab the rest of the body
       final Map<String, dynamic> responseBody = json.decode(response.body);
       String name = responseBody['name'];
+      print("HERE");
       // Registration was successful
       return name;
     } else {
@@ -199,7 +201,8 @@ class BackendUtils {
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
       'name': pantryItem.name,
-      'date_added': pantryItem.dateAdded.toString(),
+      'date_added': pantryItem.dateAdded?.toIso8601String(),
+      'expiration_date': pantryItem.expirationDate?.toIso8601String(),
       'upc': pantryItem.upc,
       'plu': pantryItem.plu,
       'quantity': pantryItem.quantity,
@@ -251,11 +254,11 @@ class BackendUtils {
 
       // loop through the list of maps and convert each map to a pantry item
       for (var item in responseBody) {
+        // print the contents of the item
+        print(item);
+
         // create a pantry item from the map
         Pantry pantryItem = Pantry.fromMap(item);
-
-        // print the enitre contents of the pantry item
-        print(pantryItem.name);
 
         // add the pantry item to the list
         pantryList.add(pantryItem);
@@ -270,6 +273,10 @@ class BackendUtils {
 
   static Future<String> updatePantryItem(Pantry pantryItem) async {
     const String apiUrl = 'http://10.0.2.2:5000/updatePantryItem';
+
+    // print the pantryItem's expiration date
+    print("update");
+    print(pantryItem.expirationDate);
 
     // use the pantry item to create a map
     final Map<String, dynamic> pantryMap = pantryItem.toMap();
