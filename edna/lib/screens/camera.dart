@@ -17,7 +17,7 @@ import 'dart:io';
 import 'package:edna/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:qr_code_scanner/qr_code_scanner.dart'; // barcode scanner
 import 'package:edna/backend_utils.dart';
 
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
@@ -35,10 +35,10 @@ class CameraPage extends StatefulWidget {
   CameraPage({Key? key, this.itemsToInsert}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _CameraPageState();
+  State<StatefulWidget> createState() => CameraPageState();
 }
 
-class _CameraPageState extends State<CameraPage> {
+class CameraPageState extends State<CameraPage> {
   Barcode? result;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
@@ -255,6 +255,7 @@ class _CameraPageState extends State<CameraPage> {
     );
   }
 
+  // private
   void _onQRViewCreated(QRViewController controller) {
     setState(() {
       this.controller = controller;
@@ -342,6 +343,7 @@ class _CameraPageState extends State<CameraPage> {
   Function get onError => // print error message
       (error) => printYellow("error = $error");
 
+  // private class method
   _getProductName() async {
     // if successfully scanned
     if (result != null) {
@@ -356,7 +358,57 @@ class _CameraPageState extends State<CameraPage> {
     }
   }
 
+  // public for testing
+  getProductName(testResult) async {
+    // if successfully scanned
+    if (testResult != null) {
+      // if code can be found in UPC database
+      if (testResult!.format == BarcodeFormat.ean13 ||
+          testResult!.format == BarcodeFormat.ean8 ||
+          testResult!.format == BarcodeFormat.upcA ||
+          testResult!.format == BarcodeFormat.upcE) {
+        return productName =
+            await BackendUtils.getUpcData(testResult!.code as String);
+      }
+    }
+  }
+
   _addItemToList() {
+    // itemAdded is used to prevent items from being added multiple times
+    if (!itemAdded) {
+      // convert upc code to int
+      //  int upc = int.parse(result!.code as String);
+
+      // create new pantry item with values
+      Pantry newPantryItem = Pantry(
+        name: productName,
+        dateAdded: DateTime.now(),
+        upc: result!.code,
+        isDeleted: 0,
+      );
+
+      // create product widget with new pantry item
+      ProductWidget newProductWidget = ProductWidget(
+          pantryItem: newPantryItem,
+          enableCheckbox: false,
+          // no need to refresh pantry since we're on camera page
+          refreshPantryList: () {});
+
+      // add to camera page's list of items
+      widget.addItem(newProductWidget);
+      // toggle itemAdded so item doesn't duplicate
+      itemAdded = true;
+    } else {
+      // wait 5 seconds before user can scan another item
+      // this way item doesn't duplicate over and over
+      Future.delayed(const Duration(seconds: 5), () {
+        itemAdded = false;
+      });
+    }
+  }
+
+  // public for testing
+  addItemToList() {
     // itemAdded is used to prevent items from being added multiple times
     if (!itemAdded) {
       // convert upc code to int
