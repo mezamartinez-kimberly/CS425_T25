@@ -210,7 +210,7 @@ def deleteAll():
     # delete user and person table
     User.query.delete()
     Person.query.delete()
-    
+
 
     db.session.commit()
     return jsonify({'message': 'All tables have been cleared'}), 200
@@ -418,6 +418,7 @@ def addPantry():
             # call the upc route function and capture the response
             response_tuple = apiCall(parameterUPC)
 
+
             if response_tuple[1] != 200:
                 # if the product name is not null, then we will add the product to the database
                 if name != None and name != "":
@@ -427,6 +428,12 @@ def addPantry():
                     db.session.add(product)
                     db.session.commit()
             else:
+                # add the product to the database
+                product = Product(name=response_tuple[0],
+                                upc=parameterUPC, plu = None, logical_delete=False)
+                db.session.add(product)
+                db.session.commit()
+                
                 # get the product id from the newly added upc from the database
                 product = Product.query.filter_by(upc=parameterUPC).first()
     elif plu:
