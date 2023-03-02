@@ -110,7 +110,6 @@ class PantryPageState extends State<PantryPage> {
 
               setState(() {
                 _showDeletedItems = !_showDeletedItems;
-
                 //     _showDeletedItems ? _listAllItems() : _listActiveItems();
               });
             },

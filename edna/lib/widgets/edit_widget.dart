@@ -10,13 +10,13 @@
 import 'package:edna/backend_utils.dart';
 import 'package:edna/dbs/pantry_db.dart';
 import 'package:edna/dbs/storage_location_db.dart';
+import 'package:edna/main.dart';
 import 'package:edna/screens/all.dart';
 import 'package:edna/widgets/product_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'; // material design
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart'; // input formatter
 
 class EditWidget extends StatefulWidget {
   @override
@@ -74,51 +74,52 @@ class _EditWidgetState extends State<EditWidget> {
     return StatefulBuilder(
       builder: (context, setState) {
         return WillPopScope(
-            onWillPop: () {
-              return Future.value(true);
-            },
-            child: AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              alignment: Alignment.center,
-              scrollable: true,
-              content: SingleChildScrollView(
-                // padding around content in dialog
-                child: Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      const SizedBox(height: 10), // spacing
-                      _buildNameField(), // name
+          onWillPop: () {
+            return Future.value(true);
+          },
+          child: AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            alignment: Alignment.center,
+            scrollable: true,
+            content: SingleChildScrollView(
+              // padding around content in dialog
+              child: Padding(
+                padding: const EdgeInsets.all(5.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(height: 10), // spacing
+                    _buildNameField(), // name
 
-                      const SizedBox(height: 25), // spacing
-                      _buildDatePicker(), // date
+                    const SizedBox(height: 25), // spacing
+                    _buildDatePicker(), // date
 
-                      const SizedBox(height: 25),
-                      _buildStorageDropdown(), // storage location
+                    const SizedBox(height: 25),
+                    _buildStorageDropdown(), // storage location
 
-                      const SizedBox(height: 25),
-                      const Text("Manual Code Entry"),
-                      const SizedBox(height: 5),
-                      _buildCodeInput(), // upc/plu code
+                    const SizedBox(height: 25),
+                    const Text("Manual Code Entry"),
+                    const SizedBox(height: 5),
+                    _buildCodeInput(), // upc/plu code
 
-                      const SizedBox(height: 25),
-                      const Text("Quantity"),
-                      _buildQuantityPicker(), // quantity
-                    ],
-                  ),
+                    const SizedBox(height: 25),
+                    const Text("Quantity"),
+                    _buildQuantityPicker(), // quantity
+                  ],
                 ),
               ),
-              actions: [
-                _buildCancelButton(),
-                const SizedBox(), // spacing
-                _buildSaveButton(),
-                const SizedBox(),
-              ],
-            ));
+            ),
+            actions: [
+              _buildCancelButton(),
+              const SizedBox(), // spacing
+              _buildSaveButton(),
+              const SizedBox(),
+            ],
+          ),
+        );
       },
     );
   }
@@ -217,6 +218,28 @@ class _EditWidgetState extends State<EditWidget> {
       child: const Text('Save',
           style: TextStyle(fontSize: 20, color: Colors.black)),
       onPressed: () async {
+        // if no upc/plu code, show error
+        if (widget.pantryItem.upc == null && widget.pantryItem.plu == null) {
+          const MyApp().createErrorMessage(context, "Please enter a code.");
+          return;
+        }
+
+        // if upc is not 12 digits, show error
+        if (widget.pantryItem.upc != null &&
+            widget.pantryItem.upc!.length != 12) {
+          const MyApp()
+              .createErrorMessage(context, "UPC code must be 12 digits.");
+          return;
+        }
+
+        // if plu is not 4 digits, show error
+        if (widget.pantryItem.plu != null &&
+            widget.pantryItem.plu!.length != 4) {
+          const MyApp()
+              .createErrorMessage(context, "PLU code must be 4 digits.");
+          return;
+        }
+
         // if user just scanned item, add to list on camera page
         if (widget.callingWidget.runtimeType == CameraPage) {
           CameraPage cameraPage = widget.callingWidget as CameraPage;
