@@ -70,6 +70,7 @@ class CameraPageState extends State<CameraPage> {
           _buildFlashButton(),
           _buildCameraToggleButton(),
         ],
+        automaticallyImplyLeading: false, // remove back button
       ),
       body: Column(
         children: <Widget>[
@@ -78,60 +79,53 @@ class CameraPageState extends State<CameraPage> {
           // items list
           Expanded(
             flex: 3,
-            child: Column(
-              children: <Widget>[
-                FutureBuilder(
-                    // get product name from UPC code
-                    future: _getProductName(),
-                    builder: (context, snapshot) {
-                      // if not scanning and list is empty
-                      if (widget.itemsToInsert == null && result == null) {
-                        return Padding(
-                          // spacing between card edges and page edges
-                          padding: const EdgeInsets.all(30),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: const Expanded(
-                              child: Padding(
-                                // spacing between card edges and text
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 30, vertical: 30),
-                                child: Text('Scan or manually enter an item.',
-                                    textAlign: TextAlign.center,
-                                    // text size
-                                    style: TextStyle(fontSize: 35)),
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                      // while not scanning, return empty container
-                      if (result == null) {
-                        return Container();
-                      }
-                      // while waiting for API call to UPC db to complete, show loading indicator
-                      if (snapshot.data == null) {
-                        return const CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else if (snapshot.data == 'UPC not found') {
-                        return Text("UPC ${result!.code} not found");
-                      } else {
-                        // if UPC found, add product to camera page's list of items
-                        _addItemToList();
+            child: Container(
+              color: Colors.black,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(40),
+                  topRight: Radius.circular(40),
+                ),
+                child: Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: <Widget>[
+                      FutureBuilder(
+                          // get product name from UPC code
+                          future: _getProductName(),
+                          builder: (context, snapshot) {
+                            // if not scanning and list is empty, show scan instructions
+                            if (widget.itemsToInsert == null &&
+                                result == null) {
+                              return _buildScanInstructions();
+                            }
+                            // while not scanning, return empty container
+                            if (result == null) {
+                              return Container();
+                            }
+                            // while waiting for API call to UPC db to complete, show loading indicator
+                            if (snapshot.data == null) {
+                              return const CircularProgressIndicator();
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else if (snapshot.data == 'UPC not found') {
+                              return Text("UPC ${result!.code} not found");
+                            } else {
+                              // if UPC found, add product to camera page's list of items
+                              _addItemToList();
 
-                        // return empty container so return value is a widget
-                        return Container();
-                      }
-                    }),
-                _buildItemList(),
-              ],
+                              // return empty container so return value is a widget
+                              return Container();
+                            }
+                          }),
+                      _buildItemList(),
+                    ],
+                  ),
+                ),
+              ),
             ),
-
-            // ),
           ),
+
           // buttons
           Padding(
             padding: const EdgeInsets.only(right: 8.0),
@@ -234,11 +228,37 @@ class CameraPageState extends State<CameraPage> {
     );
   }
 
+  Widget _buildScanInstructions() {
+    return const Padding(
+      // spacing between card edges and page edges
+      padding: const EdgeInsets.all(30),
+      child: Expanded(
+        child: Padding(
+          // spacing between card edges and text
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+          child: Text('Scan or manually enter an item.',
+              textAlign: TextAlign.center,
+              // text size
+              style: TextStyle(fontSize: 35)),
+        ),
+      ),
+    );
+  }
+
+  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
+    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
+    if (!p) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('no Permission')),
+      );
+    }
+  }
+
   Widget _buildQrView(BuildContext context) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
-        ? 150.0
+        ? 220.0
         : 300.0;
     // To ensure the Scanner view is properly sizes after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
@@ -265,15 +285,6 @@ class CameraPageState extends State<CameraPage> {
         result = scanData;
       });
     });
-  }
-
-  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
-    if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
-      );
-    }
   }
 
   @override
