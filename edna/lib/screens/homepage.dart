@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final _pageOptions = [
     CameraPage(),
-    PantryPage(),
+    const PantryPage(),
     const CalendarClass(),
     const StatsPage(),
     const ProfilePage()
@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
             _currentIndex = newIndex;
           });
         },
+        backgroundColor: Colors.transparent,
         destinations: const [
           NavigationDestination(
             selectedIcon: Icon(Icons.camera_alt),

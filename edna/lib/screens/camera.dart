@@ -15,10 +15,12 @@ import 'dart:developer'; // for debugPrint
 import 'dart:io'; // for Platform
 
 import 'package:edna/main.dart'; // for main
+import 'package:edna/screens/all.dart'; // for pantry page
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'; // for material design
 import 'package:qr_code_scanner/qr_code_scanner.dart'; // barcode scanner
 import 'package:edna/backend_utils.dart'; // for API calls
+import 'package:google_fonts/google_fonts.dart'; // for fonts
 
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // product widget
@@ -64,91 +66,118 @@ class CameraPageState extends State<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          _buildFlashButton(),
-          _buildCameraToggleButton(),
-        ],
-        automaticallyImplyLeading: false, // remove back button
+    return MaterialApp(
+      theme: ThemeData(
+        primaryColor: MyTheme().blueColor,
+        // accent color
+        colorScheme:
+            ColorScheme.fromSwatch().copyWith(secondary: MyTheme().blueColor),
       ),
-      body: Column(
-        children: <Widget>[
-          // scan area
-          Expanded(flex: 2, child: _buildQrView(context)),
-          // items list
-          Expanded(
-            flex: 3,
-            child: Container(
-              color: Colors.black,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.only(
-                  topLeft: Radius.circular(40),
-                  topRight: Radius.circular(40),
-                ),
+      home: DefaultTextStyle(
+        style: TextStyle(
+            color: Colors.black, fontFamily: GoogleFonts.roboto().fontFamily),
+        child: Column(
+          children: <Widget>[
+            // scan area
+            Expanded(flex: 4, child: _buildQrView(context)),
+            // toolbar
+            Expanded(
+                flex: 1,
                 child: Container(
-                  color: Colors.white,
-                  child: Column(
-                    children: <Widget>[
-                      FutureBuilder(
-                          // get product name from UPC code
-                          future: _getProductName(),
-                          builder: (context, snapshot) {
-                            // if not scanning and list is empty, show scan instructions
-                            if (widget.itemsToInsert == null &&
-                                result == null) {
-                              return _buildScanInstructions();
-                            }
-                            // while not scanning, return empty container
-                            if (result == null) {
-                              return Container();
-                            }
-                            // while waiting for API call to UPC db to complete, show loading indicator
-                            if (snapshot.data == null) {
-                              return const CircularProgressIndicator();
-                            } else if (snapshot.hasError) {
-                              return Text('Error: ${snapshot.error}');
-                            } else if (snapshot.data == 'UPC not found') {
-                              return Text("UPC ${result!.code} not found");
-                            } else {
-                              // if UPC found, add product to camera page's list of items
-                              _addItemToList();
+                    color: Colors.black,
+                    // rounded corners
+                    child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(40),
+                          topRight: Radius.circular(40),
+                        ),
+                        child: Container(
+                            decoration: BoxDecoration(
+                              color: MyTheme().blueColor,
+                              // black line at bottom of toolbar
+                              border: const Border(
+                                bottom: BorderSide(
+                                  color: Colors.black,
+                                  width: 1.5,
+                                ),
+                              ),
+                            ),
+                            child: _buildToolbar())))),
+            // items list
+            Expanded(
+              flex: 5,
+              child: Container(
+                color: Colors.transparent,
+                child: Column(
+                  children: <Widget>[
+                    FutureBuilder(
+                        // get product name from UPC code
+                        future: _getProductName(),
+                        builder: (context, snapshot) {
+                          // if not scanning and list is empty, show scan instructions
+                          if (widget.itemsToInsert == null && result == null) {
+                            //return _buildScanInstructions();
+                          }
+                          // while not scanning, return empty container
+                          if (result == null) {
+                            return Container();
+                          }
+                          // while waiting for API call to UPC db to complete, show loading indicator
+                          if (snapshot.data == null) {
+                            return const CircularProgressIndicator();
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else if (snapshot.data == 'UPC not found') {
+                            return Text("UPC ${result!.code} not found");
+                          } else {
+                            // if UPC found, add product to camera page's list of items
+                            _addItemToList();
 
-                              // return empty container so return value is a widget
-                              return Container();
-                            }
-                          }),
-                      _buildItemList(),
-                    ],
-                  ),
+                            // return empty container so return value is a widget
+                            return Container();
+                          }
+                        }),
+                    _buildItemList(),
+                  ],
                 ),
               ),
             ),
-          ),
 
-          // buttons
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                _buildManualButton(),
-                _buildSubmitButton(),
-              ],
-            ),
-          )
-        ],
+            // buttons
+            Padding(
+              padding: const EdgeInsets.only(right: 5.0, bottom: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  _buildManualButton(),
+                  const SizedBox(width: 5), // spacing
+                  _buildSubmitButton(),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
+    );
+  }
+
+  // define style of manual and submit buttons
+  buttonStyle() {
+    return ElevatedButton.styleFrom(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      backgroundColor: MyTheme().pinkColor,
+      foregroundColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50.0),
+      ),
+      // black border
+      side: const BorderSide(color: Colors.black, width: 1),
     );
   }
 
   Widget _buildManualButton() {
     return ElevatedButton.icon(
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18.0),
-        ),
-      ),
+      style: buttonStyle(),
       onPressed: () {
         // show edit widget
         showDialog(
@@ -168,17 +197,19 @@ class CameraPageState extends State<CameraPage> {
             });
       },
       icon: const Icon(Icons.add),
-      label: const Text("Manual"),
+      label: const Text(
+        "Manual",
+        style: TextStyle(
+          fontSize: 20,
+          color: Colors.black,
+        ),
+      ),
     );
   }
 
   Widget _buildSubmitButton() {
     return ElevatedButton.icon(
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18.0),
-        ),
-      ),
+      style: buttonStyle(),
       onPressed: () async {
         // insert scanned items into pantry database
         if (widget.itemsToInsert != null) {
@@ -224,14 +255,44 @@ class CameraPageState extends State<CameraPage> {
       icon: const Icon(Icons.check),
       label: const Text(
         'Submit',
+        style: TextStyle(
+          fontSize: 20,
+          color: Colors.black,
+        ),
       ),
+    );
+  }
+
+  Widget _buildToolbar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        const Spacer(
+          flex: 10,
+        ),
+        const Text(
+          'Add items',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const Spacer(
+          flex: 2,
+        ),
+        _buildFlashButton(),
+        _buildCameraToggleButton(),
+        const Spacer(
+          flex: 1,
+        ),
+      ],
     );
   }
 
   Widget _buildScanInstructions() {
     return const Padding(
       // spacing between card edges and page edges
-      padding: const EdgeInsets.all(30),
+      padding: EdgeInsets.all(30),
       child: Expanded(
         child: Padding(
           // spacing between card edges and text
@@ -266,7 +327,7 @@ class CameraPageState extends State<CameraPage> {
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
       overlay: QrScannerOverlayShape(
-          borderColor: Colors.red,
+          borderColor: MyTheme().blueColor,
           borderRadius: 10,
           borderLength: 30,
           borderWidth: 10,
