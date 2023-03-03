@@ -92,10 +92,10 @@ class CameraPageState extends State<CameraPage> {
                           topRight: Radius.circular(40),
                         ),
                         child: Container(
-                            decoration: BoxDecoration(
-                              color: MyTheme().blueColor,
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 201, 201, 201),
                               // black line at bottom of toolbar
-                              border: const Border(
+                              border: Border(
                                 bottom: BorderSide(
                                   color: Colors.black,
                                   width: 1.5,
@@ -124,7 +124,7 @@ class CameraPageState extends State<CameraPage> {
                           }
                           // while waiting for API call to UPC db to complete, show loading indicator
                           if (snapshot.data == null) {
-                            return const CircularProgressIndicator();
+                            return SizedBox(child: CircularProgressIndicator());
                           } else if (snapshot.hasError) {
                             return Text('Error: ${snapshot.error}');
                           } else if (snapshot.data == 'UPC not found') {

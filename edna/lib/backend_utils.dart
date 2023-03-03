@@ -240,8 +240,6 @@ class BackendUtils {
       Uri.parse(apiUrl),
       headers: {
         'Authorization': "Bearer $sessionToken",
-        // so connection doesn't close while retrieving data
-        "Connection": "Keep-Alive",
       },
     );
 

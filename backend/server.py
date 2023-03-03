@@ -201,7 +201,7 @@ def resetPassword():
 # create a quick debug route that will delete all info from all tables
 @app.route('/delete_all', methods=['DELETE'])
 def deleteAll():
-    # deltet the pantry table
+    # delete the pantry table
     Product.query.delete()
     #delte the pantry table
     Pantry.query.delete()
