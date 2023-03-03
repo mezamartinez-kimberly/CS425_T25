@@ -6,7 +6,7 @@ import 'package:edna/backend_utils.dart';
 
 class ProductWidget extends StatefulWidget {
   @override
-  _ProductWidgetState createState() => _ProductWidgetState();
+  ProductWidgetState createState() => ProductWidgetState();
 
   final Pantry pantryItem;
   bool enableCheckbox;
@@ -21,7 +21,7 @@ class ProductWidget extends StatefulWidget {
   }) : super(key: key);
 }
 
-class _ProductWidgetState extends State<ProductWidget> {
+class ProductWidgetState extends State<ProductWidget> {
   bool _isEditing = false;
   bool _isChecked = false;
 
@@ -32,6 +32,17 @@ class _ProductWidgetState extends State<ProductWidget> {
 
   refresh() {
     setState(() {});
+  }
+
+  // print function for product widget
+  void printProductWidget(ProductWidget widget) {
+    // print in format: "Name: {value}"
+    print("Name: ${widget.pantryItem.name}");
+    print("Quantity: ${widget.pantryItem.quantity}");
+    print("Expiration Date: ${widget.pantryItem.expirationDate}");
+    print("Date Added: ${widget.pantryItem.dateAdded}");
+    print("Date Removed: ${widget.pantryItem.dateRemoved}");
+    print("UPC: ${widget.pantryItem.upc}");
   }
 
   // update product widget values

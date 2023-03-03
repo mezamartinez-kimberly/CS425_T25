@@ -10,7 +10,7 @@ class BackendUtils {
 
   static Future<String> registerUser(
       String firstName, String lastName, String email, String password) async {
-    const String apiUrl = 'http://10.0.2.2:5000/register';
+    const String apiUrl = 'http://localhost:5000/register';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -42,7 +42,7 @@ class BackendUtils {
 // create a function to log the user in
 // this will need to change the state of the app and return the user to the home screen
   static Future<String> loginUser(String email, String password) async {
-    const String apiUrl = 'http://10.0.2.2:5000/login';
+    const String apiUrl = 'http://localhost:5000/login';
     final Map<String, dynamic> message = {
       'email': email,
       'password': password,
@@ -69,7 +69,7 @@ class BackendUtils {
 
 // // Create a upc get function to get the upc data
   static Future<String> getUpcData(String upc) async {
-    const String apiUrl = 'http://10.0.2.2:5000/upc';
+    const String apiUrl = 'http://localhost:5000/upc';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -93,7 +93,6 @@ class BackendUtils {
       // grab the rest of the body
       final Map<String, dynamic> responseBody = json.decode(response.body);
       String name = responseBody['name'];
-      print("HERE");
       // Registration was successful
       return name;
     } else {
@@ -104,7 +103,7 @@ class BackendUtils {
 
 // create a function to sent the smail adress to the backend
   static Future<String> sendOTPEmail(String email) async {
-    const String apiUrl = 'http://10.0.2.2:5000/sendOTP';
+    const String apiUrl = 'http://localhost:5000/sendOTP';
 
     emailGlobal = email;
 
@@ -135,7 +134,7 @@ class BackendUtils {
 
 // Create a function to verify the OTP
   static Future<String> verifyOTP(String otp) async {
-    const String apiUrl = 'http://10.0.2.2:5000/verifyOTP';
+    const String apiUrl = 'http://localhost:5000/verifyOTP';
 
     final Map<String, dynamic> message = {
       'email': emailGlobal,
@@ -165,7 +164,7 @@ class BackendUtils {
   }
 
   static Future<String> changePassword(String password) async {
-    const String apiUrl = 'http://10.0.2.2:5000/changePassword';
+    const String apiUrl = 'http://localhost:5000/changePassword';
 
     final Map<String, dynamic> message = {
       'email': emailGlobal,
@@ -196,7 +195,7 @@ class BackendUtils {
 
 // // Create a upc get function to get the upc data
   static Future<http.Response> addPantry(Pantry pantryItem) async {
-    const String apiUrl = 'http://10.0.2.2:5000/addPantry';
+    const String apiUrl = 'http://localhost:5000/addPantry';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -233,7 +232,7 @@ class BackendUtils {
   }
 
   static Future<List<Pantry>> getAllPantry() async {
-    const String apiUrl = 'http://10.0.2.2:5000/getAllPantry';
+    const String apiUrl = 'http://localhost:5000/getAllPantry';
 
     // create a get request to the backend with the auth header
     final http.Response response = await http.get(
@@ -272,7 +271,7 @@ class BackendUtils {
   }
 
   static Future<String> updatePantryItem(Pantry pantryItem) async {
-    const String apiUrl = 'http://10.0.2.2:5000/updatePantryItem';
+    const String apiUrl = 'http://localhost:5000/updatePantryItem';
 
     // print the pantryItem's expiration date
     print("update");

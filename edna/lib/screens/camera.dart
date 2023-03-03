@@ -11,14 +11,14 @@
 // - https://stackoverflow.com/questions/65992435/how-to-open-barcode-scanner-in-a-custom-widget
 // */
 
-import 'dart:developer';
-import 'dart:io';
+import 'dart:developer'; // for debugPrint
+import 'dart:io'; // for Platform
 
-import 'package:edna/main.dart';
+import 'package:edna/main.dart'; // for main
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; // for material design
 import 'package:qr_code_scanner/qr_code_scanner.dart'; // barcode scanner
-import 'package:edna/backend_utils.dart';
+import 'package:edna/backend_utils.dart'; // for API calls
 
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // product widget
@@ -409,38 +409,25 @@ class CameraPageState extends State<CameraPage> {
   }
 
   // public for testing
-  addItemToList() {
-    // itemAdded is used to prevent items from being added multiple times
-    if (!itemAdded) {
-      // convert upc code to int
-      //  int upc = int.parse(result!.code as String);
+  ProductWidget createProductWidget(Barcode testResult, String productName) {
+    // create new pantry item with values
+    Pantry newPantryItem = Pantry(
+      name: productName,
+      dateAdded: DateTime.now(),
+      upc: testResult.code,
+      isDeleted: 0,
+    );
 
-      // create new pantry item with values
-      Pantry newPantryItem = Pantry(
-        name: productName,
-        dateAdded: DateTime.now(),
-        upc: result!.code,
-        isDeleted: 0,
-      );
+    // create product widget with new pantry item
+    ProductWidget newProductWidget = ProductWidget(
+        pantryItem: newPantryItem,
+        enableCheckbox: false,
+        // no need to refresh pantry since we're on camera page
+        refreshPantryList: () {});
 
-      // create product widget with new pantry item
-      ProductWidget newProductWidget = ProductWidget(
-          pantryItem: newPantryItem,
-          enableCheckbox: false,
-          // no need to refresh pantry since we're on camera page
-          refreshPantryList: () {});
-
-      // add to camera page's list of items
-      widget.addItem(newProductWidget);
-      // toggle itemAdded so item doesn't duplicate
-      itemAdded = true;
-    } else {
-      // wait 5 seconds before user can scan another item
-      // this way item doesn't duplicate over and over
-      Future.delayed(const Duration(seconds: 5), () {
-        itemAdded = false;
-      });
-    }
+    return newProductWidget;
+    // add to camera page's list of items
+    //widget.addItem(newProductWidget);
   }
 
   _buildItemList() {
