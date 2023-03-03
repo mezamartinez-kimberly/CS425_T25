@@ -48,9 +48,6 @@ import random # for generating random numbers for OTP
 # Import the database object and the Model Classes from the models.py file
 from models import db, User, UserPreference, Person, Product, ExpirationData, Pantry
 
-# for external access to the server
-from flask_ngrok import run_with_ngrok
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # how to create the virtual environment/ install flask & dotenv
 # https://flask.palletsprojects.com/en/2.2.x/installation/#virtual-environments
@@ -69,8 +66,7 @@ from flask_ngrok import run_with_ngrok
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SETUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # create the flask app
-app = Flask(__name__) 
-run_with_ngrok(app)  # allow external access to the server
+app = Flask(__name__)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 mail = Mail(app) 
@@ -622,5 +618,4 @@ def updatePantryItem():
 
         return jsonify({'message': 'Pantry item updated successfully'}), 201
     
-if __name__ == "__main__":
-  app.run()
+

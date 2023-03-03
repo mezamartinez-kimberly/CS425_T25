@@ -1,7 +1,7 @@
-import 'package:test/test.dart'; // test package
-import 'package:edna/screens/camera.dart'; // camera page
-import 'package:qr_code_scanner/qr_code_scanner.dart'; // barcode scanner
-import 'package:edna/widgets/product_widget.dart'; // product widget
+import 'package:test/test.dart';                        // test package
+import 'package:edna/screens/camera.dart';              // camera page
+import 'package:qr_code_scanner/qr_code_scanner.dart';  // barcode scanner
+import 'package:edna/widgets/product_widget.dart';      // product widget
 
 void main() {
   test('Test widget creation', () async {
