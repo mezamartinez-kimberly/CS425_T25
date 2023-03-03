@@ -1,3 +1,5 @@
+import 'package:edna/screens/account_settings.dart';
+import 'package:edna/screens/all.dart';
 import 'package:flutter/material.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -8,6 +10,34 @@ class ProfilePage extends StatefulWidget {
 }
 
 class ProfilePageState extends State<ProfilePage> {
+  //dark/light mode switch
+  bool isSwitched = false;
+
+  Widget _buildLogOutButton() {
+    return SizedBox(
+      height: 50,
+      width: 350,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          backgroundColor: const Color(0xFF7D9AE4),
+        ),
+        onPressed: () {
+          //insert log out actions
+        },
+        child: const Text(
+          'Logout',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,12 +101,18 @@ class ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   subtitle: const Text(
-                    'Change your account settings and profile',
+                    'Change your Username, Email, and Password',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   onTap: () {
                     // Navigate to the account settings page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const AccountSettingsPage(),
+                      
+                      ),
+                    );
                   },
                 ),
               ),
@@ -107,7 +143,12 @@ class ProfilePageState extends State<ProfilePage> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   onTap: () {
-                    // Navigate to the account settings page
+                    // Navigate to the notification settings page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const NotificationsPage(),
+                      ),
+                    );
                   },
                 ),
               ),
@@ -131,15 +172,16 @@ class ProfilePageState extends State<ProfilePage> {
                     ),
                   ),
                   subtitle: const Text(
-                    'Customize the look and feel of the app',
+                    'Tap to switch between light and dark mode',
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                   ),
                   onTap: () {
-                    // Navigate to the account settings page
+                    // switch between modes
                   },
                 ),
               ),
+
               const SizedBox(height: 10.0),
               Card(
                 elevation: 5,
@@ -164,10 +206,17 @@ class ProfilePageState extends State<ProfilePage> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   onTap: () {
-                    // Navigate to the account settings page
+                    // Navigate to the FAQs page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const FAQsPage(),
+                      )
+                    );
                   },
                 ),
               ),
+              const SizedBox(height: 10.0),
+              _buildLogOutButton(),
             ],
           ),
         ),

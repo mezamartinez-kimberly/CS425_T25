@@ -13,3 +13,9 @@ export 'pantry.dart';
 export 'profile.dart';
 export 'statistics.dart';
 export 'theme.dart';
+
+export 'account_settings.dart';
+export 'faqs.dart';
+export 'notifications.dart';
+export 'one_time_pswd_as.dart';
+export 'notifications.dart';

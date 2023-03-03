@@ -57,6 +57,8 @@ dependencies:
   http: ^0.13.5
   # States
   provider: ^6.0.5
+  #sets val in memory so data doesnt get lost
+  shared_preferences: ^2.0.18
 
 
 
@@ -93,6 +95,18 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts:
+    - family: Noto Sans
+    - fonts:
+      - asset: assets/fonts/NotoSans-Regular.ttf
+
+    - family: Dekko
+    - fonts:
+      - asset: assets/fonts/Dekko-Regular.ttf
+
+    - family: Noto Serif
+    - fonts:
+      - asset: assets/fonts/NotoSerif-Regular.ttf
 
   assets:     
     - assets/logos/g-logo.png
