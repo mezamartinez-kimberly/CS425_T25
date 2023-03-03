@@ -1,6 +1,7 @@
 import 'package:edna/screens/account_settings.dart';
 import 'package:edna/screens/all.dart';
 import 'package:flutter/material.dart';
+import 'package:edna/backend_utils.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key});
@@ -38,6 +39,18 @@ class ProfilePageState extends State<ProfilePage> {
     );
   }
 
+  //function to get user data from backend
+  _getUserData() async {
+    //get user data from backend
+    List<String> userData = await BackendUtils.getUserData();
+
+    //set user data to variables
+    String firstName = userData[0];
+    String lastName = userData[1];
+    String email = userData[2];
+
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,28 +70,42 @@ class ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 40.0),
 
-              // Add a greeting, "Hello, [firstname][lastname]!"
+              //card for greeting
               Center(
                 child: Column(
-                  children: const [
-                    Text(
-                      'Hello, Firstname Lastname!',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(height: 10.0),
-                    Text(
-                      'useremail@example.com',
-                      style: TextStyle(
-                        fontSize: 16.0,
-                        fontWeight: FontWeight.normal,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+                  children: <Widget> [
+                    FutureBuilder(
+                      future: _getUserData(),
+                      builder: (context, snapshot) {
+                        //if statement to check if data is loaded
+                        if(snapshot.hasData) {
+                          return Column(
+                            children: const [
+                              Text(
+                                'Hello, [firstName][lastName]!',
+                                style: TextStyle(
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 10.0),
+                              Text(
+                                '[email]',
+                                style: TextStyle(
+                                  fontSize: 16.0,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ],
+                          );
+                        } else {
+                          return const CircularProgressIndicator();
+                        }
+                      }
+                    ),//fut
+                  ],//widg
+                ), //col
+              ),//cent
 
               const SizedBox(height: 30.0),
 

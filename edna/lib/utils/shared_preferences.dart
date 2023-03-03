@@ -10,18 +10,18 @@
 https://github.com/flutter-devs/Flutter-Devfest/blob/master/lib/utils/devfestpreferences.dart
 */
 
-import 'package:shared_preferences/shared_preferences.dart';
+// import 'package:shared_preferences/shared_preferences.dart';
 
-class DarkThemePreference {
-  static const THEME_STATUS = "THEMESTATUS";
+// class DarkThemePreference {
+//   static const THEME_STATUS = "THEMESTATUS";
 
-  setDarkTheme(bool value) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool(THEME_STATUS, value);
-  }
+//   setDarkTheme(bool value) async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     prefs.setBool(THEME_STATUS, value);
+//   }
 
-  Future<bool> getTheme() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(THEME_STATUS) ?? false;
-  }
-}
+//   Future<bool> getTheme() async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     return prefs.getBool(THEME_STATUS) ?? false;
+//   }
+// }
