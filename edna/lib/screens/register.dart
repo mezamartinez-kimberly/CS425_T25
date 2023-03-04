@@ -354,7 +354,7 @@ class _RegisterPageState extends State<RegisterPage> {
             letterSpacing: 1.5,
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            fontFamily: 'RobotoMono',
+            fontFamily: 'Roboto',
           ),
         ),
       ),

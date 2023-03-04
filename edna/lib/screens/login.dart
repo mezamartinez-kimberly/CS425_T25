@@ -157,7 +157,7 @@ class _LoginPageState extends State<LoginPage> {
             letterSpacing: 1.5,
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            fontFamily: 'RobotoMono',
+            fontFamily: 'Roboto',
           ),
         ),
 
@@ -235,7 +235,7 @@ class _LoginPageState extends State<LoginPage> {
             color: Colors.black,
             fontWeight: FontWeight.bold,
             fontSize: 15,
-            fontFamily: 'RobotoMono',
+            fontFamily: 'Roboto',
           ),
         ),
       ),

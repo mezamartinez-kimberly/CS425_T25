@@ -81,6 +81,7 @@ class ProductWidgetState extends State<ProductWidget> {
                 ),
               ),
               elevation: 5.0, // shadow
+              // size of product widgets
               child: SizedBox(
                 height: 70,
                 width: 400,
@@ -91,12 +92,15 @@ class ProductWidgetState extends State<ProductWidget> {
                   itemBuilder: (context, index) {
                     return ListTile(
                       leading: _buildCheckBox(widget.enableCheckbox),
-                      title: Text(widget.pantryItem.name,
-                          style: TextStyle(
-                              // if deleted, strikethrough text
-                              decoration: widget.pantryItem.isDeleted! == 1
-                                  ? TextDecoration.lineThrough
-                                  : TextDecoration.none)),
+                      title: Text(
+                        widget.pantryItem.name as String,
+                        maxLines: 2,
+                        style: TextStyle(
+                            // if deleted, strikethrough text
+                            decoration: widget.pantryItem.isDeleted! == 1
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none),
+                      ),
                       subtitle: Text(_formatDate()),
                       trailing: _buildEditButton(),
                     );

@@ -14,7 +14,7 @@ class StorageLocation {
   static const StorageLocation pantry = StorageLocation(3, 'Freezer');
 
   // list of all values
-  static List<StorageLocation> get values => [fridge, freezer, pantry];
+  static List<StorageLocation> get values => [pantry, fridge, freezer];
 
   // lookup by id
   static StorageLocation fromId(int id) {

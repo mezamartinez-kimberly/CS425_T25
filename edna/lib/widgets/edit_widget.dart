@@ -124,8 +124,8 @@ class _EditWidgetState extends State<EditWidget> {
 
   // called functions
   Widget _buildNameField() {
-    String initValue = "";
-    if (widget.pantryItem.name != "") {
+    String? initValue = "";
+    if (widget.pantryItem.name != "" || widget.pantryItem.name != null) {
       initValue = widget.pantryItem.name;
     }
     return TextFormField(
@@ -175,6 +175,24 @@ class _EditWidgetState extends State<EditWidget> {
             lastDate: DateTime(2101),
             helpText: "Select Expiration Date",
             errorInvalidText: "Invalid Date",
+            builder: (context, child) {
+              return Theme(
+                data: Theme.of(context).copyWith(
+                  colorScheme: ColorScheme.light(
+                    primary: MyTheme()
+                        .pinkColor, // calendar header background color, button text color
+                    onPrimary: Colors.black, // calendar header text color
+                    onSurface: Colors.black, // calendar day text color
+                  ),
+                  textButtonTheme: TextButtonThemeData(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.white, // button color
+                    ),
+                  ),
+                ),
+                child: child!,
+              );
+            },
           );
 
           // update text field to picked date

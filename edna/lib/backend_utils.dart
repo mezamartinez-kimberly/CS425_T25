@@ -252,6 +252,7 @@ class BackendUtils {
       Uri.parse(apiUrl),
       headers: {
         'Authorization': "Bearer $sessionToken",
+        'Connection': 'keep-alive',
       },
     );
 

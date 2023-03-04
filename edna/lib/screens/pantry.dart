@@ -75,7 +75,7 @@ class PantryPageState extends State<PantryPage> {
                       color: Colors.black,
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'RobotoMono')),
+                      fontFamily: 'Roboto')),
             ),
           ),
           body: Column(children: [
@@ -93,7 +93,7 @@ class PantryPageState extends State<PantryPage> {
                 }
               },
             )),
-            _buildAddButton(),
+            _buildAddButton(), // add button
           ]),
         ),
       ),
@@ -181,30 +181,31 @@ class PantryPageState extends State<PantryPage> {
   }
 
   Widget _buildAddButton() {
-    return Container(
-      padding: const EdgeInsets.only(left: 0, bottom: 20, right: 15, top: 10),
-      alignment: Alignment.bottomRight,
-      child: FloatingActionButton(
-        onPressed: () {
-          // show edit widget
-          showDialog(
-              context: context,
-              builder: (context) {
-                return EditWidget(
-                  pantryItem: Pantry(
-                    id: 401, // static var incremented each time?
-                    name: "",
-                  ),
-                  updateProductWidget: () {},
-                  refreshPantryList: refresh,
-                  callingWidget: widget,
-                );
-              });
-        },
-        elevation: 2.0,
-        child: const Icon(
-          Icons.add,
-          size: 35.0,
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.only(left: 0, bottom: 20, right: 15, top: 10),
+        alignment: Alignment.bottomRight,
+        child: FloatingActionButton(
+          backgroundColor: MyTheme().blueColor,
+          onPressed: () {
+            // show edit widget
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return EditWidget(
+                    pantryItem: Pantry(),
+                    updateProductWidget: () {},
+                    refreshPantryList: refresh,
+                    callingWidget: widget,
+                  );
+                });
+          },
+          elevation: 0,
+          child: const Icon(
+            Icons.add,
+            size: 35.0,
+            color: Colors.black,
+          ),
         ),
       ),
     );

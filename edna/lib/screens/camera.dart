@@ -67,6 +67,7 @@ class CameraPageState extends State<CameraPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: MyTheme().blueColor,
         // accent color
@@ -128,11 +129,11 @@ class CameraPageState extends State<CameraPage> {
                             // if error, show error message
                           } else if (snapshot.hasError) {
                             return const MyApp().createErrorMessage(
-                                'Error: ${snapshot.error}', context);
+                                context, 'Error: ${snapshot.error}');
                             // if UPC not found, show error message
                           } else if (snapshot.data == 'UPC not found') {
                             return const MyApp().createErrorMessage(
-                                "UPC ${result!.code} not found", context);
+                                context, "UPC ${result!.code} not found");
                             // if UPC found, add product to camera page's list of items
                           } else {
                             _addItemToList();

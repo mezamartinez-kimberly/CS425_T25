@@ -25,6 +25,11 @@ class MyApp extends StatelessWidget {
     var errorText = const Color.fromARGB(255, 88, 15, 15);
     var errorBackground = const Color.fromARGB(255, 238, 37, 37);
 
+    // if error message is not a string, convert it to a string
+    if (errorMsg.runtimeType != String) {
+      errorMsg = errorMsg.toString();
+    }
+
     Flushbar(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
       message: errorMsg,
@@ -38,6 +43,9 @@ class MyApp extends StatelessWidget {
       flushbarStyle: FlushbarStyle.FLOATING,
       margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
       borderRadius: BorderRadius.circular(30.0),
+      maxWidth: MediaQuery.of(context).size.width * 0.8,
+      isDismissible: true,
+      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
     ).show(context);
   }
 
