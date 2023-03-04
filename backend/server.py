@@ -584,6 +584,8 @@ def getAllPantry():
                 'date_removed': item.date_removed,
                 'location': location,
                 'quantity': item.quantity,
+                'upc': product.upc,
+                'plu': product.plu,
                 'expiration_date': expiration_date,
                 'is_deleted': int(item.is_deleted)
             }
