@@ -46,7 +46,7 @@ import bs4 # for html/ email editing
 import random # for generating random numbers for OTP
 
 # Import the database object and the Model Classes from the models.py file
-from models import db, User, UserPreference, Person, Product, ExpirationData, Pantry
+from models import db, User, UserPreference, Person, Product, ExpirationData, Pantry, Alias
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # how to create the virtual environment/ install flask & dotenv
@@ -98,6 +98,42 @@ time_confimation_otp_was_sent = 0
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~ ROUTE SETUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+# lets create a route to load the the Product table with PLU data from a csv file
+@app.route("/loadPLU", methods=["GET"])
+def loadPLU():
+    # open the csv file "PLU with Exp.csv"
+    with open("PLU with Exp.csv", "r") as file:
+        # create a csv reader
+        reader = csv.reader(file)
+        # skip the first row
+        next(reader)
+        # iterate through the rows
+        for row in reader:
+            # create a new product object
+            product = Product(name = row[1], 
+                              plu = row[0], 
+                              logical_delete=False, 
+                              upc=None)
+
+            db.session.add(product)
+            db.session.commit()
+
+            # query the database to get the product id
+            product = Product.query.filter_by(plu=row[0]).first()
+
+            # create a new expiration data object
+            expirationData = ExpirationData(product_id=product.id, 
+                                            user_id=-1,
+                                            expiration_time_pantry=row[2], 
+                                            expiration_time_fridge=row[3], 
+                                            expiration_time_freezer=row[4])
+
+            # commit expiration data to the database
+            db.session.add(expirationData)
+            db.session.commit()
+
+    return jsonify({'message': 'PLU data loaded'}), 200
+
 @app.route("/sendOTP", methods=["POST"])
 def sendOTP():
 
@@ -137,9 +173,6 @@ def sendOTP():
         db.session.commit()
 
         return jsonify({'message': 'OTP sent successfully'}),201
-
-
-
 
 # create an approute to verify the otp
 @app.route("/verifyOTP", methods=["POST"])
@@ -196,8 +229,6 @@ def resetPassword():
                 return jsonify({'message': 'Password updated successfully'}), 200
 
 
-
-
 # create a quick debug route that will delete all info from all tables
 @app.route('/delete_all', methods=['DELETE'])
 def deleteAll():
@@ -209,7 +240,7 @@ def deleteAll():
     # delete user and person table
     User.query.delete()
     Person.query.delete()
-    
+
 
     db.session.commit()
     return jsonify({'message': 'All tables have been cleared'}), 200
@@ -409,13 +440,14 @@ def addPantry():
     # if on search there is no upc found then we will add the product to the database via the upc api
     if parameterUPC != "None":
 
-        # query the product table to see if a product with the upc exists, if yes get the product id ONLLY of the first match
+        # query the product table to see if a product with the upc exists, if yes get the product id ONLY of the first match
         product = Product.query.filter_by(upc=parameterUPC).first()
 
         # product doesnt currently exist in the database
         if not product:
             # call the upc route function and capture the response
             response_tuple = apiCall(parameterUPC)
+
 
             if response_tuple[1] != 200:
                 # if the product name is not null, then we will add the product to the database
@@ -426,6 +458,12 @@ def addPantry():
                     db.session.add(product)
                     db.session.commit()
             else:
+                # add the product to the database
+                product = Product(name=response_tuple[0],
+                                upc=parameterUPC, plu = None, logical_delete=False)
+                db.session.add(product)
+                db.session.commit()
+                
                 # get the product id from the newly added upc from the database
                 product = Product.query.filter_by(upc=parameterUPC).first()
     elif plu:
@@ -434,6 +472,24 @@ def addPantry():
             return jsonify({'error': 'PLU not found'}), 404
     else:
         return jsonify({'error': 'No UPC or PLU provided'}), 400
+    
+
+    # now we have to see if the name provided matches the name of the product in the database 
+    # if they are different then we will create a new entry in the User's alias table
+    # if an alias for the product id already exists, then we will replace the alias with the new one
+    if name != product.name:
+        # check to see if there is already an alias for the product
+        alias = Alias.query.filter_by(user_id=user_id, product_id=product.id).first()
+        # if there is an alias, then we will update it
+        if alias:
+            alias.alias = name
+            db.session.commit()
+        # if there is no alias, then we will create one
+        else:
+            alias = Alias(user_id=user_id, product_id=product.id, alias=name)
+            db.session.add(alias)
+            db.session.commit()
+
 
 
     # ok so by here we have the plu or upc and the product id, as well as the date created
@@ -495,6 +551,7 @@ def getAllPantry():
                 else:
                     expiration_date = None
           
+            # check to see where the food is stored and conver to int for the front end
             if item.location == 'pantry':
                 location = 1
             elif item.location == 'fridge':
@@ -503,11 +560,22 @@ def getAllPantry():
                 location = 3
             else:
                 location = 0
+
+            # Check the alias table to see if an alias exists for the product given the user id
+            alias = Alias.query.filter_by(user_id=user_id, product_id=item.product_id).first()
+
+            # if an alias exists, then we will use that instead of the product name
+            if alias:
+                name = alias.alias
+            else:
+                name = product.name
+
     
             # create a dictionary of the pantry item details
             pantry_item = {
                 'id': item.id,
-                'name': product.name,
+                'name': name,
+                # if none type then return null
                 'date_added': item.date_added,
                 'date_removed': item.date_removed,
                 'location': location,

@@ -135,3 +135,15 @@ class Pantry(db.Model):
         self.location = location
         self.quantity = quantity
         self.is_deleted = is_deleted
+
+class Alias(db.Model):
+    __tablename__ = 'alias'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    alias = db.Column(db.String(300), nullable=False)
+
+    def __init__(self, user_id, product_id, alias):
+        self.user_id = user_id
+        self.product_id = product_id
+        self.alias = alias

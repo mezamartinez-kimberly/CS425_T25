@@ -20,6 +20,7 @@ import 'package:flutter/services.dart';
 
 class EditWidget extends StatefulWidget {
   @override
+  // ignore: library_private_types_in_public_api
   _EditWidgetState createState() => _EditWidgetState();
 
   final Pantry pantryItem;
