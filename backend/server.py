@@ -203,7 +203,7 @@ def resetPassword():
 def deleteAll():
     # delete the pantry table
     Product.query.delete()
-    #delte the pantry table
+    #delete the pantry table
     Pantry.query.delete()
 
     # delete user and person table
@@ -478,7 +478,6 @@ def getAllPantry():
             # get the product details
             product = Product.query.filter_by(id=item.product_id).first()
 
-
             if item.expiration_date != None:
                 expiration_date = item.expiration_date
             else:
@@ -509,14 +508,17 @@ def getAllPantry():
             pantry_item = {
                 'id': item.id,
                 'name': product.name,
-                # if none type then return null
                 'date_added': item.date_added,
                 'date_removed': item.date_removed,
                 'location': location,
                 'quantity': item.quantity,
                 'expiration_date': expiration_date,
-                'is_deleted': int(item.is_deleted)
+                'is_deleted': int(item.is_deleted),
+                'upc': product.upc,
+                'plu': product.plu
             }
+
+           
 
             # add the dictionary to the list
             pantry_list.append(pantry_item)
@@ -546,7 +548,6 @@ def updatePantryItem():
 #    "is_deleted": "0"
 # }
 
-
     # get the session token from the authorization html header
     session_token = request.headers.get('Authorization').split()[1]
     
@@ -558,7 +559,7 @@ def updatePantryItem():
 
     # get the pantry item to update
     pantry = Pantry.query.filter_by(id=id).first()
-
+    
     # check to see if the pantry item exists
     if not pantry:
         return jsonify({'error': 'Pantry item not found'}), 404

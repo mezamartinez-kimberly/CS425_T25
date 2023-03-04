@@ -42,8 +42,8 @@ class BackendUtils {
     }
   }
 
-// create a function to log the user in
-// this will need to change the state of the app and return the user to the home screen
+  // create a function to log the user in
+  // this will need to change the state of the app and return the user to the home screen
   static Future<String> loginUser(String email, String password) async {
     const String apiUrl = 'http://10.0.2.2:5000/login';
     final Map<String, dynamic> message = {
@@ -308,6 +308,27 @@ class BackendUtils {
       return "Pantry item updated successfully.";
     } else {
       return "Error updating pantry item.";
+    }
+  }
+
+  // delete all database items
+  // for debugging
+  static Future<String> deleteAll() async {
+    const String apiUrl = 'http://10.0.2.2:5000/delete_all';
+
+    // create a delete request to the backend with the auth header
+    final http.Response response = await http.delete(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': "Bearer $sessionToken",
+        'Content-Type': 'application/json',
+      },
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      return "Database successfully cleared..";
+    } else {
+      return "Error: ${response.body}.";
     }
   }
 }

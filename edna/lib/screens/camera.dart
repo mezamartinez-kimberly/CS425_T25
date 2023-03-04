@@ -114,10 +114,6 @@ class CameraPageState extends State<CameraPage> {
                         // get product name from UPC code
                         future: _getProductName(),
                         builder: (context, snapshot) {
-                          // if not scanning and list is empty, show scan instructions
-                          if (widget.itemsToInsert == null && result == null) {
-                            //return _buildScanInstructions();
-                          }
                           // while not scanning, or if waiting for flag to reset
                           // return empty container
                           if (result == null ||
@@ -235,9 +231,10 @@ class CameraPageState extends State<CameraPage> {
                 backendResult.statusCode != 201) {
               const MyApp().createErrorMessage(context,
                   "Error ${backendResult.statusCode}: ${backendResult.body}");
+              print(backendResult.body);
             } else {
-              const MyApp()
-                  .createSuccessMessage(context, "Item added to pantry");
+              // const MyApp()
+              //     .createSuccessMessage(context, "Item added to pantry");
             }
           }
           // show loading indicator for 0.5 sec
