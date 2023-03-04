@@ -27,6 +27,15 @@ class ProfilePageState extends State<ProfilePage> {
         ),
         onPressed: () {
           //insert log out actions
+          FutureBuilder(
+            future: _logOut(),
+            builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return _logOut();
+            } else {
+              return const CircularProgressIndicator();
+            }
+          });
         },
         child: const Text(
           'Logout',
@@ -49,6 +58,20 @@ class ProfilePageState extends State<ProfilePage> {
     String lastName = userData[1];
     String email = userData[2];
 
+    print('here');
+
+  }
+
+  //function to call logout from backend
+  _logOut() async {
+    //call logout from backend
+    await BackendUtils.logoutUser();
+    
+    //navigate to login page
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+    );
   }
 
   @override

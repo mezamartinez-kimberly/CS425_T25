@@ -97,7 +97,7 @@ class BackendUtils {
     }
   }
 
-  //create a function decode the users first name, last name, email for the profile page and account settings
+  //create a function to decode the users first name, last name, email for the profile page and account settings
   static Future<List<String>> getUserData() async {
     const String apiUrl = 'http://10.0.2.2:5000/obtainUserNameEmail';
 
@@ -111,29 +111,54 @@ class BackendUtils {
       },
     );
 
+    // check the status code for the result
     if (response.statusCode == 200) {
-      //grab body of the response and convert it to a list 
-      final List<dynamic> responseBody = json.decode(response.body);
+      //convert response body into a List<string> using jsonDecode
+      Map<String, dynamic> userData = new Map<String, dynamic>.from(jsonDecode(response.body));
+      print(userData);
+
+      //final List<String> userData = jsonDecode(response.body);
 
       //get first name from response body
-      String firstName = responseBody[0]['first_name'];
+      String firstName = userData[0];
 
       //get last name from response body
-      String lastName = responseBody[0]['last_name'];
+      String lastName = userData[1];
 
       //get email from response body
-      String email = responseBody[0]['email'];
+      String email = userData[2];
 
-      //store strings in an array to return
-      List<String> userData = [firstName, lastName, email];
+      //create a list of the user data
+      List<String> userDataList = [firstName, lastName, email];
 
-      //return array
-      return userData;
-
-    } else{
-      //obtaining data failed
-      return ["Error, obtaining data failed"];
+      //return the list
+      return userDataList;
+    } else {
+      // return failed
+      return ["Failed to obtain user data"];
     }
   }
-  
+
+  //create a function to use the logout route in the backend
+  static Future<String> logoutUser() async {
+    const String apiUrl = 'http://10.0.2.2:5000/logout';
+
+    // create a post request to the backend with the auth header
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': "Bearer $sessionToken",
+      },
+    );
+
+    // check the status code for the result
+    if (response.statusCode == 200) {
+      // return successful
+      return "Logout successful";
+    } else {
+      // return failed
+      return "Logout failed";
+    }
+
+  }
 }

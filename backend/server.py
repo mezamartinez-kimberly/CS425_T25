@@ -233,7 +233,7 @@ def obtainUserNameEmail():
 
     return jsonify({'first_name': first_name, 'last_name': last_name, 'email': email}), 200
 
-# create a route that will send in the users new first name, last name, and email
+# create a route that will send in the users new first name, last name, and email (check)
 @app.route('/updateUserNameEmail', methods=['POST'])
 @jwt_required() # authentication Required
 def updateUserNameEmail():
@@ -271,8 +271,20 @@ def updateUserNameEmail():
     person.last_name = new_last_name
     user.email = new_email
 
-    db.session.add(person)
-    db.session.add(user)
-    db.session.commit()
-
     return jsonify({'message': 'Users name and email updated successfully'}), 200
+
+
+#create a route that will grab the users token and remove it from the database
+@app.route('/logout', methods=['POST'])
+@jwt_required() # authentication Required
+def logout():
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # remove the session token from the database
+    user.session_token = None
+
+    return jsonify({'message': 'User logged out successfully'}), 200
