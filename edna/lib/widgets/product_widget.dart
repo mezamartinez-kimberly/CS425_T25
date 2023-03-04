@@ -67,7 +67,7 @@ class ProductWidgetState extends State<ProductWidget> {
         background: Container(color: Colors.red),
         onDismissed: (direction) {
           print("dismissed");
-          setState(() {});
+          //setState(() {});
         },
         child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -94,7 +94,7 @@ class ProductWidgetState extends State<ProductWidget> {
                       leading: _buildCheckBox(widget.enableCheckbox),
                       title: Text(
                         widget.pantryItem.name as String,
-                        maxLines: 2,
+                        // maxLines: 3,
                         style: TextStyle(
                             // if deleted, strikethrough text
                             decoration: widget.pantryItem.isDeleted! == 1
