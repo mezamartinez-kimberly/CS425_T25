@@ -234,7 +234,7 @@ def resetPassword():
 @app.route('/delete_all', methods=['DELETE'])
 def deleteAll():
     # deltet the pantry table
-    Product.query.delete()
+    # Product.query.delete()
     #delte the pantry table
     Pantry.query.delete()
 
@@ -478,7 +478,7 @@ def addPantry():
     # now we have to see if the name provided matches the name of the product in the database 
     # if they are different then we will create a new entry in the User's alias table
     # if an alias for the product id already exists, then we will replace the alias with the new one
-    if name != product.name:
+    if name != product.name and name != None and name != "":
         # check to see if there is already an alias for the product
         alias = Alias.query.filter_by(user_id=user_id, product_id=product.id).first()
         # if there is an alias, then we will update it
@@ -564,12 +564,14 @@ def getAllPantry():
                 location = 0
 
             # Check the alias table to see if an alias exists for the product given the user id
-            alias = Alias.query.filter_by(user_id=user_id, product_id=item.product_id).first()
+            alias_obj = Alias.query.filter_by(user_id=user_id, product_id=item.product_id).first()
 
             # if an alias exists, then we will use that instead of the product name
-            if alias:
-                name = alias.alias
+            if alias_obj:
+                print("HERE")
+                name = alias_obj.alias
             else:
+                print("here")
                 name = product.name
 
     
@@ -589,7 +591,7 @@ def getAllPantry():
             # add the dictionary to the list
             pantry_list.append(pantry_item)
 
-            print(pantry_item)
+        # print(pantry_list)
 
         # return the list of pantry items
         return jsonify(pantry_list), 200
