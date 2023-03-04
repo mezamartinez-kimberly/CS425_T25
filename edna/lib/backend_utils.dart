@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart'; // DateFormat
 
+// global variables
+bool firstTimeScan = true; // to prevent multiple calls from a single scan
+
 class BackendUtils {
   static String sessionToken = '';
   static String emailGlobal = '';
@@ -67,7 +70,7 @@ class BackendUtils {
     }
   }
 
-// // Create a upc get function to get the upc data
+  // Create a upc get function to get the upc data
   static Future<String> getUpcData(String upc) async {
     const String apiUrl = 'http://10.0.2.2:5000/upc';
 
@@ -80,25 +83,34 @@ class BackendUtils {
     final String jsonPayload = json.encode(message);
 
     // send the request to the backend as POST request
-    final http.Response response = await http.post(
-      Uri.parse(apiUrl),
-      headers: {
-        'Authorization': "Bearer $sessionToken",
-        'Content-Type': 'application/json',
-      },
-      body: jsonPayload,
-    );
+    if (firstTimeScan == true) {
+      firstTimeScan = false; // reset the flag
+      final http.Response response = await http.post(
+        Uri.parse(apiUrl),
+        headers: {
+          'Authorization': "Bearer $sessionToken",
+          'Content-Type': 'application/json',
+        },
+        body: jsonPayload,
+      );
 
-    if (response.statusCode == 200) {
-      // grab the rest of the body
-      final Map<String, dynamic> responseBody = json.decode(response.body);
-      String name = responseBody['name'];
-      print("HERE");
-      // Registration was successful
-      return name;
+      if (response.statusCode == 200) {
+        // grab the rest of the body
+        final Map<String, dynamic> responseBody = json.decode(response.body);
+        String upc = responseBody['name'];
+
+        // UPC found
+        return upc;
+      } else {
+        // UPC not found
+        return "UPC not found";
+      }
     } else {
-      // Registration failed
-      return "UPC not found";
+      // wait 5 seconds before resetting the flag
+      Future.delayed(const Duration(seconds: 5), () {
+        firstTimeScan = true;
+      });
+      return "resetting flag";
     }
   }
 
@@ -253,7 +265,7 @@ class BackendUtils {
       // loop through the list of maps and convert each map to a pantry item
       for (var item in responseBody) {
         // print the contents of the item
-        print(item);
+        //print(item);
 
         // create a pantry item from the map
         Pantry pantryItem = Pantry.fromMap(item);

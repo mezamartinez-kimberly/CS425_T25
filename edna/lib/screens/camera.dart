@@ -47,7 +47,7 @@ class CameraPageState extends State<CameraPage> {
   String productName = '';
   bool _flashOn = false;
 
-  bool itemAdded = false;
+  bool itemAdded = false; // flag to check if item was just added to pantry
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -118,19 +118,27 @@ class CameraPageState extends State<CameraPage> {
                           if (widget.itemsToInsert == null && result == null) {
                             //return _buildScanInstructions();
                           }
-                          // while not scanning, return empty container
-                          if (result == null) {
+                          // while not scanning, or if waiting for flag to reset
+                          // return empty container
+                          if (result == null ||
+                              snapshot.data == "resetting flag") {
                             return Container();
                           }
                           // while waiting for API call to UPC db to complete, show loading indicator
                           if (snapshot.data == null) {
-                            return SizedBox(child: CircularProgressIndicator());
+                            return const Padding(
+                                padding: EdgeInsets.all(20.0),
+                                child: CircularProgressIndicator());
+                            // if error, show error message
                           } else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
+                            return const MyApp().createErrorMessage(
+                                'Error: ${snapshot.error}', context);
+                            // if UPC not found, show error message
                           } else if (snapshot.data == 'UPC not found') {
-                            return Text("UPC ${result!.code} not found");
-                          } else {
+                            return const MyApp().createErrorMessage(
+                                "UPC ${result!.code} not found", context);
                             // if UPC found, add product to camera page's list of items
+                          } else {
                             _addItemToList();
 
                             // return empty container so return value is a widget
@@ -430,21 +438,6 @@ class CameraPageState extends State<CameraPage> {
     }
   }
 
-  // public for testing
-  getProductName(testResult) async {
-    // if successfully scanned
-    if (testResult != null) {
-      // if code can be found in UPC database
-      if (testResult!.format == BarcodeFormat.ean13 ||
-          testResult!.format == BarcodeFormat.ean8 ||
-          testResult!.format == BarcodeFormat.upcA ||
-          testResult!.format == BarcodeFormat.upcE) {
-        return productName =
-            await BackendUtils.getUpcData(testResult!.code as String);
-      }
-    }
-  }
-
   _addItemToList() {
     // itemAdded is used to prevent items from being added multiple times
     if (!itemAdded) {
@@ -478,28 +471,6 @@ class CameraPageState extends State<CameraPage> {
         itemAdded = false;
       });
     }
-  }
-
-  // public for testing
-  ProductWidget createProductWidget(Barcode testResult, String productName) {
-    // create new pantry item with values
-    Pantry newPantryItem = Pantry(
-      name: productName,
-      dateAdded: DateTime.now(),
-      upc: testResult.code,
-      isDeleted: 0,
-    );
-
-    // create product widget with new pantry item
-    ProductWidget newProductWidget = ProductWidget(
-        pantryItem: newPantryItem,
-        enableCheckbox: false,
-        // no need to refresh pantry since we're on camera page
-        refreshPantryList: () {});
-
-    return newProductWidget;
-    // add to camera page's list of items
-    //widget.addItem(newProductWidget);
   }
 
   _buildItemList() {
