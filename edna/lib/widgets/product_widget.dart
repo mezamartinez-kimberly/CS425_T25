@@ -22,7 +22,7 @@ class ProductWidget extends StatefulWidget {
   }) : super(key: key);
 }
 
-class ProductWidgetState extends State<ProductWidget> {
+class _ProductWidgetState extends State<ProductWidget> {
   bool _isEditing = false;
   bool _isChecked = false;
 
