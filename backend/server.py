@@ -238,11 +238,6 @@ def deleteAll():
     #delte the pantry table
     Pantry.query.delete()
 
-    # delete user and person table
-    User.query.delete()
-    Person.query.delete()
-
-
     db.session.commit()
     return jsonify({'message': 'All tables have been cleared'}), 200
 
@@ -407,6 +402,7 @@ def upc():
 def addPantry():
     # expected input:
     # {
+    #    "id": "1",
     #     "name": "Apple",
     #     "date_added": "2020-01-01",
     #     "expiration_date": "2020-01-01",
@@ -416,7 +412,6 @@ def addPantry():
     #    "quantity": "1"
     # }
 
-    
     name = request.json['name']
     location = request.json['location']
     parameterUPC = request.json['upc']
@@ -427,8 +422,14 @@ def addPantry():
     # convert all the time strings to datetime objects
     if request.json['date_added'] != None:
         date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
+
+        # truncate the miliseconds from the datetime object
+        date_added = date_added.replace(microsecond=0)
+
     if request.json['expiration_date'] != None:
         expiration_date = datetime.strptime(str(request.json['expiration_date']), '%Y-%m-%dT%H:%M:%S.%f')
+        date_added = date_added.replace(microsecond=0)
+
     else:
         expiration_date = None
 
@@ -599,6 +600,48 @@ def getAllPantry():
         return jsonify(pantry_list), 200
 
 
+# # creat a route that updates the flutter index term
+# @app.route('/updateFlutterIndex', methods=['POST'])
+# @jwt_required() # authentication Required
+# def updateFlutterIndex():
+#     # expected input:
+#     # {
+#     #     "date_added": "2020-12-01 00:00:00",
+#     #     "flutter_index": "1"
+#     # }
+
+#     # get the session token from the authorization html header
+#     session_token = request.headers.get('Authorization').split()[1]
+    
+#     # get the user id from the session token
+#     user_id = User.query.filter_by(session_token=session_token).first().id
+
+#     # get the json data from the request
+#     data = request.get_json()
+
+#     # get the id of the pantry item
+#     unique_date_added = data['date_added']
+
+#     # get the flutter index
+#     flutter_index = data['flutter_index']
+
+#     # query the pantry database for the user's pantry item with the unique date added
+#     pantry_item = Pantry.query.filter_by(user_id=user_id, date_added=unique_date_added).first()
+
+#     # check to see if the pantry item exists
+#     if not pantry_item:
+#         return jsonify({'error': 'Pantry item not found'}), 401
+    
+#     # update the flutter index
+#     pantry_item.flutter_index = flutter_index
+
+#     # commit the changes to the database
+#     db.session.commit()
+
+#     return jsonify({'message': 'Flutter index updated successfully'}), 201
+
+
+
 # create a route to update an item in the pantry
 @app.route('/updatePantryItem', methods=['POST'])
 @jwt_required() # authentication Required
@@ -618,6 +661,14 @@ def updatePantryItem():
 #    "is_deleted": "0"
 # }
 
+    date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
+    print(str(request.json['date_added']))
+    print(date_added)
+
+    # debug query to pantry table at the index
+    debug = Pantry.query.filter_by(id=request.json['id']).first()
+    test = debug.date_added
+    print(test)
 
     # get the session token from the authorization html header
     session_token = request.headers.get('Authorization').split()[1]
@@ -625,11 +676,8 @@ def updatePantryItem():
     # get the user id from the session token
     user_id = User.query.filter_by(session_token=session_token).first().id
 
-    # get the id of the pantry item to update
-    id = request.json['id']
-
-    # get the pantry item to update
-    pantry = Pantry.query.filter_by(id=id).first()
+    # search the pantry table for where the user id and the date_added match
+    pantry = Pantry.query.filter_by(user_id=user_id, date_added=date_added).first()
 
     # check to see if the pantry item exists
     if not pantry:
