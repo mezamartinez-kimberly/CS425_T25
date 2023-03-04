@@ -28,24 +28,26 @@ class MyApp extends StatelessWidget {
     if (errorMsg.runtimeType != String) {
       errorMsg = errorMsg.toString();
     }
-
-    Flushbar(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-      message: errorMsg,
-      messageSize: 25,
-      messageColor: Theme.of(context).brightness == Brightness.dark
-          ? Colors.white
-          : errorText,
-      duration: const Duration(seconds: 3),
-      backgroundColor: errorBackground,
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-      borderRadius: BorderRadius.circular(30.0),
-      maxWidth: MediaQuery.of(context).size.width * 0.8,
-      isDismissible: true,
-      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-    ).show(context);
+    // if calling widget is not in a build widget (which will throw error)
+    if (context.runtimeType != BuildContext) {
+      Flushbar(
+        padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        message: errorMsg,
+        messageSize: 25,
+        messageColor: Theme.of(context).brightness == Brightness.dark
+            ? Colors.white
+            : errorText,
+        duration: const Duration(seconds: 3),
+        backgroundColor: errorBackground,
+        flushbarPosition: FlushbarPosition.BOTTOM,
+        flushbarStyle: FlushbarStyle.FLOATING,
+        margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+        borderRadius: BorderRadius.circular(30.0),
+        maxWidth: MediaQuery.of(context).size.width * 0.8,
+        isDismissible: true,
+        dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+      ).show(context);
+    }
   }
 
   createSuccessMessage(context, errorMsg) {
