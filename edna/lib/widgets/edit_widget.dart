@@ -51,8 +51,6 @@ class _EditWidgetState extends State<EditWidget> {
   // for exp date
   TextEditingController dateController = TextEditingController();
 
-  Color tempPink = const Color.fromARGB(255, 255, 180, 205);
-
   // init state
   @override
   void initState() {
@@ -127,8 +125,8 @@ class _EditWidgetState extends State<EditWidget> {
 
   // called functions
   Widget _buildNameField() {
-    String initValue = "";
-    if (widget.pantryItem.name != "") {
+    String? initValue = "";
+    if (widget.pantryItem.name != "" || widget.pantryItem.name != null) {
       initValue = widget.pantryItem.name;
     }
     return TextFormField(
@@ -178,6 +176,24 @@ class _EditWidgetState extends State<EditWidget> {
             lastDate: DateTime(2101),
             helpText: "Select Expiration Date",
             errorInvalidText: "Invalid Date",
+            builder: (context, child) {
+              return Theme(
+                data: Theme.of(context).copyWith(
+                  colorScheme: ColorScheme.light(
+                    primary: MyTheme()
+                        .pinkColor, // calendar header background color, button text color
+                    onPrimary: Colors.black, // calendar header text color
+                    onSurface: Colors.black, // calendar day text color
+                  ),
+                  textButtonTheme: TextButtonThemeData(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.white, // button color
+                    ),
+                  ),
+                ),
+                child: child!,
+              );
+            },
           );
 
           // update text field to picked date
@@ -312,10 +328,13 @@ class _EditWidgetState extends State<EditWidget> {
 
   Widget _buildQuantityPicker() {
     return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+      // round card surrounding quantity picker
       Card(
-        color: tempPink, // temp color
+        color: MyTheme().pinkColor, // temp color
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
+          // black border
+          side: const BorderSide(color: Color.fromARGB(104, 4, 4, 4), width: 1),
         ),
         child: SizedBox(
           width: 240,
@@ -361,7 +380,7 @@ class _EditWidgetState extends State<EditWidget> {
     Color borderColor = const Color.fromARGB(255, 34, 34, 34);
 
     // return Card(
-    //   color: tempPink,
+    //   color: MyTheme().pinkColor,
     //   child: SizedBox(
     //     width: 320,
     //     height: 150,
@@ -377,7 +396,7 @@ class _EditWidgetState extends State<EditWidget> {
             selectedBorderColor: borderColor,
             textStyle: const TextStyle(
                 fontSize: 20, fontWeight: FontWeight.w400), // button text size
-            fillColor: tempPink,
+            fillColor: MyTheme().pinkColor,
             selectedColor: const Color.fromARGB(255, 0, 0, 0), // black text
             direction: Axis.horizontal,
             onPressed: (int index) {

@@ -9,12 +9,12 @@ class StorageLocation {
   //const StorageLocation._internal(this.id, this.name);
 
   // lookup table
-  static const StorageLocation fridge = StorageLocation(0, 'Pantry');
-  static const StorageLocation freezer = StorageLocation(1, 'Fridge');
-  static const StorageLocation pantry = StorageLocation(2, 'Freezer');
+  static const StorageLocation fridge = StorageLocation(1, 'Pantry');
+  static const StorageLocation freezer = StorageLocation(2, 'Fridge');
+  static const StorageLocation pantry = StorageLocation(3, 'Freezer');
 
   // list of all values
-  static List<StorageLocation> get values => [fridge, freezer, pantry];
+  static List<StorageLocation> get values => [pantry, fridge, freezer];
 
   // lookup by id
   static StorageLocation fromId(int id) {

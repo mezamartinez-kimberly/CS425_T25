@@ -8,7 +8,7 @@ import 'package:intl/intl.dart';
 
 class Pantry {
   final int? id;
-  String name;
+  String? name;
   DateTime? dateAdded;
   DateTime? dateRemoved;
   DateTime? expirationDate;
@@ -20,7 +20,7 @@ class Pantry {
 
   Pantry({
     this.id,
-    required this.name,
+    this.name,
     this.dateAdded,
     this.dateRemoved,
     this.expirationDate,

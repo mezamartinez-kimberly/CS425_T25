@@ -51,18 +51,35 @@ class PantryPageState extends State<PantryPage> {
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-            bottom: const TabBar(
-              tabs: [
-                Tab(child: Text('Pantry')),
-                Tab(child: Text('Fridge')),
-                Tab(child: Text('Freezer')),
+            backgroundColor: Colors.transparent,
+            elevation: 0, // remove shadow
+            automaticallyImplyLeading: false, // remove back button
+            bottom: TabBar(
+              indicatorColor: MyTheme().pinkColor,
+              tabs: const [
+                Tab(
+                    child:
+                        Text('Pantry', style: TextStyle(color: Colors.black))),
+                Tab(
+                    child:
+                        Text('Fridge', style: TextStyle(color: Colors.black))),
+                Tab(
+                    child:
+                        Text('Freezer', style: TextStyle(color: Colors.black))),
               ],
             ),
-            title: const Text('Shelf'),
+            title: const Padding(
+              padding: EdgeInsets.only(top: 20.0, bottom: 10),
+              child: Text('Shelf',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Roboto')),
+            ),
           ),
           body: Column(children: [
-            // make scrollable
-            _buildHeader(),
+            _buildHeader(), // eye icon
             Expanded(
                 child: FutureBuilder(
               future: _loadPantryItems(),
@@ -76,7 +93,7 @@ class PantryPageState extends State<PantryPage> {
                 }
               },
             )),
-            _buildAddButton(),
+            _buildAddButton(), // add button
           ]),
         ),
       ),
@@ -85,34 +102,29 @@ class PantryPageState extends State<PantryPage> {
 
   Widget _buildHeader() {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        const Padding(
-          padding: EdgeInsets.only(left: 20, bottom: 15, top: 15),
-        ),
+        // eye icon
         Padding(
-          padding: const EdgeInsets.only(right: 30),
-          child: IconButton(
-            icon: _showDeletedItems
-                ? const Icon(
-                    Icons.remove_red_eye,
-                    size: 40,
-                    color: Color.fromARGB(255, 139, 14, 14),
-                  )
-                : const Icon(
-                    Icons.visibility_off,
-                    size: 40,
-                    color: Color.fromARGB(255, 139, 14, 14),
-                  ),
-            onPressed: () {
-              // refresh list
-              refresh();
+          padding: const EdgeInsets.only(top: 8, right: 10),
+          child: CircleAvatar(
+            radius: 28,
+            backgroundColor: MyTheme().pinkColor,
+            child: IconButton(
+              icon: _showDeletedItems
+                  ? const Icon(Icons.remove_red_eye_outlined,
+                      size: 32, color: Colors.black)
+                  : const Icon(Icons.visibility_off_outlined,
+                      size: 32, color: Colors.black),
+              onPressed: () {
+                // refresh list
+                refresh();
 
-              setState(() {
-                _showDeletedItems = !_showDeletedItems;
-                //     _showDeletedItems ? _listAllItems() : _listActiveItems();
-              });
-            },
+                setState(() {
+                  _showDeletedItems = !_showDeletedItems;
+                });
+              },
+            ),
           ),
         ),
       ],
@@ -169,30 +181,31 @@ class PantryPageState extends State<PantryPage> {
   }
 
   Widget _buildAddButton() {
-    return Container(
-      padding: const EdgeInsets.only(left: 0, bottom: 20, right: 15, top: 10),
-      alignment: Alignment.bottomRight,
-      child: FloatingActionButton(
-        onPressed: () {
-          // show edit widget
-          showDialog(
-              context: context,
-              builder: (context) {
-                return EditWidget(
-                  pantryItem: Pantry(
-                    id: 401, // static var incremented each time?
-                    name: "",
-                  ),
-                  updateProductWidget: () {},
-                  refreshPantryList: refresh,
-                  callingWidget: widget,
-                );
-              });
-        },
-        elevation: 2.0,
-        child: const Icon(
-          Icons.add,
-          size: 35.0,
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.only(left: 0, bottom: 20, right: 15, top: 10),
+        alignment: Alignment.bottomRight,
+        child: FloatingActionButton(
+          backgroundColor: MyTheme().blueColor,
+          onPressed: () {
+            // show edit widget
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return EditWidget(
+                    pantryItem: Pantry(),
+                    updateProductWidget: () {},
+                    refreshPantryList: refresh,
+                    callingWidget: widget,
+                  );
+                });
+          },
+          elevation: 0,
+          child: const Icon(
+            Icons.add,
+            size: 35.0,
+            color: Colors.black,
+          ),
         ),
       ),
     );

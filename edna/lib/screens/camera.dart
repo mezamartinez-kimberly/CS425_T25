@@ -11,14 +11,16 @@
 // - https://stackoverflow.com/questions/65992435/how-to-open-barcode-scanner-in-a-custom-widget
 // */
 
-import 'dart:developer';
-import 'dart:io';
+import 'dart:developer'; // for debugPrint
+import 'dart:io'; // for Platform
 
-import 'package:edna/main.dart';
+import 'package:edna/main.dart'; // for main
+import 'package:edna/screens/all.dart'; // for pantry page
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart'; // for material design
 import 'package:qr_code_scanner/qr_code_scanner.dart'; // barcode scanner
-import 'package:edna/backend_utils.dart';
+import 'package:edna/backend_utils.dart'; // for API calls
+import 'package:google_fonts/google_fonts.dart'; // for fonts
 
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // product widget
@@ -45,7 +47,7 @@ class CameraPageState extends State<CameraPage> {
   String productName = '';
   bool _flashOn = false;
 
-  bool itemAdded = false;
+  bool itemAdded = false; // flag to check if item was just added to pantry
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -64,97 +66,123 @@ class CameraPageState extends State<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          _buildFlashButton(),
-          _buildCameraToggleButton(),
-        ],
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: MyTheme().blueColor,
+        // accent color
+        colorScheme:
+            ColorScheme.fromSwatch().copyWith(secondary: MyTheme().blueColor),
       ),
-      body: Column(
-        children: <Widget>[
-          // scan area
-          Expanded(flex: 2, child: _buildQrView(context)),
-          // items list
-          Expanded(
-            flex: 3,
-            child: Column(
-              children: <Widget>[
-                FutureBuilder(
-                    // get product name from UPC code
-                    future: _getProductName(),
-                    builder: (context, snapshot) {
-                      // if not scanning and list is empty
-                      if (widget.itemsToInsert == null && result == null) {
-                        return Padding(
-                          // spacing between card edges and page edges
-                          padding: const EdgeInsets.all(30),
-                          child: Card(
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15.0),
-                            ),
-                            child: const Expanded(
-                              child: Padding(
-                                // spacing between card edges and text
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 30, vertical: 30),
-                                child: Text('Scan or manually enter an item.',
-                                    textAlign: TextAlign.center,
-                                    // text size
-                                    style: TextStyle(fontSize: 35)),
+      home: DefaultTextStyle(
+        style: TextStyle(
+            color: Colors.black, fontFamily: GoogleFonts.roboto().fontFamily),
+        child: Column(
+          children: <Widget>[
+            // scan area
+            Expanded(flex: 4, child: _buildQrView(context)),
+            // toolbar
+            Expanded(
+                flex: 1,
+                child: Container(
+                    color: Colors.black,
+                    // rounded corners
+                    child: ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(40),
+                          topRight: Radius.circular(40),
+                        ),
+                        child: Container(
+                            decoration: const BoxDecoration(
+                              color: Color.fromARGB(255, 201, 201, 201),
+                              // black line at bottom of toolbar
+                              border: Border(
+                                bottom: BorderSide(
+                                  color: Colors.black,
+                                  width: 1.5,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      }
-                      // while not scanning, return empty container
-                      if (result == null) {
-                        return Container();
-                      }
-                      // while waiting for API call to UPC db to complete, show loading indicator
-                      if (snapshot.data == null) {
-                        return const CircularProgressIndicator();
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      } else if (snapshot.data == 'UPC not found') {
-                        return Text("UPC ${result!.code} not found");
-                      } else {
-                        // if UPC found, add product to camera page's list of items
-                        _addItemToList();
+                            child: _buildToolbar())))),
+            // items list
+            Expanded(
+              flex: 5,
+              child: Container(
+                color: Colors.transparent,
+                child: Column(
+                  children: <Widget>[
+                    FutureBuilder(
+                        // get product name from UPC code
+                        future: _getProductName(),
+                        builder: (context, snapshot) {
+                          // while not scanning, or if waiting for flag to reset
+                          // return empty container
+                          if (result == null ||
+                              snapshot.data == "resetting flag") {
+                            return Container();
+                          }
+                          // while waiting for API call to UPC db to complete, show loading indicator
+                          if (snapshot.data == null) {
+                            return const Padding(
+                                padding: EdgeInsets.all(20.0),
+                                child: CircularProgressIndicator());
+                            // if error, show error message
+                          } else if (snapshot.hasError) {
+                            return const MyApp().createErrorMessage(
+                                context, 'Error: ${snapshot.error}');
+                            // if UPC not found, show error message
+                          } else if (snapshot.data == 'UPC not found') {
+                            return const MyApp().createErrorMessage(
+                                context, "UPC ${result!.code} not found");
+                            // if UPC found, add product to camera page's list of items
+                          } else {
+                            _addItemToList();
 
-                        // return empty container so return value is a widget
-                        return Container();
-                      }
-                    }),
-                _buildItemList(),
-              ],
+                            // return empty container so return value is a widget
+                            return Container();
+                          }
+                        }),
+                    _buildItemList(),
+                  ],
+                ),
+              ),
             ),
 
-            // ),
-          ),
-          // buttons
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                _buildManualButton(),
-                _buildSubmitButton(),
-              ],
-            ),
-          )
-        ],
+            // buttons
+            Padding(
+              padding: const EdgeInsets.only(right: 5.0, bottom: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: <Widget>[
+                  _buildManualButton(),
+                  const SizedBox(width: 5), // spacing
+                  _buildSubmitButton(),
+                ],
+              ),
+            )
+          ],
+        ),
       ),
+    );
+  }
+
+  // define style of manual and submit buttons
+  buttonStyle() {
+    return ElevatedButton.styleFrom(
+      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+      backgroundColor: MyTheme().pinkColor,
+      foregroundColor: Colors.black,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(50.0),
+      ),
+      // black border
+      side: const BorderSide(color: Colors.black, width: 1),
     );
   }
 
   Widget _buildManualButton() {
     return ElevatedButton.icon(
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18.0),
-        ),
-      ),
+      style: buttonStyle(),
       onPressed: () {
         // show edit widget
         showDialog(
@@ -174,17 +202,19 @@ class CameraPageState extends State<CameraPage> {
             });
       },
       icon: const Icon(Icons.add),
-      label: const Text("Manual"),
+      label: const Text(
+        "Manual",
+        style: TextStyle(
+          fontSize: 20,
+          color: Colors.black,
+        ),
+      ),
     );
   }
 
   Widget _buildSubmitButton() {
     return ElevatedButton.icon(
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(18.0),
-        ),
-      ),
+      style: buttonStyle(),
       onPressed: () async {
         // insert scanned items into pantry database
         if (widget.itemsToInsert != null) {
@@ -202,9 +232,10 @@ class CameraPageState extends State<CameraPage> {
                 backendResult.statusCode != 201) {
               const MyApp().createErrorMessage(context,
                   "Error ${backendResult.statusCode}: ${backendResult.body}");
+              print(backendResult.body);
             } else {
-              const MyApp()
-                  .createSuccessMessage(context, "Item added to pantry");
+              // const MyApp()
+              //     .createSuccessMessage(context, "Item added to pantry");
             }
           }
           // show loading indicator for 0.5 sec
@@ -230,15 +261,71 @@ class CameraPageState extends State<CameraPage> {
       icon: const Icon(Icons.check),
       label: const Text(
         'Submit',
+        style: TextStyle(
+          fontSize: 20,
+          color: Colors.black,
+        ),
       ),
     );
+  }
+
+  Widget _buildToolbar() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: <Widget>[
+        const Spacer(
+          flex: 10,
+        ),
+        const Text(
+          'Add items',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const Spacer(
+          flex: 2,
+        ),
+        _buildFlashButton(),
+        _buildCameraToggleButton(),
+        const Spacer(
+          flex: 1,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildScanInstructions() {
+    return const Padding(
+      // spacing between card edges and page edges
+      padding: EdgeInsets.all(30),
+      child: Expanded(
+        child: Padding(
+          // spacing between card edges and text
+          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
+          child: Text('Scan or manually enter an item.',
+              textAlign: TextAlign.center,
+              // text size
+              style: TextStyle(fontSize: 35)),
+        ),
+      ),
+    );
+  }
+
+  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
+    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
+    if (!p) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('no Permission')),
+      );
+    }
   }
 
   Widget _buildQrView(BuildContext context) {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
-        ? 150.0
+        ? 220.0
         : 300.0;
     // To ensure the Scanner view is properly sizes after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
@@ -246,7 +333,7 @@ class CameraPageState extends State<CameraPage> {
       key: qrKey,
       onQRViewCreated: _onQRViewCreated,
       overlay: QrScannerOverlayShape(
-          borderColor: Colors.red,
+          borderColor: MyTheme().blueColor,
           borderRadius: 10,
           borderLength: 30,
           borderWidth: 10,
@@ -265,15 +352,6 @@ class CameraPageState extends State<CameraPage> {
         result = scanData;
       });
     });
-  }
-
-  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
-    if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
-      );
-    }
   }
 
   @override
@@ -358,21 +436,6 @@ class CameraPageState extends State<CameraPage> {
     }
   }
 
-  // public for testing
-  getProductName(testResult) async {
-    // if successfully scanned
-    if (testResult != null) {
-      // if code can be found in UPC database
-      if (testResult!.format == BarcodeFormat.ean13 ||
-          testResult!.format == BarcodeFormat.ean8 ||
-          testResult!.format == BarcodeFormat.upcA ||
-          testResult!.format == BarcodeFormat.upcE) {
-        return productName =
-            await BackendUtils.getUpcData(testResult!.code as String);
-      }
-    }
-  }
-
   _addItemToList() {
     // itemAdded is used to prevent items from being added multiple times
     if (!itemAdded) {
@@ -390,41 +453,6 @@ class CameraPageState extends State<CameraPage> {
       // create product widget with new pantry item
       ProductWidget newProductWidget = ProductWidget(
           key: UniqueKey(),
-          pantryItem: newPantryItem,
-          enableCheckbox: false,
-          // no need to refresh pantry since we're on camera page
-          refreshPantryList: () {});
-
-      // add to camera page's list of items
-      widget.addItem(newProductWidget);
-      // toggle itemAdded so item doesn't duplicate
-      itemAdded = true;
-    } else {
-      // wait 5 seconds before user can scan another item
-      // this way item doesn't duplicate over and over
-      Future.delayed(const Duration(seconds: 5), () {
-        itemAdded = false;
-      });
-    }
-  }
-
-  // public for testing
-  addItemToList() {
-    // itemAdded is used to prevent items from being added multiple times
-    if (!itemAdded) {
-      // convert upc code to int
-      //  int upc = int.parse(result!.code as String);
-
-      // create new pantry item with values
-      Pantry newPantryItem = Pantry(
-        name: productName,
-        dateAdded: DateTime.now(),
-        upc: result!.code,
-        isDeleted: 0,
-      );
-
-      // create product widget with new pantry item
-      ProductWidget newProductWidget = ProductWidget(
           pantryItem: newPantryItem,
           enableCheckbox: false,
           // no need to refresh pantry since we're on camera page

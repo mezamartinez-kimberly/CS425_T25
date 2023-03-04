@@ -63,52 +63,52 @@ class _ProductWidgetState extends State<ProductWidget> {
   }
 
   Widget _buildItemContainer() {
-    //  return Dismissible(
-    //                 key: UniqueKey(),
-    //                 background: Container(color: Colors.red),
-    //                 onDismissed: (direction) {
-    //                   PantryDatabase.instance.delete(item.id!);
-    //                   setState(() {
-
-    //                     // snapshot.data!.removeAt(index);
-    //                   });
-    //                 },
-    //                 child:
-    return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-        child: Card(
-          // outline
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(15.0),
-            side: const BorderSide(
-              color: Colors.black,
-              width: 1.0,
-            ),
-          ),
-          elevation: 5.0, // shadow
-          child: SizedBox(
-            height: 70,
-            width: 400,
-            child: ListView.builder(
-              physics:
-                  const NeverScrollableScrollPhysics(), // disable scroll within individual cards
-              itemCount: 1,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  leading: _buildCheckBox(widget.enableCheckbox),
-                  title: Text(widget.pantryItem.name,
-                      style: TextStyle(
-                          // if deleted, strikethrough text
-                          decoration: widget.pantryItem.isDeleted! == 1
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none)),
-                  subtitle: Text(_formatDate()),
-                  trailing: _buildEditButton(),
-                );
-              },
-            ),
-          ),
-        ));
+    return Dismissible(
+        key: UniqueKey(),
+        background: Container(color: Colors.red),
+        onDismissed: (direction) {
+          print("dismissed");
+          //setState(() {});
+        },
+        child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+            child: Card(
+              // outline
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+                side: const BorderSide(
+                  color: Colors.black,
+                  width: 1.0,
+                ),
+              ),
+              elevation: 5.0, // shadow
+              // size of product widgets
+              child: SizedBox(
+                height: 70,
+                width: 400,
+                child: ListView.builder(
+                  physics:
+                      const NeverScrollableScrollPhysics(), // disable scroll within individual cards
+                  itemCount: 1,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      leading: _buildCheckBox(widget.enableCheckbox),
+                      title: Text(
+                        widget.pantryItem.name as String,
+                        // maxLines: 3,
+                        style: TextStyle(
+                            // if deleted, strikethrough text
+                            decoration: widget.pantryItem.isDeleted! == 1
+                                ? TextDecoration.lineThrough
+                                : TextDecoration.none),
+                      ),
+                      subtitle: Text(_formatDate()),
+                      trailing: _buildEditButton(),
+                    );
+                  },
+                ),
+              ),
+            )));
   }
 
   Widget _buildEditButton() {

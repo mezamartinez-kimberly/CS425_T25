@@ -45,7 +45,6 @@ from flask_bcrypt import Bcrypt
 import bs4 # for html/ email editing
 import random # for generating random numbers for OTP
 
-
 # Import the database object and the Model Classes from the models.py file
 from models import db, User, UserPreference, Person, Product, ExpirationData, Pantry, Alias
 
@@ -233,9 +232,9 @@ def resetPassword():
 # create a quick debug route that will delete all info from all tables
 @app.route('/delete_all', methods=['DELETE'])
 def deleteAll():
-    # deltet the pantry table
-    # Product.query.delete()
-    #delte the pantry table
+    # delete the pantry table
+    Product.query.delete()
+    #delete the pantry table
     Pantry.query.delete()
 
     db.session.commit()
@@ -536,7 +535,6 @@ def getAllPantry():
             # get the product details
             product = Product.query.filter_by(id=item.product_id).first()
 
-
             if item.expiration_date != None:
                 expiration_date = item.expiration_date
             else:
@@ -588,8 +586,12 @@ def getAllPantry():
                 'upc': product.upc,
                 'plu': product.plu,
                 'expiration_date': expiration_date,
-                'is_deleted': int(item.is_deleted)
+                'is_deleted': int(item.is_deleted),
+                'upc': product.upc,
+                'plu': product.plu
             }
+
+           
 
             # add the dictionary to the list
             pantry_list.append(pantry_item)

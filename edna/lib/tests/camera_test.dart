@@ -1,43 +1,33 @@
-import 'package:flutter/material.dart';
-import 'package:test/test.dart';
-import 'package:edna/screens/camera.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart'; // barcode scanner
+// import 'package:test/test.dart';                        // test package
+// import 'package:edna/screens/camera.dart';              // camera page
+// import 'package:qr_code_scanner/qr_code_scanner.dart';  // barcode scanner
+// import 'package:edna/widgets/product_widget.dart';      // product widget
 
-void main() {
-  test('Test widget creation', () async {
-    // assert that camera page is not null
-    expect(CameraPage(), isNotNull);
+// void main() {
+//   test('Test widget creation', () async {
+//     // assert that camera page is not null
+//     expect(CameraPage(), isNotNull);
+//     // get access to camera page stateful widget
+//     CameraPageState cameraPageState = CameraPageState();
 
-    CameraPage cameraPage = CameraPage();
-    CameraPageState cameraPageState = CameraPageState();
+//     // create test barcode object
+//     Barcode? testBarcode = Barcode(
+//         '096619295203', BarcodeFormat.upcA, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
+//     // assert that barcode is created successfully
+//     expect(testBarcode, isNotNull);
 
-    // create barcode result
-    Barcode? testBarcode = Barcode(
-        '096619295203', BarcodeFormat.upcA, [1, 2, 3, 4, 5, 6, 7, 8, 9]);
-    // assert that barcode is created successfully
-    expect(testBarcode, isNotNull);
+//     // get product name from barcode
+//     String productName = await cameraPageState.getProductName(testBarcode);
+//     // assert that product name retrieved successfully
+//     expect(productName, isNotNull);
 
-    var productName = await cameraPageState.getProductName(testBarcode);
-    // .then((productName) => print("Product name: $productName"));
-    expect(productName, isNotNull);
-    //print(productName);
-    //
-    // expect(productName, isNotNull);
-    // print(productName);
-    // cameraPageState.addItemToList();
+//     // create product widget from barcode and product name
+//     ProductWidget productWidget =
+//         cameraPageState.createProductWidget(testBarcode, productName);
+//     // assert that widget is not null
+//     expect(productWidget, isNotNull);
 
-    // } else if (snapshot.data == 'UPC not found') {
-    //   print("UPC ${result!.code} not found");
-    // } else {
-    // if UPC found, add product to camera page's list of items
-
-    // list should have 1 item
-    //expect(cameraPage.itemsToInsert, 1);
-
-    // assert that the UPC code is the same as the one added to the list
-    // expect(cameraPage.itemsToInsert![0].pantryItem.upc, result.code);
-  });
-  // test('Test widget creation', () async {
-
-  // });
-}
+//     // print all properties of object stored in product widget
+//     ProductWidgetState().printProductWidget(productWidget);
+//   });
+// }

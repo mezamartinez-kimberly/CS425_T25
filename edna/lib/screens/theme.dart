@@ -13,7 +13,11 @@ https://medium.com/@nickysong/creating-a-custom-color-swatch-in-flutter-554bcdcb
 import 'package:flutter/material.dart';
 
 class MyTheme extends StatelessWidget {
-  const MyTheme({super.key});
+  var pinkColor = const Color.fromRGBO(247, 164, 162, 1);
+  var blueColor = const Color.fromRGBO(147, 168, 221, 1);
+
+  // constructor
+  MyTheme({Key? key}) : super(key: key);
 
   // function that allows user to create own material color type
   MaterialColor createMaterialColor(Color color) {
