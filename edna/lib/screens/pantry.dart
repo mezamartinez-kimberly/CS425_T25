@@ -26,10 +26,11 @@ class PantryPage extends StatefulWidget {
   PantryPageState createState() => PantryPageState();
 }
 
-class PantryPageState extends State<PantryPage> {
+class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
   late bool _showDeletedItems;
   List<Pantry> _activePantryItems = [];
   List<Pantry> _allPantryItems = [];
+  late TabController _tabController = TabController(length: 3, vsync: this);
   int _currentTab = 0; // added variable to keep track of current tab
 
   refresh() async {
@@ -40,9 +41,16 @@ class PantryPageState extends State<PantryPage> {
   @override
   void initState() {
     super.initState();
-    _currentTab = 0; // set current tab to pantry by default
-    _loadPantryItems(_currentTab); // load pantry items by default
+    _tabController = TabController(length: 3, vsync: this);
+    _currentTab = _tabController.index + 1;
+    _loadPantryItems(_currentTab);
     _showDeletedItems = false;
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -57,6 +65,7 @@ class PantryPageState extends State<PantryPage> {
             elevation: 0, // remove shadow
             automaticallyImplyLeading: false, // remove back button
             bottom: TabBar(
+              controller: _tabController,
               indicatorColor: MyTheme().pinkColor,
               tabs: const [
                 Tab(
@@ -70,19 +79,10 @@ class PantryPageState extends State<PantryPage> {
                         Text('Freezer', style: TextStyle(color: Colors.black))),
               ],
               onTap: (index) {
+                // Set the current tab to the selected tab
                 setState(() {
-                  switch (index) {
-                    case 0:
-                      _currentTab = 1;
-                      break;
-                    case 1:
-                      _currentTab = 2;
-                      break;
-                    case 2:
-                      _currentTab = 3;
-                      break;
-                  }
-                }); // set current tab
+                  _currentTab = index + 1;
+                });
                 _loadPantryItems(
                     _currentTab); // load pantry items for selected tab
               },
