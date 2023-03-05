@@ -30,16 +30,18 @@ class PantryPageState extends State<PantryPage> {
   late bool _showDeletedItems;
   List<Pantry> _activePantryItems = [];
   List<Pantry> _allPantryItems = [];
+  int _currentTab = 0; // added variable to keep track of current tab
 
   refresh() async {
-    await _loadPantryItems();
+    await _loadPantryItems(_currentTab);
     setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    _loadPantryItems();
+    _currentTab = 0; // set current tab to pantry by default
+    _loadPantryItems(_currentTab); // load pantry items by default
     _showDeletedItems = false;
   }
 
@@ -67,6 +69,23 @@ class PantryPageState extends State<PantryPage> {
                     child:
                         Text('Freezer', style: TextStyle(color: Colors.black))),
               ],
+              onTap: (index) {
+                setState(() {
+                  switch (index) {
+                    case 0:
+                      _currentTab = 1;
+                      break;
+                    case 1:
+                      _currentTab = 2;
+                      break;
+                    case 2:
+                      _currentTab = 3;
+                      break;
+                  }
+                }); // set current tab
+                _loadPantryItems(
+                    _currentTab); // load pantry items for selected tab
+              },
             ),
             title: const Padding(
               padding: EdgeInsets.only(top: 20.0, bottom: 10),
@@ -78,23 +97,26 @@ class PantryPageState extends State<PantryPage> {
                       fontFamily: 'Roboto')),
             ),
           ),
-          body: Column(children: [
-            _buildHeader(), // eye icon
-            Expanded(
+          body: Column(
+            children: [
+              _buildHeader(),
+              Expanded(
                 child: FutureBuilder(
-              future: _loadPantryItems(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return _showDeletedItems
-                      ? _listAllItems()
-                      : _listActiveItems();
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            )),
-            _buildAddButton(), // add button
-          ]),
+                  future: _loadPantryItems(_currentTab),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return _showDeletedItems
+                          ? _listAllItems()
+                          : _listActiveItems();
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                ),
+              ),
+              _buildAddButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -131,10 +153,20 @@ class PantryPageState extends State<PantryPage> {
     );
   }
 
-  Future<void> _loadPantryItems() async {
+  Future<void> _loadPantryItems(int location) async {
+    // declare pantry items for all tabs
     _allPantryItems = await BackendUtils.getAllPantry();
-    _activePantryItems =
-        _allPantryItems.where((item) => item.isDeleted == 0).toList();
+
+    // declare pantry items for selected tab where isDeleted == 0
+    _activePantryItems = _allPantryItems
+        .where(
+            (item) => item.storageLocation == location && item.isDeleted == 0)
+        .toList();
+
+    // declare pantry items for selected tab
+    _allPantryItems = _allPantryItems
+        .where((item) => item.storageLocation == location)
+        .toList();
   }
 
   Widget _listActiveItems() {
@@ -151,8 +183,16 @@ class PantryPageState extends State<PantryPage> {
 
   Widget _buildPantryList(List<Pantry> pantryItems) {
     return pantryItems.isEmpty
-        ? const Center(
-            child: Text('No items in pantry', style: TextStyle(fontSize: 20)))
+        ? Center(
+            child: Text(
+              _currentTab == 1
+                  ? 'No items in your Pantry'
+                  : _currentTab == 2
+                      ? 'No items in your Fridge'
+                      : 'No items in your Freezer',
+              style: TextStyle(fontSize: 20),
+            ),
+          )
         : Align(
             alignment: Alignment.topCenter,
             child: ListView.builder(

@@ -299,7 +299,7 @@ class BackendUtils {
       // loop through the list of maps and convert each map to a pantry item
       for (var item in responseBody) {
         // print the contents of the item
-        //print(item);
+        print(item);
 
         // create a pantry item from the map
         Pantry pantryItem = Pantry.fromMap(item);

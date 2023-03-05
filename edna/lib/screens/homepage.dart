@@ -52,7 +52,7 @@ class _HomePageState extends State<HomePage> {
           NavigationDestination(
             selectedIcon: Icon(Icons.shopping_basket),
             icon: Icon(Icons.shopping_basket_outlined),
-            label: 'Pantry',
+            label: 'Shelf',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.calendar_month),

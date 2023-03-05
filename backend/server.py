@@ -585,7 +585,7 @@ def getAllPantry():
             elif item.location == 'freezer':
                 location = 3
             else:
-                location = 0
+                location = 1
 
             # Check the alias table to see if an alias exists for the product given the user id
             alias_obj = Alias.query.filter_by(user_id=user_id, product_id=item.product_id).first()
@@ -690,14 +690,19 @@ def updatePantryItem():
 
             pantry.date_removed = date_removed
         if request.json['location']:
-            if request.json['location'] == '1':
+            if request.json['location'] == 1:
                 location = "pantry"
-            elif request.json['location'] == '2':
+            elif request.json['location'] == 2:
                 location = "fridge"
-            elif request.json['location'] == '3':
+            elif request.json['location'] == 3:
                 location = "freezer"
             else:
                 location = "pantry"
+
+            pantry.location = location  
+        else:
+            pantry.location = "pantry"
+
         if request.json['upc']:
             product.upc = request.json['upc']
         if request.json['plu']:
