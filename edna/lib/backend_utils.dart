@@ -299,7 +299,7 @@ class BackendUtils {
       // loop through the list of maps and convert each map to a pantry item
       for (var item in responseBody) {
         // print the contents of the item
-        print(item);
+        // print(item);
 
         // create a pantry item from the map
         Pantry pantryItem = Pantry.fromMap(item);
@@ -363,6 +363,34 @@ class BackendUtils {
       return "Database successfully cleared..";
     } else {
       return "Error: ${response.body}.";
+    }
+  }
+
+  static Future<String> deletePantryItem(Pantry pantryItem) async {
+    const String apiUrl = 'http://10.0.2.2:5000/deletePantryItem';
+
+    // create a map called "message" that contains the data to be sent to the backend
+    final Map<String, dynamic> message = {
+      'date_added': pantryItem.dateAdded?.toIso8601String(),
+    };
+
+    // convert the map to a JSON string
+    final String jsonPayload = json.encode(message);
+
+    // send the request to the backend as POST request with auth header and JSON message
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': "Bearer $sessionToken",
+        'Content-Type': 'application/json',
+      },
+      body: jsonPayload,
+    );
+
+    if (response.statusCode == 201) {
+      return "Pantry item deleted successfully.";
+    } else {
+      return "Error deleting pantry item.";
     }
   }
 }

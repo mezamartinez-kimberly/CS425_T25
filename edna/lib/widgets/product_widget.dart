@@ -65,10 +65,20 @@ class _ProductWidgetState extends State<ProductWidget> {
   Widget _buildItemContainer() {
     return Dismissible(
         key: UniqueKey(),
-        background: Container(color: Colors.red),
+        // make the background red with a delete icon
+        background: Container(
+          color: const Color.fromARGB(255, 255, 68, 54),
+          child: const Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: EdgeInsets.only(left: 20.0),
+              child: Icon(Icons.delete, color: Colors.white),
+            ),
+          ),
+        ),
         onDismissed: (direction) {
-          print("dismissed");
-          //setState(() {});
+          // if deleted, remove from list
+          BackendUtils.deletePantryItem(widget.pantryItem);
         },
         child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -171,12 +181,21 @@ class _ProductWidgetState extends State<ProductWidget> {
         context: context,
         builder: (context) {
           return AlertDialog(
+            //round the corners
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20.0))),
             title: const Text("Is this item expired?"),
             actions: [
               TextButton(
                 child: const Text("Yes"),
                 onPressed: () {
                   Navigator.of(context).pop();
+
+                  // set the date removed to now
+                  widget.pantryItem.dateRemoved = DateTime.now();
+
+                  // cell function to update this in the backend
+                  BackendUtils.updatePantryItem(widget.pantryItem);
 
                   // wait 0.4 sec before deleting on page
                   Future.delayed(const Duration(milliseconds: 400), () {

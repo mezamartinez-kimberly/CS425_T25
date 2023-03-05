@@ -157,7 +157,7 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
     // declare pantry items for all tabs
     _allPantryItems = await BackendUtils.getAllPantry();
 
-    // declare pantry items for selected tab where isDeleted == 0
+    // declare pantry items for selected tab where isDeleted ==
     _activePantryItems = _allPantryItems
         .where(
             (item) => item.storageLocation == location && item.isDeleted == 0)
@@ -190,7 +190,7 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                   : _currentTab == 2
                       ? 'No items in your Fridge'
                       : 'No items in your Freezer',
-              style: TextStyle(fontSize: 20),
+              style: const TextStyle(fontSize: 20),
             ),
           )
         : Align(
