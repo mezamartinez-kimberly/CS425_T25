@@ -29,7 +29,7 @@ from urllib.error import HTTPError, URLError
 import json
 import csv
 
-from datetime import datetime # for date formatting
+from datetime import datetime, timedelta # for date formatting
 
 # create Json Web Token (JWT) for authentication
 from flask_jwt_extended import create_access_token
@@ -232,8 +232,8 @@ def resetPassword():
 # create a quick debug route that will delete all info from all tables
 @app.route('/delete_all', methods=['DELETE'])
 def deleteAll():
-    # delete the pantry table
-    Product.query.delete()
+    # # delete the pantry table
+    # Product.query.delete()
     #delete the pantry table
     Pantry.query.delete()
 
@@ -418,19 +418,6 @@ def addPantry():
     plu = request.json['plu']
     quantity = request.json['quantity']
 
-    # convert all the time strings to datetime objects
-    if request.json['date_added'] != None:
-        date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
-
-        # truncate the miliseconds from the datetime object
-        date_added = date_added.replace(microsecond=0)
-
-    if request.json['expiration_date'] != None:
-        expiration_date = datetime.strptime(str(request.json['expiration_date']), '%Y-%m-%dT%H:%M:%S.%f')
-        date_added = date_added.replace(microsecond=0)
-
-    else:
-        expiration_date = None
 
     # get the session token from the authorization html header
     session_token = request.headers.get('Authorization').split()[1]
@@ -492,6 +479,44 @@ def addPantry():
             db.session.commit()
 
 
+    # see if in the json there is an entry for location, if not then default to pantry
+    if location == None:
+        location = 'pantry'
+
+    # Deal with Time and expiration Dates
+    if request.json['date_added'] != None:
+        date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
+
+        # truncate the miliseconds from the datetime object
+        date_added = date_added.replace(microsecond=0)
+
+    if request.json['expiration_date'] != None:
+        expiration_date = datetime.strptime(str(request.json['expiration_date']), '%Y-%m-%dT%H:%M:%S.%f')
+        date_added = date_added.replace(microsecond=0)
+    else:
+        # query the expiration table to see if this product has an expiration date
+        expiration = ExpirationData.query.filter_by(product_id=product.id).first()
+
+
+        # make sure expiration is not null
+        if expiration:
+
+            # check the location of the product
+            if location == 'fridge':
+                exp_time = expiration.expiration_time_fridge
+            elif location == 'freezer':
+                exp_time = expiration.expiration_time_freezer
+            elif location == 'pantry':
+                exp_time = expiration.expiration_time_pantry
+
+            # check if expiration time is null
+            if exp_time:
+                expiration_date = date_added + timedelta(days=exp_time)
+            else:
+                expiration_date = None
+        else:
+            expiration_date = None
+
 
     # ok so by here we have the plu or upc and the product id, as well as the date created
     # now we need to add the product to the pantry
@@ -500,7 +525,7 @@ def addPantry():
                     date_added=date_added,
                     date_removed=None,
                     # if the location is not provided, we will default it to pantry
-                    location=location if location else 'pantry',
+                    location=location,
                     expiration_date=expiration_date,
                     quantity=quantity,
                     is_deleted=False)
@@ -600,47 +625,6 @@ def getAllPantry():
 
         # return the list of pantry items
         return jsonify(pantry_list), 200
-
-
-# # creat a route that updates the flutter index term
-# @app.route('/updateFlutterIndex', methods=['POST'])
-# @jwt_required() # authentication Required
-# def updateFlutterIndex():
-#     # expected input:
-#     # {
-#     #     "date_added": "2020-12-01 00:00:00",
-#     #     "flutter_index": "1"
-#     # }
-
-#     # get the session token from the authorization html header
-#     session_token = request.headers.get('Authorization').split()[1]
-    
-#     # get the user id from the session token
-#     user_id = User.query.filter_by(session_token=session_token).first().id
-
-#     # get the json data from the request
-#     data = request.get_json()
-
-#     # get the id of the pantry item
-#     unique_date_added = data['date_added']
-
-#     # get the flutter index
-#     flutter_index = data['flutter_index']
-
-#     # query the pantry database for the user's pantry item with the unique date added
-#     pantry_item = Pantry.query.filter_by(user_id=user_id, date_added=unique_date_added).first()
-
-#     # check to see if the pantry item exists
-#     if not pantry_item:
-#         return jsonify({'error': 'Pantry item not found'}), 401
-    
-#     # update the flutter index
-#     pantry_item.flutter_index = flutter_index
-
-#     # commit the changes to the database
-#     db.session.commit()
-
-#     return jsonify({'message': 'Flutter index updated successfully'}), 201
 
 
 
