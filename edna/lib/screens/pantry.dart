@@ -79,21 +79,22 @@ class PantryPageState extends State<PantryPage> {
             ),
           ),
           body: Column(children: [
-            _buildHeader(), // eye icon
+            Expanded(flex: 1, child: _buildHeader()), // eye icon
             Expanded(
+                flex: 8,
                 child: FutureBuilder(
-              future: _loadPantryItems(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return _showDeletedItems
-                      ? _listAllItems()
-                      : _listActiveItems();
-                } else {
-                  return const Center(child: CircularProgressIndicator());
-                }
-              },
-            )),
-            _buildAddButton(), // add button
+                  future: _loadPantryItems(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.done) {
+                      return _showDeletedItems
+                          ? _listAllItems()
+                          : _listActiveItems();
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                )),
+            buildAddButton(), // add button
           ]),
         ),
       ),
@@ -180,10 +181,11 @@ class PantryPageState extends State<PantryPage> {
           );
   }
 
-  Widget _buildAddButton() {
+  Widget buildAddButton() {
     return Expanded(
+      flex: 1,
       child: Container(
-        padding: const EdgeInsets.only(left: 0, bottom: 20, right: 15, top: 10),
+        padding: const EdgeInsets.only(right: 15),
         alignment: Alignment.bottomRight,
         child: FloatingActionButton(
           backgroundColor: MyTheme().blueColor,

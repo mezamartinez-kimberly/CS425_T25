@@ -68,7 +68,7 @@ class _ProductWidgetState extends State<ProductWidget> {
         background: Container(color: Colors.red),
         onDismissed: (direction) {
           print("dismissed");
-          //setState(() {});
+          setState(() {});
         },
         child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -93,16 +93,26 @@ class _ProductWidgetState extends State<ProductWidget> {
                   itemBuilder: (context, index) {
                     return ListTile(
                       leading: _buildCheckBox(widget.enableCheckbox),
-                      title: Text(
-                        widget.pantryItem.name as String,
-                        // maxLines: 3,
-                        style: TextStyle(
-                            // if deleted, strikethrough text
-                            decoration: widget.pantryItem.isDeleted! == 1
-                                ? TextDecoration.lineThrough
-                                : TextDecoration.none),
-                      ),
-                      subtitle: Text(_formatDate()),
+                      title:
+                          // if name is null or empty, show "No name"
+                          widget.pantryItem.name == "" ||
+                                  widget.pantryItem.name == null
+                              ? const Text("No name",
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                  ))
+                              // otherwise, show name
+                              : Text(
+                                  widget.pantryItem.name as String,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                      // if deleted, strikethrough text
+                                      decoration:
+                                          widget.pantryItem.isDeleted! == 1
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none),
+                                ),
+                      subtitle: _formatDate(),
                       trailing: _buildEditButton(),
                     );
                   },
@@ -200,13 +210,16 @@ class _ProductWidgetState extends State<ProductWidget> {
         });
   }
 
-  String _formatDate() {
+  Widget _formatDate() {
     // format date
     DateTime? date = widget.pantryItem.expirationDate;
     if (date != null) {
-      return "Expires: ${DateFormat.MMMEd().format(date)}";
+      return Text("Expires: ${DateFormat.MMMEd().format(date)}");
     } else {
-      return "No Expiration Date";
+      return const Text("No expiration date",
+          style: TextStyle(
+            fontStyle: FontStyle.italic,
+          ));
     }
   }
 }

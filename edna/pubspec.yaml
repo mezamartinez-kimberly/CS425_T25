@@ -60,6 +60,8 @@ dependencies:
   another_flushbar: ^1.12.29
   # for unit tests
   test: 
+  # loading wheel
+  loader_overlay: ^2.1.0
 
 
 

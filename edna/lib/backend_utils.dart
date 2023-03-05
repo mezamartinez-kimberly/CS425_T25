@@ -71,8 +71,9 @@ class BackendUtils {
   }
 
   // Create a upc get function to get the upc data
-  static Future<String> getUpcData(String upc) async {
+  static Future<dynamic> getUpcData(String upc) async {
     const String apiUrl = 'http://10.0.2.2:5000/upc';
+    print("inside getUpcData");
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -84,7 +85,8 @@ class BackendUtils {
 
     // send the request to the backend as POST request
     if (firstTimeScan == true) {
-      firstTimeScan = false; // reset the flag
+      print("firstTimeScan = true");
+
       final http.Response response = await http.post(
         Uri.parse(apiUrl),
         headers: {
@@ -94,23 +96,29 @@ class BackendUtils {
         body: jsonPayload,
       );
 
+      print("response = ${response.statusCode}");
+
       if (response.statusCode == 200) {
+        firstTimeScan = false; // set flag
+
+        // wait 5 seconds before resetting the flag
+        Future.delayed(const Duration(seconds: 5), () {
+          firstTimeScan = true;
+        });
+
         // grab the rest of the body
         final Map<String, dynamic> responseBody = json.decode(response.body);
-        String upc = responseBody['name'];
+        String name = responseBody['name'];
 
-        // UPC found
-        return upc;
+        // name found from UPC
+        print("name = $name");
+        return name;
       } else {
         // UPC not found
         return "UPC not found";
       }
     } else {
-      // wait 5 seconds before resetting the flag
-      Future.delayed(const Duration(seconds: 5), () {
-        firstTimeScan = true;
-      });
-      return "resetting flag";
+      return null;
     }
   }
 

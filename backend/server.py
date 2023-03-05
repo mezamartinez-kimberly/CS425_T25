@@ -238,8 +238,8 @@ def deleteAll():
     Pantry.query.delete()
 
     # delete user and person table
-    User.query.delete()
-    Person.query.delete()
+    # User.query.delete()
+    # Person.query.delete()
 
 
     db.session.commit()
@@ -566,10 +566,8 @@ def getAllPantry():
 
             # if an alias exists, then we will use that instead of the product name
             if alias_obj:
-                print("HERE")
                 name = alias_obj.alias
             else:
-                print("here")
                 name = product.name
 
     
