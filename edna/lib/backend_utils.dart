@@ -114,19 +114,18 @@ class BackendUtils {
     // check the status code for the result
     if (response.statusCode == 200) {
       //convert response body into a List<string> using jsonDecode
-      Map<String, dynamic> userData = new Map<String, dynamic>.from(jsonDecode(response.body));
-      print(userData);
+      Map<String, dynamic> userData =  Map<String, dynamic>.from(jsonDecode(response.body));
 
       //final List<String> userData = jsonDecode(response.body);
 
       //get first name from response body
-      String firstName = userData[0];
+      String firstName = userData['first_name'];
 
       //get last name from response body
-      String lastName = userData[1];
+      String lastName = userData['last_name'];
 
       //get email from response body
-      String email = userData[2];
+      String email = userData['email'];
 
       //create a list of the user data
       List<String> userDataList = [firstName, lastName, email];

@@ -1,10 +1,10 @@
-import 'package:edna/screens/account_settings.dart';
 import 'package:edna/screens/all.dart';
 import 'package:flutter/material.dart';
 import 'package:edna/backend_utils.dart';
 
+
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key});
+  const ProfilePage({Key? key}) : super(key: key);
 
   @override
   ProfilePageState createState() => ProfilePageState();
@@ -13,6 +13,18 @@ class ProfilePage extends StatefulWidget {
 class ProfilePageState extends State<ProfilePage> {
   //dark/light mode switch
   bool isSwitched = false;
+
+  String firstName = "";
+  String lastName = "";
+  String email = "";
+
+  //create an initialization function to get user data
+  @override
+  void initState() {
+    super.initState();
+    _getUserData().then((_) {
+    });
+  }
 
   Widget _buildLogOutButton() {
     return SizedBox(
@@ -27,14 +39,18 @@ class ProfilePageState extends State<ProfilePage> {
         ),
         onPressed: () {
           //insert log out actions
-          FutureBuilder(
-            future: _logOut(),
-            builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              return _logOut();
-            } else {
-              return const CircularProgressIndicator();
-            }
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (_) => const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+          _logOut().then((_) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+            );
           });
         },
         child: const Text(
@@ -49,29 +65,21 @@ class ProfilePageState extends State<ProfilePage> {
   }
 
   //function to get user data from backend
-  _getUserData() async {
+  Future<void> _getUserData() async {
     //get user data from backend
     List<String> userData = await BackendUtils.getUserData();
-
-    //set user data to variables
-    String firstName = userData[0];
-    String lastName = userData[1];
-    String email = userData[2];
-
-    print('here');
-
+    setState(() {
+      firstName = userData[0];
+      lastName = userData[1];
+      email = userData[2];
+    });
   }
 
   //function to call logout from backend
-  _logOut() async {
+  Future<void> _logOut() async {
     //call logout from backend
     await BackendUtils.logoutUser();
-    
-    //navigate to login page
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => const LoginPage()),
-    );
+    setState(() {});
   }
 
   @override
@@ -94,41 +102,29 @@ class ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 40.0),
 
               //card for greeting
-              Center(
-                child: Column(
-                  children: <Widget> [
-                    FutureBuilder(
-                      future: _getUserData(),
-                      builder: (context, snapshot) {
-                        //if statement to check if data is loaded
-                        if(snapshot.hasData) {
-                          return Column(
-                            children: const [
-                              Text(
-                                'Hello, [firstName][lastName]!',
-                                style: TextStyle(
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              SizedBox(height: 10.0),
-                              Text(
-                                '[email]',
-                                style: TextStyle(
-                                  fontSize: 16.0,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ],
-                          );
-                        } else {
-                          return const CircularProgressIndicator();
-                        }
-                      }
-                    ),//fut
-                  ],//widg
-                ), //col
-              ),//cent
+              SizedBox(
+                child: Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        'Hello, $firstName $lastName!',
+                        style: const TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 10.0),
+                      Text(
+                        email,
+                        style: const TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
 
               const SizedBox(height: 30.0),
 
