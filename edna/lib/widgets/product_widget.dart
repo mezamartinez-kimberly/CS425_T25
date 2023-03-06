@@ -12,6 +12,8 @@ class ProductWidget extends StatefulWidget {
   final Pantry pantryItem;
   bool enableCheckbox;
   final Function()? refreshPantryList;
+  bool onCamera;
+  bool onPantry;
 
   // constructor
   ProductWidget({
@@ -19,6 +21,8 @@ class ProductWidget extends StatefulWidget {
     required this.pantryItem,
     this.enableCheckbox = false, // enabled by default
     this.refreshPantryList,
+    this.onCamera = false,
+    this.onPantry = true,
   }) : super(key: key);
 }
 

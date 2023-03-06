@@ -307,7 +307,6 @@ class _EditWidgetState extends State<EditWidget> {
         else if (widget.callingWidget.runtimeType == ProductWidget) {
           setState(() {
             // update pantry item with new values
-            //PantryDatabase.instance.update(widget.pantryItem);
             BackendUtils.updatePantryItem(widget.pantryItem);
             // update product widget
             widget.updateProductWidget!();
