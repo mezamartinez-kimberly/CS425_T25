@@ -14,7 +14,6 @@ class BackendUtils {
   static Future<String> registerUser(
       String firstName, String lastName, String email, String password) async {
     const String apiUrl = 'http://10.0.2.2:5000/register';
-    const String apiUrl = 'http://10.0.2.2:5000/register';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -413,7 +412,8 @@ class BackendUtils {
     // check the status code for the result
     if (response.statusCode == 200) {
       //convert response body into a List<string> using jsonDecode
-      Map<String, dynamic> userData =  Map<String, dynamic>.from(jsonDecode(response.body));
+      Map<String, dynamic> userData =
+          Map<String, dynamic>.from(jsonDecode(response.body));
 
       //final List<String> userData = jsonDecode(response.body);
 
@@ -457,6 +457,5 @@ class BackendUtils {
       // return failed
       return "Logout failed";
     }
-
   }
 }
