@@ -411,6 +411,8 @@ def addPantry():
     #    "quantity": "1"
     # }
 
+    print(request.json)
+
     name = request.json['name']
     location = request.json['location']
     parameterUPC = request.json['upc']
@@ -647,14 +649,10 @@ def updatePantryItem():
 #    "is_deleted": "0"
 # }
 
-    date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
-    print(str(request.json['date_added']))
-    print(date_added)
+    # print the entire json
+    print(request.json)
 
-    # debug query to pantry table at the index
-    debug = Pantry.query.filter_by(id=request.json['id']).first()
-    test = debug.date_added
-    print(test)
+    date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
 
     # get the session token from the authorization html header
     session_token = request.headers.get('Authorization').split()[1]
@@ -732,7 +730,7 @@ def updatePantryItem():
         if request.json['is_deleted'] == 0 or request.json['is_deleted'] == 1:
             pantry.is_deleted = request.json['is_deleted']
 
-
+        print(location)
 
         # add the changes to the pantry item/ product/ expiration if not Null/None
         if pantry != None:

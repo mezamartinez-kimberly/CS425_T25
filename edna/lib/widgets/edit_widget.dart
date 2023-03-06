@@ -281,6 +281,7 @@ class _EditWidgetState extends State<EditWidget> {
 
           // add to scanned list on camera page
           cameraPage.addItem(newProductWidget);
+
           // refresh camera page
           widget.refreshCameraPage!();
         }

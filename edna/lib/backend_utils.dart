@@ -320,10 +320,11 @@ class BackendUtils {
 
     // print the pantryItem's expiration date
     print("update");
-    print(pantryItem.dateAdded);
 
     // use the pantry item to create a map
     final Map<String, dynamic> pantryMap = pantryItem.toMap();
+
+    print(pantryMap);
 
     // convert the map to a JSON string
     final String jsonString = json.encode(pantryMap);

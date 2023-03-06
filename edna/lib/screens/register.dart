@@ -248,9 +248,6 @@ class _RegisterPageState extends State<RegisterPage> {
             return 'Password is required';
           }
 
-          print(password);
-          print(confirmPassword);
-
           if (password != confirmPassword) {
             return 'Passwords do not match';
           }

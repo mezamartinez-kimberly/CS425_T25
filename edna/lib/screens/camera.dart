@@ -436,7 +436,7 @@ class CameraPageState extends State<CameraPage> {
     }
   }
 
-  _addItemToList() {
+  _addItemToList() async {
     // itemAdded is used to prevent items from being added multiple times
     if (!itemAdded) {
       // convert upc code to int
@@ -460,6 +460,10 @@ class CameraPageState extends State<CameraPage> {
 
       // add to camera page's list of items
       widget.addItem(newProductWidget);
+
+      // call the backend utils function to add to pantry
+      await BackendUtils.addPantry(newPantryItem);
+
       // toggle itemAdded so item doesn't duplicate
       itemAdded = true;
     } else {
