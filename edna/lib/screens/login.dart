@@ -172,8 +172,9 @@ class _LoginPageState extends State<LoginPage> {
 
             // Send the information to the backend
             String result = await BackendUtils.loginUser(email, password);
+            print(result);
 
-            // Resolved an aync + naviagation issue
+            // Resolved an async + navigation issue
             // https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html
             if (!mounted) return;
 

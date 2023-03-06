@@ -14,6 +14,9 @@ from flask_bcrypt import Bcrypt
 # flask --app server run
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+import sys
+sys.stdin.reconfigure(encoding='utf-8')
+sys.stdout.reconfigure(encoding='utf-8')
 
 class User(db.Model):
     __tablename__ = 'user'
@@ -24,6 +27,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(120), nullable=False)
     email = db.Column(db.String(120), nullable=False)
     session_token = db.Column(db.String(120), nullable=True)
+    otp_hash = db.Column(db.String(120), nullable=True)
 
     # relationships
     pantry = db.relationship("Pantry", backref="user")
@@ -114,18 +118,35 @@ class Pantry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    # flutter_index = db.Column(db.Integer, nullable=True)
     date_added = db.Column(db.DateTime, nullable=False)
     date_removed = db.Column(db.DateTime, nullable=True)
+    expiration_date = db.Column(db.DateTime, nullable=True)
     location = db.Column(db.String(30), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     is_deleted = db.Column(db.Boolean, nullable=False)
 
     # define the constructor
-    def __init__(self, user_id, product_id, date_added, date_removed, location, quantity, is_deleted):
+    def __init__(self, user_id, product_id, date_added, date_removed, expiration_date, location, quantity, is_deleted):
+    # def __init__(self, user_id, product_id, flutter_index, date_added, date_removed, expiration_date, location, quantity, is_deleted):
         self.user_id = user_id
         self.product_id = product_id
+        # self.flutter_index = flutter_index
         self.date_added = date_added
         self.date_removed = date_removed
+        self.expiration_date = expiration_date
         self.location = location
         self.quantity = quantity
         self.is_deleted = is_deleted
+
+class Alias(db.Model):
+    __tablename__ = 'alias'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    alias = db.Column(db.String(300), nullable=False)
+
+    def __init__(self, user_id, product_id, alias):
+        self.user_id = user_id
+        self.product_id = product_id
+        self.alias = alias

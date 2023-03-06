@@ -30,8 +30,6 @@ for row in data:
 
 # for every unique food name, create a list of PLU codes that reference that food name
 # the key is the food name and the value is a list of PLU codes
-
-
 food_dict = {}
 for food in food_names:
     food_dict[food] = []

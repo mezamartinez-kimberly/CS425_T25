@@ -21,10 +21,10 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final _pageOptions = [
-    const CameraPage(),
+    CameraPage(),
     const PantryPage(),
     const CalendarClass(),
-    const StatsPage(),
+    const TreePage(),
     const ProfilePage()
   ];
 
@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage> {
             _currentIndex = newIndex;
           });
         },
+        backgroundColor: Colors.transparent,
         destinations: const [
           NavigationDestination(
             selectedIcon: Icon(Icons.camera_alt),
@@ -51,7 +52,7 @@ class _HomePageState extends State<HomePage> {
           NavigationDestination(
             selectedIcon: Icon(Icons.shopping_basket),
             icon: Icon(Icons.shopping_basket_outlined),
-            label: 'Pantry',
+            label: 'Shelf',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.calendar_month),
@@ -59,9 +60,9 @@ class _HomePageState extends State<HomePage> {
             label: 'Calendar',
           ),
           NavigationDestination(
-            selectedIcon: Icon(Icons.bar_chart),
-            icon: Icon(Icons.bar_chart_outlined),
-            label: 'Stats',
+            selectedIcon: Icon(Icons.park),
+            icon: Icon(Icons.park_outlined),
+            label: 'Tree',
           ),
           NavigationDestination(
             selectedIcon: Icon(Icons.person),

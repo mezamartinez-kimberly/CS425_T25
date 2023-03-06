@@ -203,11 +203,11 @@ class _RegisterPageState extends State<RegisterPage> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        validator: (String? value) {
-          if (value!.isEmpty) {
+        validator: (String? password) {
+          if (password!.isEmpty) {
             return 'Password is required';
           }
-          if (value.length < 8) {
+          if (password.length < 8) {
             return 'Password must be at least 8 characters';
           }
           return null;
@@ -243,19 +243,21 @@ class _RegisterPageState extends State<RegisterPage> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-        validator: (String? value) {
-          if (value!.isEmpty) {
+        validator: (String? confirmPassword) {
+          if (confirmPassword!.isEmpty) {
             return 'Password is required';
           }
-          if (password != value) {
+
+          print(password);
+          print(confirmPassword);
+
+          if (password != confirmPassword) {
             return 'Passwords do not match';
           }
           return null;
         },
         onSaved: (String? value) {
-          if (password == value) {
-            confirmPassword = value!;
-          }
+          confirmPassword = value!;
         },
         obscureText: true,
       ),
@@ -274,6 +276,7 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
         ),
         onPressed: () async {
+          formKey.currentState!.save();
           if (!formKey.currentState!.validate()) {
             formKey.currentState!.save();
             return;
@@ -282,6 +285,11 @@ class _RegisterPageState extends State<RegisterPage> {
           // send the validated data to the registerUser function
           String result = await BackendUtils.registerUser(
               firstName, lastName, email, password);
+
+          // Resolved an async + navigation issue
+          // https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html
+          if (!mounted) return;
+
           if (result == "Registration successful") {
             // create an alert dialog to show the user that they have successfully registered
             showDialog(
