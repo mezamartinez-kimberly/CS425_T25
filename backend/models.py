@@ -118,6 +118,7 @@ class Pantry(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    # flutter_index = db.Column(db.Integer, nullable=True)
     date_added = db.Column(db.DateTime, nullable=False)
     date_removed = db.Column(db.DateTime, nullable=True)
     expiration_date = db.Column(db.DateTime, nullable=True)
@@ -127,8 +128,10 @@ class Pantry(db.Model):
 
     # define the constructor
     def __init__(self, user_id, product_id, date_added, date_removed, expiration_date, location, quantity, is_deleted):
+    # def __init__(self, user_id, product_id, flutter_index, date_added, date_removed, expiration_date, location, quantity, is_deleted):
         self.user_id = user_id
         self.product_id = product_id
+        # self.flutter_index = flutter_index
         self.date_added = date_added
         self.date_removed = date_removed
         self.expiration_date = expiration_date

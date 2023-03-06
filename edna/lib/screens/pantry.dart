@@ -26,21 +26,31 @@ class PantryPage extends StatefulWidget {
   PantryPageState createState() => PantryPageState();
 }
 
-class PantryPageState extends State<PantryPage> {
+class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
   late bool _showDeletedItems;
   List<Pantry> _activePantryItems = [];
   List<Pantry> _allPantryItems = [];
+  late TabController _tabController = TabController(length: 3, vsync: this);
+  int _currentTab = 0; // added variable to keep track of current tab
 
   refresh() async {
-    await _loadPantryItems();
+    await _loadPantryItems(_currentTab);
     setState(() {});
   }
 
   @override
   void initState() {
     super.initState();
-    _loadPantryItems();
+    _tabController = TabController(length: 3, vsync: this);
+    _currentTab = _tabController.index + 1;
+    _loadPantryItems(_currentTab);
     _showDeletedItems = false;
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -55,6 +65,7 @@ class PantryPageState extends State<PantryPage> {
             elevation: 0, // remove shadow
             automaticallyImplyLeading: false, // remove back button
             bottom: TabBar(
+              controller: _tabController,
               indicatorColor: MyTheme().pinkColor,
               tabs: const [
                 Tab(
@@ -67,6 +78,14 @@ class PantryPageState extends State<PantryPage> {
                     child:
                         Text('Freezer', style: TextStyle(color: Colors.black))),
               ],
+              onTap: (index) {
+                // Set the current tab to the selected tab
+                setState(() {
+                  _currentTab = index + 1;
+                });
+                _loadPantryItems(
+                    _currentTab); // load pantry items for selected tab
+              },
             ),
             title: const Padding(
               padding: EdgeInsets.only(top: 20.0, bottom: 10),
@@ -83,7 +102,7 @@ class PantryPageState extends State<PantryPage> {
             Expanded(
                 flex: 8,
                 child: FutureBuilder(
-                  future: _loadPantryItems(),
+                  future: _loadPantryItems(_currentTab),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.done) {
                       return _showDeletedItems
@@ -93,9 +112,11 @@ class PantryPageState extends State<PantryPage> {
                       return const Center(child: CircularProgressIndicator());
                     }
                   },
-                )),
-            buildAddButton(), // add button
-          ]),
+                ),
+              ),
+              _buildAddButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -132,10 +153,20 @@ class PantryPageState extends State<PantryPage> {
     );
   }
 
-  Future<void> _loadPantryItems() async {
+  Future<void> _loadPantryItems(int location) async {
+    // declare pantry items for all tabs
     _allPantryItems = await BackendUtils.getAllPantry();
-    _activePantryItems =
-        _allPantryItems.where((item) => item.isDeleted == 0).toList();
+
+    // declare pantry items for selected tab where isDeleted ==
+    _activePantryItems = _allPantryItems
+        .where(
+            (item) => item.storageLocation == location && item.isDeleted == 0)
+        .toList();
+
+    // declare pantry items for selected tab
+    _allPantryItems = _allPantryItems
+        .where((item) => item.storageLocation == location)
+        .toList();
   }
 
   Widget _listActiveItems() {
@@ -152,8 +183,16 @@ class PantryPageState extends State<PantryPage> {
 
   Widget _buildPantryList(List<Pantry> pantryItems) {
     return pantryItems.isEmpty
-        ? const Center(
-            child: Text('No items in pantry', style: TextStyle(fontSize: 20)))
+        ? Center(
+            child: Text(
+              _currentTab == 1
+                  ? 'No items in your Pantry'
+                  : _currentTab == 2
+                      ? 'No items in your Fridge'
+                      : 'No items in your Freezer',
+              style: const TextStyle(fontSize: 20),
+            ),
+          )
         : Align(
             alignment: Alignment.topCenter,
             child: ListView.builder(

@@ -58,17 +58,12 @@ dependencies:
   provider: ^6.0.5
   # show errors over dialog box
   another_flushbar: ^1.12.29
+  # progress bar for the app
+  milestone_progress: ^0.0.4
   # for unit tests
   test: 
   # loading wheel
   loader_overlay: ^2.1.0
-
-
-
-
-
-
-
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -99,7 +94,14 @@ flutter:
   # the material Icons class.
   uses-material-design: true
 
-  assets:     
+  assets:
+    - assets/images/Stage_1.png  
+    - assets/images/Stage_2.png  
+    - assets/images/Stage_3.png  
+    - assets/images/Stage_4.png  
+    - assets/images/Stage_5.png  
+    - assets/images/Stage_6.png  
+
     - assets/logos/g-logo.png
 
   # To add assets to your application, add an assets section, like this:

@@ -29,7 +29,7 @@ from urllib.error import HTTPError, URLError
 import json
 import csv
 
-from datetime import datetime # for date formatting
+from datetime import datetime, timedelta # for date formatting
 
 # create Json Web Token (JWT) for authentication
 from flask_jwt_extended import create_access_token
@@ -232,8 +232,8 @@ def resetPassword():
 # create a quick debug route that will delete all info from all tables
 @app.route('/delete_all', methods=['DELETE'])
 def deleteAll():
-    # delete the pantry table
-    Product.query.delete()
+    # # delete the pantry table
+    # Product.query.delete()
     #delete the pantry table
     Pantry.query.delete()
 
@@ -406,6 +406,7 @@ def upc():
 def addPantry():
     # expected input:
     # {
+    #    "id": "1",
     #     "name": "Apple",
     #     "date_added": "2020-01-01",
     #     "expiration_date": "2020-01-01",
@@ -415,7 +416,6 @@ def addPantry():
     #    "quantity": "1"
     # }
 
-    
     name = request.json['name']
     location = request.json['location']
     parameterUPC = request.json['upc']
@@ -423,13 +423,6 @@ def addPantry():
     plu = request.json['plu']
     quantity = request.json['quantity']
 
-    # convert all the time strings to datetime objects
-    if request.json['date_added'] != None:
-        date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
-    if request.json['expiration_date'] != None:
-        expiration_date = datetime.strptime(str(request.json['expiration_date']), '%Y-%m-%dT%H:%M:%S.%f')
-    else:
-        expiration_date = None
 
     # get the session token from the authorization html header
     session_token = request.headers.get('Authorization').split()[1]
@@ -491,6 +484,44 @@ def addPantry():
             db.session.commit()
 
 
+    # see if in the json there is an entry for location, if not then default to pantry
+    if location == None:
+        location = 'pantry'
+
+    # Deal with Time and expiration Dates
+    if request.json['date_added'] != None:
+        date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
+
+        # truncate the miliseconds from the datetime object
+        date_added = date_added.replace(microsecond=0)
+
+    if request.json['expiration_date'] != None:
+        expiration_date = datetime.strptime(str(request.json['expiration_date']), '%Y-%m-%dT%H:%M:%S.%f')
+        date_added = date_added.replace(microsecond=0)
+    else:
+        # query the expiration table to see if this product has an expiration date
+        expiration = ExpirationData.query.filter_by(product_id=product.id).first()
+
+
+        # make sure expiration is not null
+        if expiration:
+
+            # check the location of the product
+            if location == 'fridge':
+                exp_time = expiration.expiration_time_fridge
+            elif location == 'freezer':
+                exp_time = expiration.expiration_time_freezer
+            elif location == 'pantry':
+                exp_time = expiration.expiration_time_pantry
+
+            # check if expiration time is null
+            if exp_time:
+                expiration_date = date_added + timedelta(days=exp_time)
+            else:
+                expiration_date = None
+        else:
+            expiration_date = None
+
 
     # ok so by here we have the plu or upc and the product id, as well as the date created
     # now we need to add the product to the pantry
@@ -499,7 +530,7 @@ def addPantry():
                     date_added=date_added,
                     date_removed=None,
                     # if the location is not provided, we will default it to pantry
-                    location=location if location else 'pantry',
+                    location=location,
                     expiration_date=expiration_date,
                     quantity=quantity,
                     is_deleted=False)
@@ -559,7 +590,7 @@ def getAllPantry():
             elif item.location == 'freezer':
                 location = 3
             else:
-                location = 0
+                location = 1
 
             # Check the alias table to see if an alias exists for the product given the user id
             alias_obj = Alias.query.filter_by(user_id=user_id, product_id=item.product_id).first()
@@ -599,6 +630,7 @@ def getAllPantry():
         return jsonify(pantry_list), 200
 
 
+
 # create a route to update an item in the pantry
 @app.route('/updatePantryItem', methods=['POST'])
 @jwt_required() # authentication Required
@@ -618,18 +650,24 @@ def updatePantryItem():
 #    "is_deleted": "0"
 # }
 
+    date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
+    print(str(request.json['date_added']))
+    print(date_added)
+
+    # debug query to pantry table at the index
+    debug = Pantry.query.filter_by(id=request.json['id']).first()
+    test = debug.date_added
+    print(test)
+
     # get the session token from the authorization html header
     session_token = request.headers.get('Authorization').split()[1]
     
     # get the user id from the session token
     user_id = User.query.filter_by(session_token=session_token).first().id
 
-    # get the id of the pantry item to update
-    id = request.json['id']
+    # search the pantry table for where the user id and the date_added match
+    pantry = Pantry.query.filter_by(user_id=user_id, date_added=date_added).first()
 
-    # get the pantry item to update
-    pantry = Pantry.query.filter_by(id=id).first()
-    
     # check to see if the pantry item exists
     if not pantry:
         return jsonify({'error': 'Pantry item not found'}), 404
@@ -643,7 +681,7 @@ def updatePantryItem():
         # now add the new information to the pantry item/ product/ expiration if not Null/None
         if request.json['name']:
             product.name = request.json['name']
-        if request.json['date_added']:
+        if request.json['date_added'] != None:
 
             # convert the date ISO8601 format to a datetime object
             date_added = datetime.strptime(request.json['date_added'], '%Y-%m-%dT%H:%M:%S.%f')
@@ -654,15 +692,38 @@ def updatePantryItem():
             date_removed = datetime.strptime(request.json['date_removed'], '%Y-%m-%dT%H:%M:%S.%f')
 
             pantry.date_removed = date_removed
+
+            # if we have date removed then we can calculate the expiration date
+            if pantry.location == 'pantry' and expiration.expiration_time_pantry != None:
+            # subtract the date removed from the date added to get the number of days the food was in the pantry
+                exp_time = date_removed - pantry.date_added
+                # add this information to the expiration table
+                expiration.expiration_time_pantry = int(exp_time.days)
+            elif pantry.location == 'fridge' and expiration.expiration_time_fridge != None:
+                # subtract the date removed from the date added to get the number of days the food was in the fridge
+                exp_time = date_removed - pantry.date_added
+                # add this information to the expiration table
+                expiration.expiration_time_fridge = int(exp_time.days)
+            elif pantry.location == 'freezer' and expiration.expiration_time_freezer != None:
+                # subtract the date removed from the date added to get the number of days the food was in the freezer
+                exp_time = date_removed - pantry.date_added
+                # add this information to the expiration table
+                expiration.expiration_time_freezer = int(exp_time.days)
+
         if request.json['location']:
-            if request.json['location'] == '1':
+            if request.json['location'] == 1:
                 location = "pantry"
-            elif request.json['location'] == '2':
+            elif request.json['location'] == 2:
                 location = "fridge"
-            elif request.json['location'] == '3':
+            elif request.json['location'] == 3:
                 location = "freezer"
             else:
                 location = "pantry"
+
+            pantry.location = location  
+        else:
+            pantry.location = "pantry"
+
         if request.json['upc']:
             product.upc = request.json['upc']
         if request.json['plu']:
@@ -688,5 +749,38 @@ def updatePantryItem():
         db.session.commit()
 
         return jsonify({'message': 'Pantry item updated successfully'}), 201
+    
+
+# create a route to delete an item in the pantry
+@app.route('/deletePantryItem', methods=['POST'])
+@jwt_required() # authentication Required
+def deletePantryItem():
+# expected input:
+# {
+    # date_added: "2020-01-01T00:00:00.000Z"
+# }
+
+    # get the session token from the authorization html header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user id from the session token
+    user_id = User.query.filter_by(session_token=session_token).first().id
+
+    # convert the date ISO8601 format to a datetime object
+    date_added = datetime.strptime(request.json['date_added'], '%Y-%m-%dT%H:%M:%S.%f')
+
+    # search the pantry table for where the user id and the date_added match
+    pantry = Pantry.query.filter_by(user_id=user_id, date_added=date_added).first()
+
+    # check to see if the pantry item exists
+    if not pantry:
+        return jsonify({'error': 'Pantry item not found'}), 404
+    else:
+        db.session.delete(pantry)
+
+        # commit the changes to the database
+        db.session.commit()
+
+        return jsonify({'message': 'Pantry item deleted successfully'}), 201
     
 
