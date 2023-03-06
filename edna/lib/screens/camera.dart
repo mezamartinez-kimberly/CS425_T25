@@ -165,7 +165,7 @@ class CameraPageState extends State<CameraPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
-                  _buildManualButton(),
+                  _buildAddButton(),
                   const SizedBox(width: 10), // spacing
                   _buildSubmitButton(),
                   const SizedBox(width: 5), // spacing
@@ -178,7 +178,7 @@ class CameraPageState extends State<CameraPage> {
     );
   }
 
-  Widget _buildManualButton() {
+  Widget _buildAddButton() {
     return SizedBox(
       width: 60,
       height: 60,
@@ -198,7 +198,8 @@ class CameraPageState extends State<CameraPage> {
                   return EditWidget(
                     pantryItem: Pantry(),
                     updateProductWidget: () {},
-                    refreshPantryList: refresh,
+                    refreshPantryList: () {},
+                    refreshCameraPage: refresh,
                     callingWidget: widget,
                   );
                 });
@@ -408,11 +409,7 @@ class CameraPageState extends State<CameraPage> {
     print('\x1B[33m$text\x1B[0m');
   }
 
-  Future<String> name = Future.value("");
-  Function get onError => // print error message
-      (error) => printYellow("error = $error");
-
-  // private class method
+  // get product name from upc code using backend
   _getProductName() async {
     // if successfully scanned
     if (result != null) {
@@ -437,12 +434,12 @@ class CameraPageState extends State<CameraPage> {
     }
   }
 
+  // if user scans item and gets upc and product name
+  // create a pantry item and product widget from it
+  // add product widget to camera page's list of items
   _addItemToList() {
     // itemAdded is used to prevent items from being added multiple times
     if (!itemAdded) {
-      // convert upc code to int
-      //  int upc = int.parse(result!.code as String);
-
       // create new pantry item with values
       Pantry newPantryItem = Pantry(
         name: productName,
@@ -453,11 +450,13 @@ class CameraPageState extends State<CameraPage> {
 
       // create product widget with new pantry item
       ProductWidget newProductWidget = ProductWidget(
-          key: UniqueKey(),
-          pantryItem: newPantryItem,
-          enableCheckbox: false,
-          // no need to refresh pantry since we're on camera page
-          refreshPantryList: () {});
+        key: UniqueKey(),
+        pantryItem: newPantryItem,
+        enableCheckbox: false,
+        // no need to refresh pantry since we're on camera page
+        refreshPantryList: () {},
+        onCameraPage: true,
+      );
 
       // add to camera page's list of items
       widget.addItem(newProductWidget);
@@ -472,6 +471,7 @@ class CameraPageState extends State<CameraPage> {
     }
   }
 
+  // widget for list of items on camera page
   _buildItemList() {
     // if there are items to insert, return list of items
     return widget.itemsToInsert != null
