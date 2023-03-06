@@ -62,6 +62,8 @@ dependencies:
   milestone_progress: ^0.0.4
   # for unit tests
   test: 
+  # loading wheel
+  loader_overlay: ^2.1.0
 
 
   # The following adds the Cupertino Icons font to your application.

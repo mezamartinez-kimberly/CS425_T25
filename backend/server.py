@@ -237,6 +237,11 @@ def deleteAll():
     #delete the pantry table
     Pantry.query.delete()
 
+    # delete user and person table
+    # User.query.delete()
+    # Person.query.delete()
+
+
     db.session.commit()
     return jsonify({'message': 'All tables have been cleared'}), 200
 
@@ -594,10 +599,8 @@ def getAllPantry():
 
             # if an alias exists, then we will use that instead of the product name
             if alias_obj:
-                print("HERE")
                 name = alias_obj.alias
             else:
-                print("here")
                 name = product.name
 
     

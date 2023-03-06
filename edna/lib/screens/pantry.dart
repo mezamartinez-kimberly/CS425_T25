@@ -97,10 +97,10 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                       fontFamily: 'Roboto')),
             ),
           ),
-          body: Column(
-            children: [
-              _buildHeader(),
-              Expanded(
+          body: Column(children: [
+            Expanded(flex: 1, child: _buildHeader()), // eye icon
+            Expanded(
+                flex: 8,
                 child: FutureBuilder(
                   future: _loadPantryItems(_currentTab),
                   builder: (context, snapshot) {
@@ -220,10 +220,11 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
           );
   }
 
-  Widget _buildAddButton() {
+  Widget buildAddButton() {
     return Expanded(
+      flex: 1,
       child: Container(
-        padding: const EdgeInsets.only(left: 0, bottom: 20, right: 15, top: 10),
+        padding: const EdgeInsets.only(right: 15),
         alignment: Alignment.bottomRight,
         child: FloatingActionButton(
           backgroundColor: MyTheme().blueColor,

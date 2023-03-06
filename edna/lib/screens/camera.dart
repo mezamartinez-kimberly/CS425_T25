@@ -20,7 +20,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'; // for material design
 import 'package:qr_code_scanner/qr_code_scanner.dart'; // barcode scanner
 import 'package:edna/backend_utils.dart'; // for API calls
-import 'package:google_fonts/google_fonts.dart'; // for fonts
+import 'package:google_fonts/google_fonts.dart'; // fonts
+import 'package:loader_overlay/loader_overlay.dart'; // loading wheel
 
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // product widget
@@ -48,6 +49,8 @@ class CameraPageState extends State<CameraPage> {
   bool _flashOn = false;
 
   bool itemAdded = false; // flag to check if item was just added to pantry
+  bool firstRun =
+      true; // flag to check if this is the first time item is scanned
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -66,6 +69,7 @@ class CameraPageState extends State<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
+    //BackendUtils.deleteAll(); // debugging
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -115,34 +119,41 @@ class CameraPageState extends State<CameraPage> {
                         // get product name from UPC code
                         future: _getProductName(),
                         builder: (context, snapshot) {
-                          // while not scanning, or if waiting for flag to reset
-                          // return empty container
-                          if (result == null ||
-                              snapshot.data == "resetting flag") {
+                          // while not scanning, return empty container
+                          if (result == null) {
                             return Container();
                           }
-                          // while waiting for API call to UPC db to complete, show loading indicator
-                          if (snapshot.data == null) {
-                            return const Padding(
-                                padding: EdgeInsets.all(20.0),
-                                child: CircularProgressIndicator());
-                            // if error, show error message
-                          } else if (snapshot.hasError) {
-                            return const MyApp().createErrorMessage(
-                                context, 'Error: ${snapshot.error}');
+                          // once backend call complete and we've gotten data
+                          if (snapshot.data != null) {
                             // if UPC not found, show error message
-                          } else if (snapshot.data == 'UPC not found') {
-                            return const MyApp().createErrorMessage(
-                                context, "UPC ${result!.code} not found");
-                            // if UPC found, add product to camera page's list of items
-                          } else {
-                            _addItemToList();
+                            if (snapshot.data == 'UPC not found') {
+                              // display error message
+                              return Text("UPC ${result!.code} not found");
+                            }
+                            // if UPC found, add product to camera page's list
+                            else {
+                              _addItemToList();
 
-                            // return empty container so return value is a widget
+                              // if first scan, must manually add itemList to Camera Page's widget tree by returning it
+                              // since it's not already there
+                              if (firstRun) {
+                                firstRun = false;
+                                return _buildItemList();
+                              } else {
+                                return Container();
+                              }
+                            }
+                          }
+                          // if error, show error message
+                          else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          }
+                          // if data returned is null (ie UPC not found)
+                          else {
                             return Container();
                           }
                         }),
-                    _buildItemList(),
+                    _buildItemList() // display camera page's list of items
                   ],
                 ),
               ),
@@ -155,8 +166,9 @@ class CameraPageState extends State<CameraPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   _buildManualButton(),
-                  const SizedBox(width: 5), // spacing
+                  const SizedBox(width: 10), // spacing
                   _buildSubmitButton(),
+                  const SizedBox(width: 5), // spacing
                 ],
               ),
             )
@@ -166,103 +178,99 @@ class CameraPageState extends State<CameraPage> {
     );
   }
 
-  // define style of manual and submit buttons
-  buttonStyle() {
-    return ElevatedButton.styleFrom(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-      backgroundColor: MyTheme().pinkColor,
-      foregroundColor: Colors.black,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(50.0),
-      ),
-      // black border
-      side: const BorderSide(color: Colors.black, width: 1),
-    );
-  }
-
   Widget _buildManualButton() {
-    return ElevatedButton.icon(
-      style: buttonStyle(),
-      onPressed: () {
-        // show edit widget
-        showDialog(
-            context: context,
-            builder: (context) {
-              return EditWidget(
-                pantryItem: Pantry(
-                  id: 401, // id should be static var incremented each time?
-                  name: "",
-                ),
-                callingWidget: widget,
-                updateProductWidget: () {},
-                refreshPantryList: () {},
-                // on camera page, so only need refresh function for camera page
-                refreshCameraPage: refresh,
-              );
-            });
-      },
-      icon: const Icon(Icons.add),
-      label: const Text(
-        "Manual",
-        style: TextStyle(
-          fontSize: 20,
-          color: Colors.black,
+    return SizedBox(
+      width: 60,
+      height: 60,
+      child: FittedBox(
+        child: FloatingActionButton(
+          heroTag: "add", // need unique tag for each button
+          backgroundColor: MyTheme().pinkColor,
+          // rounded corners
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(23.0),
+          ),
+          onPressed: () {
+            // show edit widget
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return EditWidget(
+                    pantryItem: Pantry(),
+                    updateProductWidget: () {},
+                    refreshPantryList: refresh,
+                    callingWidget: widget,
+                  );
+                });
+          },
+          elevation: 3,
+          child: const Icon(
+            Icons.add,
+            size: 40.0,
+            color: Colors.black,
+          ),
         ),
       ),
     );
   }
 
   Widget _buildSubmitButton() {
-    return ElevatedButton.icon(
-      style: buttonStyle(),
-      onPressed: () async {
-        // insert scanned items into pantry database
-        if (widget.itemsToInsert != null) {
-          for (ProductWidget product in widget.itemsToInsert!) {
-            // add to pantry db
-            var backendResult =
-                await BackendUtils.addPantry(product.pantryItem);
+    return SizedBox(
+      width: 60,
+      height: 60,
+      child: FloatingActionButton(
+        heroTag: "submit", // need unique tag for each button
+        backgroundColor: MyTheme().pinkColor,
+        // rounded corners
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(23.0),
+        ),
+        onPressed: () async {
+          // insert scanned items into pantry database
+          if (widget.itemsToInsert != null) {
+            for (ProductWidget product in widget.itemsToInsert!) {
+              // add to pantry database
+              var backendResult =
+                  await BackendUtils.addPantry(product.pantryItem);
 
-            if (!mounted) return;
+              // if camera page closed, don't do anything
+              if (!mounted) return;
 
-            print(backendResult);
-
-            // if success do nothing else show error with the name and allow the user to edit it
-            if (backendResult.statusCode != 200 &&
-                backendResult.statusCode != 201) {
-              const MyApp().createErrorMessage(context,
-                  "Error ${backendResult.statusCode}: ${backendResult.body}");
-              print(backendResult.body);
-            } else {
-              // const MyApp()
-              //     .createSuccessMessage(context, "Item added to pantry");
+              // success/error messages
+              if (backendResult.statusCode != 200 &&
+                  backendResult.statusCode != 201) {
+                const MyApp().createErrorMessage(context,
+                    "Error ${backendResult.statusCode}: ${backendResult.body}");
+                print(backendResult.body);
+              } else {
+                // const MyApp()
+                //     .createSuccessMessage(context, "Item added to pantry");
+              }
             }
-          }
-          // show loading indicator for 0.5 sec
-          // ignore: use_build_context_synchronously
-          showDialog(
-              context: context,
-              builder: (context) {
-                // wait 0.5 sec
-                Future.delayed(const Duration(milliseconds: 500), () {
-                  // clear scanned list
-                  widget.itemsToInsert!.clear();
-                  // refresh page
-                  refresh(); // resets state
-                  // close dialog
-                  Navigator.of(context).pop(true);
+            // show loading indicator for 0.5 sec before submit
+            // ignore: use_build_context_synchronously
+            showDialog(
+                context: context,
+                builder: (context) {
+                  // wait 0.5 sec
+                  Future.delayed(const Duration(milliseconds: 500), () {
+                    // clear scanned list
+                    widget.itemsToInsert!.clear();
+                    // refresh page
+                    refresh(); // resets state
+                    // close dialog
+                    Navigator.of(context).pop(true);
+                  });
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 });
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              });
-        }
-      },
-      icon: const Icon(Icons.check),
-      label: const Text(
-        'Submit',
-        style: TextStyle(
-          fontSize: 20,
+          }
+        },
+        elevation: 3,
+        child: const Icon(
+          Icons.check,
+          size: 40.0,
           color: Colors.black,
         ),
       ),
@@ -292,23 +300,6 @@ class CameraPageState extends State<CameraPage> {
           flex: 1,
         ),
       ],
-    );
-  }
-
-  Widget _buildScanInstructions() {
-    return const Padding(
-      // spacing between card edges and page edges
-      padding: EdgeInsets.all(30),
-      child: Expanded(
-        child: Padding(
-          // spacing between card edges and text
-          padding: EdgeInsets.symmetric(horizontal: 30, vertical: 30),
-          child: Text('Scan or manually enter an item.',
-              textAlign: TextAlign.center,
-              // text size
-              style: TextStyle(fontSize: 35)),
-        ),
-      ),
     );
   }
 
@@ -430,8 +421,18 @@ class CameraPageState extends State<CameraPage> {
           result!.format == BarcodeFormat.ean8 ||
           result!.format == BarcodeFormat.upcA ||
           result!.format == BarcodeFormat.upcE) {
-        return productName =
-            await BackendUtils.getUpcData(result!.code as String);
+        // get data from backend
+        var data = await BackendUtils.getUpcData(result!.code as String);
+        // if data is not null
+        if (data != null) {
+          // if data 'UPC code not found'
+          if (data == 'UPC not found') {
+            // do nothing
+          } else {
+            // set productName to data, return
+            return productName = data;
+          }
+        }
       }
     }
   }
@@ -469,7 +470,7 @@ class CameraPageState extends State<CameraPage> {
     } else {
       // wait 5 seconds before user can scan another item
       // this way item doesn't duplicate over and over
-      Future.delayed(const Duration(seconds: 5), () {
+      Future.delayed(const Duration(seconds: 3), () {
         itemAdded = false;
       });
     }
