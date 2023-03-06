@@ -28,8 +28,8 @@ class PantryPage extends StatefulWidget {
 
 class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
   late bool _showDeletedItems;
-  List<Pantry> _activePantryItems = [];
-  List<Pantry> _allPantryItems = [];
+  List<Pantry> activePantryItems = [];
+  List<Pantry> allPantryItems = [];
   late TabController _tabController = TabController(length: 3, vsync: this);
   int _currentTab = 0; // added variable to keep track of current tab
 
