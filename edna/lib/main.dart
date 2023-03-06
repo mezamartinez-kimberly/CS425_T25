@@ -4,9 +4,19 @@ import 'package:edna/screens/all.dart'; // all screens
 import 'package:another_flushbar/flushbar.dart'; // snackbars
 import 'package:another_flushbar/flushbar_helper.dart'; // snackbars
 import 'package:another_flushbar/flushbar_route.dart'; // snackbars
+import 'package:edna/provider.dart'; // provider
+import 'package:provider/provider.dart'; // provider
+import 'package:edna/dbs/pantry_db.dart'; // pantry db
 
 void main() async {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PantryProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
