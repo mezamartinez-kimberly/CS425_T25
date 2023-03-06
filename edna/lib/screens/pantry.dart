@@ -156,29 +156,29 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
 
   Future<void> _loadPantryItems(int location) async {
     // declare pantry items for all tabs
-    _allPantryItems = await BackendUtils.getAllPantry();
+    allPantryItems = await BackendUtils.getAllPantry();
 
     // declare pantry items for selected tab where isDeleted ==
-    _activePantryItems = _allPantryItems
+    activePantryItems = allPantryItems
         .where(
             (item) => item.storageLocation == location && item.isDeleted == 0)
         .toList();
 
     // declare pantry items for selected tab
-    _allPantryItems = _allPantryItems
+    allPantryItems = allPantryItems
         .where((item) => item.storageLocation == location)
         .toList();
   }
 
   Widget _listActiveItems() {
     return Center(
-      child: _buildPantryList(_activePantryItems),
+      child: _buildPantryList(activePantryItems),
     );
   }
 
   Widget _listAllItems() {
     return Center(
-      child: _buildPantryList(_allPantryItems),
+      child: _buildPantryList(allPantryItems),
     );
   }
 
