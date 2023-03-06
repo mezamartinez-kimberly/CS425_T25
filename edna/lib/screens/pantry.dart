@@ -97,9 +97,10 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                       fontFamily: 'Roboto')),
             ),
           ),
-          body: Column(children: [
-            Expanded(flex: 1, child: _buildHeader()), // eye icon
-            Expanded(
+          body: Column(
+            children: [
+              Expanded(flex: 1, child: _buildHeader()), // eye icon
+              Expanded(
                 flex: 8,
                 child: FutureBuilder(
                   future: _loadPantryItems(_currentTab),
@@ -114,7 +115,7 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                   },
                 ),
               ),
-              _buildAddButton(),
+              buildAddButton(),
             ],
           ),
         ),
