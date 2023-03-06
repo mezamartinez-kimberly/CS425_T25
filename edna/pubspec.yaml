@@ -67,14 +67,6 @@ dependencies:
   #sets val in memory so data doesnt get lost
   shared_preferences: ^2.0.18
 
-
-
-  # formatting dates
-  intl: ^0.17.0
-
-
-
-
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
@@ -115,6 +107,22 @@ flutter:
     - fonts:
       - asset: assets/fonts/NotoSerif-Regular.ttf
 
+    - family: Roboto
+    - fonts:
+        - asset: fonts/Roboto-Regular.ttf
+        - asset: fonts/Roboto-Bold.ttf
+        - asset: fonts/Roboto-BoldItalic.ttf
+        - asset: fonts/Roboto-Black.ttf
+        - asset: fonts/Roboto-BlackItalic.ttf
+        - asset: fonts/Roboto-Italic.ttf
+        - asset: fonts/Roboto-Light.ttf
+        - asset: fonts/Roboto-LightItalic.ttf
+        - asset: fonts/Roboto-Medium.ttf
+        - asset: fonts/Roboto-MediumItalic.ttf
+        - asset: fonts/Roboto-Thin.ttf
+        - asset: fonts/Roboto-ThinItalic.ttf
+          weight: 700
+
   assets:
     - assets/images/Stage_1.png  
     - assets/images/Stage_2.png  
@@ -141,22 +149,7 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  fonts:
-    - family: Roboto
-      fonts:
-        - asset: fonts/Roboto-Regular.ttf
-        - asset: fonts/Roboto-Bold.ttf
-        - asset: fonts/Roboto-BoldItalic.ttf
-        - asset: fonts/Roboto-Black.ttf
-        - asset: fonts/Roboto-BlackItalic.ttf
-        - asset: fonts/Roboto-Italic.ttf
-        - asset: fonts/Roboto-Light.ttf
-        - asset: fonts/Roboto-LightItalic.ttf
-        - asset: fonts/Roboto-Medium.ttf
-        - asset: fonts/Roboto-MediumItalic.ttf
-        - asset: fonts/Roboto-Thin.ttf
-        - asset: fonts/Roboto-ThinItalic.ttf
-          weight: 700
+  
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
