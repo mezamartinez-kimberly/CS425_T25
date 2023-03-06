@@ -64,6 +64,15 @@ dependencies:
   test: 
   # loading wheel
   loader_overlay: ^2.1.0
+  #sets val in memory so data doesnt get lost
+  shared_preferences: ^2.0.18
+
+
+
+  # formatting dates
+  intl: ^0.17.0
+
+
 
 
   # The following adds the Cupertino Icons font to your application.
@@ -93,6 +102,18 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+  fonts:
+    - family: Noto Sans
+    - fonts:
+      - asset: assets/fonts/NotoSans-Regular.ttf
+
+    - family: Dekko
+    - fonts:
+      - asset: assets/fonts/Dekko-Regular.ttf
+
+    - family: Noto Serif
+    - fonts:
+      - asset: assets/fonts/NotoSerif-Regular.ttf
 
   assets:
     - assets/images/Stage_1.png  

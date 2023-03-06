@@ -784,3 +784,90 @@ def deletePantryItem():
         return jsonify({'message': 'Pantry item deleted successfully'}), 201
     
 
+
+
+# create a route that will obtain the user's first name, last name, and email
+@app.route('/obtainUserNameEmail', methods=['POST'])
+@jwt_required() # authentication Required
+def obtainUserNameEmail():
+    
+    # expected output from json:
+    # {
+    #     "first_name": "John",
+    #     "last_name": "Doe",
+    #     "email": "johndoe123@gmail.com",
+    # }
+
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # get the user's first name and last name from the database
+    person = Person.query.filter_by(id=user.person_id).first()
+
+    # from person get the first name and last name
+    first_name = person.first_name
+    last_name = person.last_name
+
+    # from user get the email
+    email = user.email
+
+    return jsonify({'first_name': first_name, 'last_name': last_name, 'email': email}), 200
+
+# create a route that will send in the users new first name, last name, and email (check)
+@app.route('/updateUserNameEmail', methods=['POST'])
+@jwt_required() # authentication Required
+def updateUserNameEmail():
+        
+    # expected input:
+    # {
+    #     "first_name": "John",
+    #     "last_name": "Doe",
+    #     "email": "johndoe123@gmail.com",
+    # }
+
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # get the user's first name and last name from the database
+    person = Person.query.filter_by(id=user.person_id).first()
+
+    # from person get the first name and last name
+    first_name = person.first_name
+    last_name = person.last_name
+
+    # from user get the email
+    email = user.email
+
+    # get the new first name, last name, and email from the html
+    new_first_name = request.json['first_name']
+    new_last_name = request.json['last_name']
+    new_email = request.json['email']
+
+    # update the first name, last name, and email in the database
+    person.first_name = new_first_name
+    person.last_name = new_last_name
+    user.email = new_email
+
+    return jsonify({'message': 'Users name and email updated successfully'}), 200
+
+
+#create a route that will grab the users token and remove it from the database
+@app.route('/logout', methods=['POST'])
+@jwt_required() # authentication Required
+def logout():
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # remove the session token from the database
+    user.session_token = None
+
+    return jsonify({'message': 'User logged out successfully'}), 200
