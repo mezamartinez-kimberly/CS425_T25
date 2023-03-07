@@ -7,6 +7,7 @@
 ==============================
 */
 
+import 'package:edna/screens/all.dart';
 import 'package:edna/utils/pantry_item.dart'; // pantry objects
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog
 import 'package:flutter/material.dart'; // material design widgets
@@ -155,7 +156,7 @@ class ProductWidgetState extends State<ProductWidget> {
                 pantryItem: widget.pantryItem,
                 callingWidget: widget,
                 updateProductWidget: refresh,
-                refreshPantryList: () {},
+                refreshPantryList: widget.refreshPantryList,
               );
             });
       },

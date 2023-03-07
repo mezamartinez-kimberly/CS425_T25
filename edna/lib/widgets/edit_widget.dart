@@ -283,10 +283,11 @@ class EditWidgetState extends State<EditWidget> {
 
           // create product widget with new pantry item
           ProductWidget newProductWidget = ProductWidget(
-              pantryItem: newPantryItem,
-              enableCheckbox: false,
-              // no need to refresh pantry since we're still on camera page
-              refreshPantryList: () {});
+            pantryItem: newPantryItem,
+            enableCheckbox: false,
+            // no need to refresh pantry since we're still on camera page
+            refreshPantryList: () {},
+          );
 
           // add to scanned list on camera page
           cameraPage.addItem(newProductWidget);
@@ -295,9 +296,9 @@ class EditWidgetState extends State<EditWidget> {
         }
 
         // if user is creating widget on pantry page, add product to pantry
-        else if (widget.callingWidget.runtimeType == PantryPage) {
+        else if (widget.callingWidget.runtimeType == ShelfPage) {
           // add to pantry
-          var response = await BackendUtils.addPantry(
+          await BackendUtils.addPantry(
             Pantry(
               name: widget.pantryItem.name,
               expirationDate: widget.pantryItem.expirationDate,
@@ -314,7 +315,6 @@ class EditWidgetState extends State<EditWidget> {
         }
 
         // if user is editing an already existing item (ie item has a product widget)
-
         else if (widget.callingWidget.runtimeType == ProductWidget) {
           // get access to calling widget
           ProductWidget callingWidget = widget.callingWidget as ProductWidget;
@@ -335,14 +335,14 @@ class EditWidgetState extends State<EditWidget> {
           // then the item is already in the database
           // so update the item in the databaseelse
           else {
-            print("Editing on pantry page");
             setState(() {
               // update pantry item in db with new values
               BackendUtils.updatePantryItem(widget.pantryItem);
               // update product widget
               widget.updateProductWidget!();
               // refresh pantry list
-              widget.refreshPantryList!();
+              widget.refreshPantryList!(); // null for some reason
+              print(widget.refreshPantryList.runtimeType);
             });
           }
         } else {

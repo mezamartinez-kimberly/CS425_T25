@@ -451,7 +451,6 @@ class CameraPageState extends State<CameraPage> {
         key: UniqueKey(),
         pantryItem: newPantryItem,
         enableCheckbox: false,
-        // no need to refresh pantry since we're on camera page
         refreshPantryList: () {},
         onCameraPage: true,
       );

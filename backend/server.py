@@ -562,6 +562,7 @@ def getAllPantry():
 
         # loop through each pantry item
         for item in pantry:
+            
             # get the product details
             product = Product.query.filter_by(id=item.product_id).first()
 
@@ -651,13 +652,13 @@ def updatePantryItem():
 # }
 
     date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
-    print(str(request.json['date_added']))
-    print(date_added)
+    # print(str(request.json['date_added']))
+    # print(date_added)
 
     # debug query to pantry table at the index
     debug = Pantry.query.filter_by(id=request.json['id']).first()
     test = debug.date_added
-    print(test)
+    # print(test)
 
     # get the session token from the authorization html header
     session_token = request.headers.get('Authorization').split()[1]

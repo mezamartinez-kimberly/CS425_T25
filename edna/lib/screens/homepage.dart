@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final _pageOptions = [
     CameraPage(),
-    const PantryPage(),
+    const ShelfPage(),
     const CalendarClass(),
     const TreePage(),
     const ProfilePage()

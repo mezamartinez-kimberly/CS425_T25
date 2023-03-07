@@ -19,15 +19,15 @@ import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
 import 'package:edna/utils/provider.dart';
 import 'package:provider/provider.dart';
 
-class PantryPage extends StatefulWidget {
+class ShelfPage extends StatefulWidget {
   // constructor
-  const PantryPage({Key? key}) : super(key: key);
+  const ShelfPage({Key? key}) : super(key: key);
 
   @override
-  PantryPageState createState() => PantryPageState();
+  ShelfPageState createState() => ShelfPageState();
 }
 
-class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
+class ShelfPageState extends State<ShelfPage> with TickerProviderStateMixin {
   late bool _showDeletedItems;
   List<Pantry> activePantryItems = [];
   List<Pantry> allPantryItems = [];
@@ -36,6 +36,7 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
 
   refresh() async {
     await _loadPantryItems(_currentTab);
+
     setState(() {});
   }
 
