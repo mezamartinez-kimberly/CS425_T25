@@ -257,7 +257,7 @@ class _EditWidgetState extends State<EditWidget> {
           return;
         }
 
-        // if user just scanned item, add to list on camera page
+        // if user creating item on camera page, add to camera's list
         if (widget.callingWidget.runtimeType == CameraPage) {
           CameraPage cameraPage = widget.callingWidget as CameraPage;
 
@@ -301,22 +301,41 @@ class _EditWidgetState extends State<EditWidget> {
           );
           // refresh pantry list
           widget.refreshPantryList!();
-        }
+        } else if (widget.callingWidget.runtimeType == ProductWidget) {
+          // get access to calling widget
+          ProductWidget callingWidget = widget.callingWidget as ProductWidget;
 
-        // else, user is editing a product widget, so update existing
-        else if (widget.callingWidget.runtimeType == ProductWidget) {
-          setState(() {
-            // update pantry item with new values
-            BackendUtils.updatePantryItem(widget.pantryItem);
-            // update product widget
-            widget.updateProductWidget!();
-          });
+          // if user is editing a product widget on camera page
+          // item is not in database yet
+          // so update loca item, not the item in the database
+          if (callingWidget.onCameraPage == true) {
+            setState(() {
+              // update local pantry item with new values
+
+              // update product widget
+              widget.updateProductWidget!();
+            });
+          }
+
+          // if user is editing a product widget on pantry page
+          // then the item is already in the database
+          // so update the item in the databaseelse
+          else {
+            print("Editing on pantry page");
+            setState(() {
+              // update pantry item in db with new values
+              BackendUtils.updatePantryItem(widget.pantryItem);
+              // update product widget
+              widget.updateProductWidget!();
+              // refresh pantry list
+              widget.refreshPantryList!();
+            });
+          }
         } else {
           print(
               "Error: no actions specified for calling widget ${widget.callingWidget.runtimeType}");
         }
-        // refresh pantry list
-        widget.refreshPantryList!();
+
         // close dialog box
         Navigator.of(context).pop();
         // no longer editing

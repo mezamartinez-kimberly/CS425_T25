@@ -17,8 +17,7 @@ class AccountSettingsPage extends StatefulWidget {
   AccountSettingsPageState createState() => AccountSettingsPageState();
 }
 
-class AccountSettingsPageState extends State<AccountSettingsPage>{
-
+class AccountSettingsPageState extends State<AccountSettingsPage> {
   String firstName = '';
   String lastName = '';
   String email = '';
@@ -136,6 +135,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage>{
       ),
     );
   }
+
   // create a circular back button thats in the upper left corner
   Widget _buildBackBtn() {
     return Container(
@@ -181,8 +181,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage>{
           ),
           backgroundColor: const Color(0xFF7D9AE4),
         ),
-        onPressed: () {
-        },
+        onPressed: () {},
         child: const Text(
           'Submit',
           style: TextStyle(
@@ -201,94 +200,94 @@ class AccountSettingsPageState extends State<AccountSettingsPage>{
         title: Stack(
           children: <Widget>[
             _buildBackBtn(),
-            const Text('        Account Settings',
-              style: TextStyle(fontSize: 30.0,
-                color: Colors.black, 
+            const Text(
+              '        Account Settings',
+              style: TextStyle(
+                fontSize: 30.0,
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),
           ],
-          
-      ),
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
+        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          child: Form(
-            key: formKey,
-            child: ListView(
-              children: <Widget>[
-                //name area
-                const Text(
-                  'Current Name:',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.left,
+          child: Container(
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: formKey,
+          child: ListView(
+            children: <Widget>[
+              //name area
+              const Text(
+                'Current Name:',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 10.0),
-                const Text(
-                  'New name:',
-                  style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                textAlign: TextAlign.left,
+              ),
+              const SizedBox(height: 10.0),
+              const Text(
+                'New name:',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 20.0),
-                 _buildFirstNameField(),
-                _buildLastNameField(),
-                const SizedBox(height: 20.0),
-                //change email area
-                const Text(
-                  'Current Email:',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.left,
+              ),
+              const SizedBox(height: 20.0),
+              _buildFirstNameField(),
+              _buildLastNameField(),
+              const SizedBox(height: 20.0),
+              //change email area
+              const Text(
+                'Current Email:',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 10.0),
-                const Text(
-                  'New Email:',
-                  style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                textAlign: TextAlign.left,
+              ),
+              const SizedBox(height: 10.0),
+              const Text(
+                'New Email:',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 20.0),
-                _buildEmailField(),
-                const SizedBox(height: 20.0),
-                //change password area
-                const Text(
-                  'Change Password',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.left,
+              ),
+              const SizedBox(height: 20.0),
+              _buildEmailField(),
+              const SizedBox(height: 20.0),
+              //change password area
+              const Text(
+                'Change Password',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 10.0),
-                const Text(
-                  'Enter current email to send verification code:',
-                  style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                textAlign: TextAlign.left,
+              ),
+              const SizedBox(height: 10.0),
+              const Text(
+                'Enter current email to send verification code:',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 20.0),
-                _buildEmailField(),
-                const SizedBox(height: 20.0),
-                _buildSubmitButton(),
-              ],
-            ),
+              ),
+              const SizedBox(height: 20.0),
+              _buildEmailField(),
+              const SizedBox(height: 20.0),
+              _buildSubmitButton(),
+            ],
           ),
-        )
-      ),
+        ),
+      )),
     );
   }
 }

@@ -17,6 +17,8 @@ import 'package:google_fonts/google_fonts.dart'; // fonts
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // pantry item widget
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
+import 'package:edna/provider.dart';
+import 'package:provider/provider.dart';
 
 class PantryPage extends StatefulWidget {
   // constructor
@@ -38,13 +40,22 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
     setState(() {});
   }
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _tabController = TabController(length: 3, vsync: this);
+  //   _currentTab = _tabController.index + 1;
+  //   _showDeletedItems = false;
+  //   _loadPantryItems(_currentTab);
+  // }
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _tabController = TabController(length: 3, vsync: this);
     _currentTab = _tabController.index + 1;
-    _loadPantryItems(_currentTab);
     _showDeletedItems = false;
+    _loadPantryItems(_currentTab);
   }
 
   @override
@@ -55,71 +66,66 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: DefaultTabController(
-        length: 3,
-        child: Scaffold(
-          appBar: AppBar(
-            backgroundColor: Colors.transparent,
-            elevation: 0, // remove shadow
-            automaticallyImplyLeading: false, // remove back button
-            bottom: TabBar(
-              controller: _tabController,
-              indicatorColor: MyTheme().pinkColor,
-              tabs: const [
-                Tab(
-                    child:
-                        Text('Pantry', style: TextStyle(color: Colors.black))),
-                Tab(
-                    child:
-                        Text('Fridge', style: TextStyle(color: Colors.black))),
-                Tab(
-                    child:
-                        Text('Freezer', style: TextStyle(color: Colors.black))),
-              ],
-              onTap: (index) {
-                // Set the current tab to the selected tab
-                setState(() {
-                  _currentTab = index + 1;
-                });
-                _loadPantryItems(
-                    _currentTab); // load pantry items for selected tab
-              },
-            ),
-            title: const Padding(
-              padding: EdgeInsets.only(top: 20.0, bottom: 10),
-              child: Text('Shelf',
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Roboto')),
-            ),
-          ),
-          body: Column(
-            children: [
-              Expanded(flex: 1, child: _buildHeader()), // eye icon
-              Expanded(
-                flex: 8,
-                child: FutureBuilder(
-                  future: _loadPantryItems(_currentTab),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.done) {
-                      return _showDeletedItems
-                          ? _listAllItems()
-                          : _listActiveItems();
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  },
-                ),
+    return ChangeNotifierProvider(
+      create: (context) => PantryProvider(),
+      builder: (context, child) {
+        final pantryProvider = Provider.of<PantryProvider>(context);
+        if (pantryProvider.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else {
+          return Scaffold(
+            appBar: AppBar(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              automaticallyImplyLeading: false,
+              bottom: TabBar(
+                controller: _tabController,
+                indicatorColor: MyTheme().pinkColor,
+                tabs: const [
+                  Tab(
+                      child: Text('Pantry',
+                          style: TextStyle(color: Colors.black))),
+                  Tab(
+                      child: Text('Fridge',
+                          style: TextStyle(color: Colors.black))),
+                  Tab(
+                      child: Text('Freezer',
+                          style: TextStyle(color: Colors.black))),
+                ],
+                onTap: (index) {
+                  setState(() {
+                    _currentTab = index + 1;
+                  });
+                  _loadPantryItems(_currentTab);
+                },
               ),
-              _buildAddButton(),
-            ],
-          ),
-        ),
-      ),
+              title: const Padding(
+                padding: EdgeInsets.only(top: 20.0, bottom: 10),
+                child: Text('Shelf',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Roboto')),
+              ),
+            ),
+            body: Column(
+              children: [
+                Expanded(
+                  flex: 1,
+                  child: _buildHeader(),
+                ),
+                Expanded(
+                  flex: 8,
+                  child:
+                      _showDeletedItems ? _listAllItems() : _listActiveItems(),
+                ),
+                _buildAddButton(),
+              ],
+            ),
+          );
+        }
+      },
     );
   }
 
@@ -146,6 +152,12 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                 setState(() {
                   _showDeletedItems = !_showDeletedItems;
                 });
+
+                if (_showDeletedItems) {
+                  _listAllItems(); // call _listAllItems if _showDeletedItems is true
+                } else {
+                  _listActiveItems(); // call _listActiveItems if _showDeletedItems is false
+                }
               },
             ),
           ),
@@ -155,19 +167,26 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
   }
 
   Future<void> _loadPantryItems(int location) async {
-    // declare pantry items for all tabs
     allPantryItems = await BackendUtils.getAllPantry();
 
-    // declare pantry items for selected tab where isDeleted ==
+    final pantryProvider = Provider.of<PantryProvider>(context, listen: false);
+
+    allPantryItems = allPantryItems
+        .where((item) => item.storageLocation == location)
+        .toList();
+
+    pantryProvider.setAllPantryItems(allPantryItems);
+
     activePantryItems = allPantryItems
         .where(
             (item) => item.storageLocation == location && item.isDeleted == 0)
         .toList();
+    pantryProvider.setActivePantryItems(activePantryItems);
 
-    // declare pantry items for selected tab
-    allPantryItems = allPantryItems
-        .where((item) => item.storageLocation == location)
-        .toList();
+    setState(() {
+      // Call list builder to refresh list based on current tab and _showDeletedItems
+      _showDeletedItems ? _listAllItems() : _listActiveItems();
+    });
   }
 
   Widget _listActiveItems() {
