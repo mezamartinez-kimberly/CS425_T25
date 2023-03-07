@@ -1,6 +1,6 @@
 import 'package:edna/screens/all.dart';
 import 'package:flutter/material.dart';
-import 'package:edna/backend_utils.dart';
+import 'package:edna/utils/backend_utils.dart';
 
 
 class ProfilePage extends StatefulWidget {

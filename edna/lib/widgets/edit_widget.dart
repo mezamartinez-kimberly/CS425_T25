@@ -1,16 +1,23 @@
-//ref:
-// https://levelup.gitconnected.com/date-picker-in-flutter-ec6080f3508a
-// https://stackoverflow.com/questions/59455869/how-to-make-fullscreen-alertdialog-in-flutter
-// https://stackoverflow.com/questions/48481590/how-to-set-update-state-of-statefulwidget-from-other-statefulwidget-in-flutter
-// https://stackoverflow.com/questions/70927812/flutter-textfield-should-open-when-button-is-pressed
-// https://api.flutter.dev/flutter/material/ToggleButtons-class.html
+/* This file contains the code for the EditWidget class, a dialog which allows the user to manually enter or edit a pantry item.
 
-// ignore_for_file: avoid_print
+==============================
+*    Title: edit_widget.dart
+*    Author: Julian Fliegler
+*    Date: March 2023
+==============================
 
-import 'package:edna/backend_utils.dart';
-import 'package:edna/dbs/pantry_db.dart';
-import 'package:edna/dbs/storage_location_db.dart';
-import 'package:edna/main.dart';
+* Referenced code:
+ * https://levelup.gitconnected.com/date-picker-in-flutter-ec6080f3508a
+ * https://stackoverflow.com/questions/59455869/how-to-make-fullscreen-alertdialog-in-flutter
+ * https://stackoverflow.com/questions/48481590/how-to-set-update-state-of-statefulwidget-from-other-statefulwidget-in-flutter
+ * https://stackoverflow.com/questions/70927812/flutter-textfield-should-open-when-button-is-pressed
+ * https://api.flutter.dev/flutter/material/ToggleButtons-class.html
+*/
+
+import 'package:edna/utils/backend_utils.dart';
+import 'package:edna/utils/pantry_item.dart';
+import 'package:edna/utils/storage_location_db.dart';
+import 'package:edna/utils/popup_utils.dart';
 import 'package:edna/screens/all.dart';
 import 'package:edna/widgets/product_widget.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,10 +25,10 @@ import 'package:flutter/material.dart'; // material design
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 
+// ignore: must_be_immutable
 class EditWidget extends StatefulWidget {
   @override
-  // ignore: library_private_types_in_public_api
-  _EditWidgetState createState() => _EditWidgetState();
+  EditWidgetState createState() => EditWidgetState();
 
   final Pantry pantryItem;
   Widget? callingWidget;
@@ -44,11 +51,11 @@ class EditWidget extends StatefulWidget {
   }) : super(key: key);
 }
 
-class _EditWidgetState extends State<EditWidget> {
+class EditWidgetState extends State<EditWidget> {
   // for upc/plu input
   final List<bool> _selectedCodeType = <bool>[false, false];
   final List<Widget> codeTypes = <Widget>[const Text('UPC'), const Text('PLU')];
-  // for exp date
+  // for expiration date
   TextEditingController dateController = TextEditingController();
 
   // init state
@@ -207,16 +214,18 @@ class _EditWidgetState extends State<EditWidget> {
         });
   }
 
-  Widget _buildNotesField() {
-    return TextField(
-      //controller: TextEditingController()..text = widget.notes ?? "Notes",
-      decoration: const InputDecoration(
-          icon: Icon(Icons.notes), hintText: "Enter Notes"),
-      onChanged: (value) {
-        widget.notes = value;
-      },
-    );
-  }
+  // notes field
+  // not using right now, might use later
+  // Widget _buildNotesField() {
+  //   return TextField(
+  //     //controller: TextEditingController()..text = widget.notes ?? "Notes",
+  //     decoration: const InputDecoration(
+  //         icon: Icon(Icons.notes), hintText: "Enter Notes"),
+  //     onChanged: (value) {
+  //       widget.notes = value;
+  //     },
+  //   );
+  // }
 
   Widget _buildCancelButton() {
     return TextButton(
@@ -237,14 +246,14 @@ class _EditWidgetState extends State<EditWidget> {
       onPressed: () async {
         // if no upc/plu code, show error
         if (widget.pantryItem.upc == null && widget.pantryItem.plu == null) {
-          const MyApp().createErrorMessage(context, "Please enter a code.");
+          PopupUtils().createErrorMessage(context, "Please enter a code.");
           return;
         }
 
         // if upc is not 12 digits, show error
         if (widget.pantryItem.upc != null &&
             widget.pantryItem.upc!.length != 12) {
-          const MyApp()
+          PopupUtils()
               .createErrorMessage(context, "UPC code must be 12 digits.");
           return;
         }
@@ -252,7 +261,7 @@ class _EditWidgetState extends State<EditWidget> {
         // if plu is not 4 digits, show error
         if (widget.pantryItem.plu != null &&
             widget.pantryItem.plu!.length != 4) {
-          const MyApp()
+          PopupUtils()
               .createErrorMessage(context, "PLU code must be 4 digits.");
           return;
         }
@@ -337,6 +346,7 @@ class _EditWidgetState extends State<EditWidget> {
         }
 
         // close dialog box
+        // ignore: use_build_context_synchronously
         Navigator.of(context).pop();
         // no longer editing
         widget.isEditing = false;

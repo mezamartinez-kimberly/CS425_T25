@@ -1,34 +1,33 @@
-// /*
-// ==============================
-// *    Title: camera.dart
-// *    Author: Julian Fliegler
-// *    Date: Dec 2022
-// ==============================
-// */
+/* Camera page is for scanning barcodes and adding items to shelf.
 
-// /* Referenced code:
-//  - https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter
-// - https://stackoverflow.com/questions/65992435/how-to-open-barcode-scanner-in-a-custom-widget
-// */
+==============================
+*    Title: camera.dart
+*    Author: Julian Fliegler
+*    Date: March 2023
+==============================
+
+* Referenced code:
+  * https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter
+  * https://stackoverflow.com/questions/65992435/how-to-open-barcode-scanner-in-a-custom-widget
+*/
 
 import 'dart:developer'; // for debugPrint
 import 'dart:io'; // for Platform
-
-import 'package:edna/main.dart'; // for main
-import 'package:edna/screens/all.dart'; // for pantry page
+import 'package:edna/screens/all.dart';
+import 'package:edna/utils/popup_utils.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart'; // for material design
+import 'package:flutter/material.dart'; // material design
 import 'package:qr_code_scanner/qr_code_scanner.dart'; // barcode scanner
-import 'package:edna/backend_utils.dart'; // for API calls
+import 'package:edna/utils/backend_utils.dart'; // backend calls
 import 'package:google_fonts/google_fonts.dart'; // fonts
-import 'package:loader_overlay/loader_overlay.dart'; // loading wheel
-
-import 'package:edna/dbs/pantry_db.dart'; // pantry db
-import 'package:edna/widgets/product_widget.dart'; // product widget
+//import 'package:loader_overlay/loader_overlay.dart'; // loading wheel
+import 'package:edna/utils/pantry_item.dart'; // pantry object
+import 'package:edna/widgets/product_widget.dart'; // pantry object UI
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
 
 // ignore: must_be_immutable
 class CameraPage extends StatefulWidget {
+  //
   List<ProductWidget>? itemsToInsert;
   addItem(ProductWidget product) {
     itemsToInsert ??= []; // initialize if null
@@ -240,9 +239,8 @@ class CameraPageState extends State<CameraPage> {
               // success/error messages
               if (backendResult.statusCode != 200 &&
                   backendResult.statusCode != 201) {
-                const MyApp().createErrorMessage(context,
+                PopupUtils().createErrorMessage(context,
                     "Error ${backendResult.statusCode}: ${backendResult.body}");
-                print(backendResult.body);
               } else {
                 // const MyApp()
                 //     .createSuccessMessage(context, "Item added to pantry");
@@ -405,9 +403,9 @@ class CameraPageState extends State<CameraPage> {
   }
 
   // for debugging
-  void printYellow(String text) {
-    print('\x1B[33m$text\x1B[0m');
-  }
+  // void printYellow(String text) {
+  //   print('\x1B[33m$text\x1B[0m');
+  // }
 
   // get product name from upc code using backend
   _getProductName() async {

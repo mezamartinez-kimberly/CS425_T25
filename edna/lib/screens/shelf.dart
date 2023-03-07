@@ -1,20 +1,19 @@
-/* 
-==============================
-*    Title: pantry.dart
-*    Author: Julian Fliegler
-*    Date: Dec 2022
-==============================
-*/
+/* The shelf page contains a list of all the items in the user's pantry, fridge, and freezer. The user can view, add, edit, or delete items from the list.
 
-/* Referenced code:
+==============================
+*    Title: shelf.dart
+*    Author: Julian Fliegler
+*    Date: March 2023
+==============================
+
+Referenced code:
 * https://api.flutter.dev/flutter/widgets/ListView-class.html
 */
 
-import 'package:edna/backend_utils.dart';
+import 'package:edna/utils/backend_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart';
-import 'package:google_fonts/google_fonts.dart'; // fonts
-import 'package:edna/dbs/pantry_db.dart'; // pantry db
+import 'package:edna/utils/pantry_item.dart'; // pantry item
 import 'package:edna/widgets/product_widget.dart'; // pantry item widget
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
 

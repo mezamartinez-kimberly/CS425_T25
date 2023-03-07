@@ -90,10 +90,6 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
-  uses-material-design: true
   fonts:
     - family: Noto Sans
     - fonts:
@@ -120,6 +116,11 @@ flutter:
         - asset: fonts/Roboto-Thin.ttf
         - asset: fonts/Roboto-ThinItalic.ttf
           weight: 700
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
 
   assets:
     - assets/images/Stage_1.png  

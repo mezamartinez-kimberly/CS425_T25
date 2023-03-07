@@ -9,7 +9,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'all.dart';
-import 'package:edna/backend_utils.dart';
+import 'package:edna/utils/backend_utils.dart';
 
 class NewPasswordPage extends StatefulWidget {
   const NewPasswordPage({Key? key}) : super(key: key);

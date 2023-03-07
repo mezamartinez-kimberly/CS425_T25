@@ -11,7 +11,7 @@ import 'dart:ffi';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:edna/backend_utils.dart';
+import 'package:edna/utils/backend_utils.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:edna/screens/all.dart'; // all screens
 

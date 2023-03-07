@@ -2,14 +2,14 @@
 ==============================
 *    Title: forgot_password.dart
 *    Author: John Watson
-*    Date: Feb 2022
+*    Date: Feb 2023
 ==============================
 */
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'all.dart';
-import 'package:edna/backend_utils.dart';
+import 'package:edna/utils/backend_utils.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   const ForgotPasswordPage({Key? key}) : super(key: key);

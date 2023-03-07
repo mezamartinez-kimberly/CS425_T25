@@ -1,8 +1,6 @@
 import 'dart:convert';
-import 'package:edna/dbs/pantry_db.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:edna/utils/pantry_item.dart';
 import 'package:http/http.dart' as http;
-import 'package:intl/intl.dart'; // DateFormat
 
 // global variables
 bool firstTimeScan = true; // to prevent multiple calls from a single scan

@@ -15,7 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:edna/calendar_utils.dart';
+import 'package:edna/utils/calendar_utils.dart';
 
 class CalendarClass extends StatefulWidget {
   //can also turn off prefer_const_constructor under rules and put false so that you dont need these

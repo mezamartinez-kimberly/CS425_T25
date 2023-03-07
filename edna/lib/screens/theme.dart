@@ -2,7 +2,7 @@
 ==============================
 *    Title: theme.dart
 *    Author: Julian Fliegler
-*    Date: Dec 2022
+*    Date: March 2023
 ==============================
 */
 
@@ -12,6 +12,7 @@ https://medium.com/@nickysong/creating-a-custom-color-swatch-in-flutter-554bcdcb
 
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class MyTheme extends StatelessWidget {
   var pinkColor = const Color.fromRGBO(247, 164, 162, 1);
   var blueColor = const Color.fromRGBO(147, 168, 221, 1);

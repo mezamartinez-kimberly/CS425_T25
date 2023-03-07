@@ -1,9 +1,19 @@
-import 'package:edna/dbs/pantry_db.dart';
-import 'package:edna/widgets/edit_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // DateFormat
-import 'package:edna/backend_utils.dart';
+/* Product Widget is a UI wrapper for a pantry item
 
+==============================
+*    Title: product_widget.dart
+*    Author: Julian Fliegler
+*    Date: March 2023
+==============================
+*/
+
+import 'package:edna/utils/pantry_item.dart'; // pantry objects
+import 'package:edna/widgets/edit_widget.dart'; // edit dialog
+import 'package:flutter/material.dart'; // material design widgets
+import 'package:intl/intl.dart'; // DateFormat
+import 'package:edna/utils/backend_utils.dart'; // backend utils
+
+// ignore: must_be_immutable
 class ProductWidget extends StatefulWidget {
   @override
   // ignore: library_private_types_in_public_api
@@ -27,7 +37,6 @@ class ProductWidget extends StatefulWidget {
 }
 
 class ProductWidgetState extends State<ProductWidget> {
-  bool _isEditing = false;
   bool _isChecked = false;
 
   @override
@@ -139,7 +148,6 @@ class ProductWidgetState extends State<ProductWidget> {
     return IconButton(
       icon: const Icon(Icons.edit),
       onPressed: () {
-        _isEditing = true;
         showDialog(
             context: context,
             builder: (context) {

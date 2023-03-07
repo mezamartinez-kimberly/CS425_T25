@@ -1,4 +1,4 @@
-// StorageLocation is used in the pantry_db.dart file to store the storage location of a pantry item.
+// StorageLocation is used in the pantry_item.dart file to store the storage location of a pantry item.
 
 class StorageLocation {
   final int id;
@@ -6,7 +6,6 @@ class StorageLocation {
 
   // constructor
   const StorageLocation(this.id, this.name);
-  //const StorageLocation._internal(this.id, this.name);
 
   // lookup table
   static const StorageLocation fridge = StorageLocation(1, 'Pantry');
