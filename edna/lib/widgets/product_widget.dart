@@ -7,13 +7,13 @@ import 'package:edna/backend_utils.dart';
 class ProductWidget extends StatefulWidget {
   @override
   // ignore: library_private_types_in_public_api
-  _ProductWidgetState createState() => _ProductWidgetState();
+  ProductWidgetState createState() => ProductWidgetState();
 
   final Pantry pantryItem;
   bool enableCheckbox;
   final Function()? refreshPantryList;
-  bool onCamera;
-  bool onPantry;
+  bool? onCameraPage;
+  bool? onPantryPage;
 
   // constructor
   ProductWidget({
@@ -21,12 +21,12 @@ class ProductWidget extends StatefulWidget {
     required this.pantryItem,
     this.enableCheckbox = false, // enabled by default
     this.refreshPantryList,
-    this.onCamera = false,
-    this.onPantry = true,
+    this.onCameraPage = false,
+    this.onPantryPage = false,
   }) : super(key: key);
 }
 
-class _ProductWidgetState extends State<ProductWidget> {
+class ProductWidgetState extends State<ProductWidget> {
   bool _isEditing = false;
   bool _isChecked = false;
 
@@ -239,10 +239,13 @@ class _ProductWidgetState extends State<ProductWidget> {
     if (date != null) {
       return Text("Expires: ${DateFormat.MMMEd().format(date)}");
     } else {
-      return const Text("No expiration date",
-          style: TextStyle(
-            fontStyle: FontStyle.italic,
-          ));
+      // return const Text("No expiration date",
+      //     style: TextStyle(
+      //       fontStyle: FontStyle.italic,
+      //     ));
+      // default expiration date is 7 days from current day
+      return Text(
+          "Expires: ${DateFormat.MMMEd().format(DateTime.now().add(const Duration(days: 7)))}");
     }
   }
 }

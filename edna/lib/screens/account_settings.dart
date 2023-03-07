@@ -9,6 +9,7 @@
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart'; // all screens
 import 'package:google_fonts/google_fonts.dart';
+import 'package:edna/backend_utils.dart';
 
 class AccountSettingsPage extends StatefulWidget {
   const AccountSettingsPage({Key? key});
@@ -17,11 +18,18 @@ class AccountSettingsPage extends StatefulWidget {
   AccountSettingsPageState createState() => AccountSettingsPageState();
 }
 
-class AccountSettingsPageState extends State<AccountSettingsPage>{
+class AccountSettingsPageState extends State<AccountSettingsPage> {
+  String firstName = "";
+  String lastName = "";
+  String email = "";
 
-  String firstName = '';
-  String lastName = '';
-  String email = '';
+  //create an initialization function to get user data
+  @override
+  void initState() {
+    super.initState();
+    _getUserData().then((_) {
+    });
+  }
 
   final formKey = GlobalKey<FormState>();
 
@@ -136,6 +144,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage>{
       ),
     );
   }
+
   // create a circular back button thats in the upper left corner
   Widget _buildBackBtn() {
     return Container(
@@ -181,7 +190,53 @@ class AccountSettingsPageState extends State<AccountSettingsPage>{
           ),
           backgroundColor: const Color(0xFF7D9AE4),
         ),
-        onPressed: () {
+        onPressed: ()async {
+          formKey.currentState!.save(); // Always save the form data
+
+          if (formKey.currentState!.validate()) {
+            // print email
+            print(email);
+
+            _updateUserNameEmail(firstName, lastName, email);
+
+            String result = await BackendUtils.sendOTPEmail(email);
+
+            // Resolved an aync + naviagation issue
+            // https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html
+            if (!mounted) return;
+
+            if (result == "Email sent successfully") {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const OtpEntryPage()),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Container(
+                    alignment: Alignment.topCenter,
+                    height: 15.0,
+                    child: const Center(
+                      child: Text(
+                        'Please check your credentials and try again',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  backgroundColor: const Color.fromARGB(255, 255, 55, 55),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(40.0),
+                  ),
+                  behavior: SnackBarBehavior.floating,
+                  margin: const EdgeInsets.symmetric(
+                      horizontal: 30.0, vertical: 50),
+                ),
+              );
+            }
+          }
         },
         child: const Text(
           'Submit',
@@ -194,6 +249,28 @@ class AccountSettingsPageState extends State<AccountSettingsPage>{
     );
   }
 
+  //function to get user data from backend
+  Future<void> _getUserData() async {
+    //get user data from backend
+    List<String> userData = await BackendUtils.getUserData();
+    setState(() {
+      firstName = userData[0];
+      lastName = userData[1];
+      email = userData[2];
+    });
+  }
+
+  //function to call /updateUserNameEmail from backend
+  Future<void> _updateUserNameEmail(String firstName, String lastName, String email) async {
+    //call /updateUserNameEmail from backend
+    await BackendUtils.updateUserNameEmail(firstName, lastName, email);
+    setState(() {
+      firstName = firstName;
+      lastName = lastName;
+      email = email;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -201,94 +278,94 @@ class AccountSettingsPageState extends State<AccountSettingsPage>{
         title: Stack(
           children: <Widget>[
             _buildBackBtn(),
-            const Text('        Account Settings',
-              style: TextStyle(fontSize: 30.0,
-                color: Colors.black, 
+            const Text(
+              '        Account Settings',
+              style: TextStyle(
+                fontSize: 30.0,
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),
           ],
-          
-      ),
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
+        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
-          child: Form(
-            key: formKey,
-            child: ListView(
-              children: <Widget>[
-                //name area
-                const Text(
-                  'Current Name:',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.left,
+          child: Container(
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: formKey,
+          child: ListView(
+            children: <Widget>[
+              //name area
+              Text(
+                'Current Name: $firstName $lastName',
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 10.0),
-                const Text(
-                  'New name:',
-                  style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                textAlign: TextAlign.left,
+              ),
+              const SizedBox(height: 10.0),
+              const Text(
+                'New name:',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 20.0),
-                 _buildFirstNameField(),
-                _buildLastNameField(),
-                const SizedBox(height: 20.0),
-                //change email area
-                const Text(
-                  'Current Email:',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.left,
+              ),
+              const SizedBox(height: 20.0),
+              _buildFirstNameField(),
+              _buildLastNameField(),
+              const SizedBox(height: 20.0),
+              //change email area
+              Text(
+                'Current Email: $email',
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 10.0),
-                const Text(
-                  'New Email:',
-                  style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                textAlign: TextAlign.left,
+              ),
+              const SizedBox(height: 10.0),
+              const Text(
+                'New Email:',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 20.0),
-                _buildEmailField(),
-                const SizedBox(height: 20.0),
-                //change password area
-                const Text(
-                  'Change Password',
-                  style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  textAlign: TextAlign.left,
+              ),
+              const SizedBox(height: 20.0),
+              _buildEmailField(),
+              const SizedBox(height: 20.0),
+              //change password area
+              const Text(
+                'Change Password',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 10.0),
-                const Text(
-                  'Enter current email to send verification code:',
-                  style: TextStyle(
-                    fontSize: 15.0,
-                    fontWeight: FontWeight.bold,
-                  ),
+                textAlign: TextAlign.left,
+              ),
+              const SizedBox(height: 10.0),
+              const Text(
+                'Enter current email to send verification code:',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 20.0),
-                _buildEmailField(),
-                const SizedBox(height: 20.0),
-                _buildSubmitButton(),
-              ],
-            ),
+              ),
+              const SizedBox(height: 20.0),
+              _buildEmailField(),
+              const SizedBox(height: 20.0),
+              _buildSubmitButton(),
+            ],
           ),
-        )
-      ),
+        ),
+      )),
     );
   }
 }
