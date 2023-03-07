@@ -20,11 +20,10 @@ class ProductWidget extends StatefulWidget {
   // ignore: library_private_types_in_public_api
   ProductWidgetState createState() => ProductWidgetState();
 
-  final Pantry pantryItem;
+  Pantry pantryItem;
   bool enableCheckbox;
   final Function()? refreshPantryList;
-  bool? onCameraPage;
-  bool? onPantryPage;
+  Widget callingWidget;
 
   // constructor
   ProductWidget({
@@ -32,8 +31,7 @@ class ProductWidget extends StatefulWidget {
     required this.pantryItem,
     this.enableCheckbox = false, // enabled by default
     this.refreshPantryList,
-    this.onCameraPage = false,
-    this.onPantryPage = false,
+    required this.callingWidget,
   }) : super(key: key);
 }
 

@@ -27,7 +27,6 @@ import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
 
 // ignore: must_be_immutable
 class CameraPage extends StatefulWidget {
-  //
   List<ProductWidget>? itemsToInsert;
   addItem(ProductWidget product) {
     itemsToInsert ??= []; // initialize if null
@@ -452,7 +451,7 @@ class CameraPageState extends State<CameraPage> {
         pantryItem: newPantryItem,
         enableCheckbox: false,
         refreshPantryList: () {},
-        onCameraPage: true,
+        callingWidget: widget,
       );
 
       // add to camera page's list of items

@@ -287,6 +287,7 @@ class EditWidgetState extends State<EditWidget> {
             enableCheckbox: false,
             // no need to refresh pantry since we're still on camera page
             refreshPantryList: () {},
+            callingWidget: widget,
           );
 
           // add to scanned list on camera page
@@ -316,16 +317,21 @@ class EditWidgetState extends State<EditWidget> {
 
         // if user is editing an already existing item (ie item has a product widget)
         else if (widget.callingWidget.runtimeType == ProductWidget) {
-          // get access to calling widget
-          ProductWidget callingWidget = widget.callingWidget as ProductWidget;
+          // get access to calling widgets
+          ProductWidget productWidget = widget.callingWidget as ProductWidget;
+          Widget productWidgetParent = productWidget.callingWidget;
 
           // if user is editing a product widget on camera page
           // item is not in database yet
-          // so update loca item, not the item in the database
-          if (callingWidget.onCameraPage == true) {
+          // so update local item, not the item in the database
+          if (productWidgetParent.runtimeType == CameraPage) {
+            CameraPage cameraPage = productWidgetParent as CameraPage;
+            // get index of current item
+            var index = cameraPage.itemsToInsert?.indexOf(productWidget);
+            // update local pantry item with new values
+            print("widget.pantryItem: ${widget.pantryItem}");
+            //    cameraPage.itemsToInsert![index!].pantryItem = widget.pantryItem;
             setState(() {
-              // update local pantry item with new values
-
               // update product widget
               widget.updateProductWidget!();
             });
@@ -333,7 +339,7 @@ class EditWidgetState extends State<EditWidget> {
 
           // if user is editing a product widget on pantry page
           // then the item is already in the database
-          // so update the item in the databaseelse
+          // so update the item in the database
           else {
             setState(() {
               // update pantry item in db with new values
@@ -341,7 +347,7 @@ class EditWidgetState extends State<EditWidget> {
               // update product widget
               widget.updateProductWidget!();
               // refresh pantry list
-              widget.refreshPantryList!(); // null for some reason
+              widget.refreshPantryList!();
               print(widget.refreshPantryList.runtimeType);
             });
           }

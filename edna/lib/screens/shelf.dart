@@ -225,6 +225,7 @@ class ShelfPageState extends State<ShelfPage> with TickerProviderStateMixin {
                         pantryItem: item,
                         enableCheckbox: true,
                         refreshPantryList: refresh,
+                        callingWidget: widget,
                       )
                     : item.isDeleted == 1
                         ? Container()
@@ -233,6 +234,7 @@ class ShelfPageState extends State<ShelfPage> with TickerProviderStateMixin {
                               pantryItem: item,
                               enableCheckbox: true,
                               refreshPantryList: refresh,
+                              callingWidget: widget,
                             ),
                           );
               },
