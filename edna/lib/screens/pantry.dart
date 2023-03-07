@@ -40,13 +40,22 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
     setState(() {});
   }
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _tabController = TabController(length: 3, vsync: this);
+  //   _currentTab = _tabController.index + 1;
+  //   _showDeletedItems = false;
+  //   _loadPantryItems(_currentTab);
+  // }
+
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _tabController = TabController(length: 3, vsync: this);
     _currentTab = _tabController.index + 1;
-    _loadPantryItems(_currentTab);
     _showDeletedItems = false;
+    _loadPantryItems(_currentTab);
   }
 
   @override
@@ -55,7 +64,6 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -144,6 +152,12 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                 setState(() {
                   _showDeletedItems = !_showDeletedItems;
                 });
+
+                if (_showDeletedItems) {
+                  _listAllItems(); // call _listAllItems if _showDeletedItems is true
+                } else {
+                  _listActiveItems(); // call _listActiveItems if _showDeletedItems is false
+                }
               },
             ),
           ),
@@ -156,12 +170,23 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
     allPantryItems = await BackendUtils.getAllPantry();
 
     final pantryProvider = Provider.of<PantryProvider>(context, listen: false);
+
+    allPantryItems = allPantryItems
+        .where((item) => item.storageLocation == location)
+        .toList();
+
     pantryProvider.setAllPantryItems(allPantryItems);
 
     activePantryItems = allPantryItems
-        .where((item) => item.storageLocation == location)
+        .where(
+            (item) => item.storageLocation == location && item.isDeleted == 0)
         .toList();
     pantryProvider.setActivePantryItems(activePantryItems);
+
+    setState(() {
+      // Call list builder to refresh list based on current tab and _showDeletedItems
+      _showDeletedItems ? _listAllItems() : _listActiveItems();
+    });
   }
 
   Widget _listActiveItems() {
