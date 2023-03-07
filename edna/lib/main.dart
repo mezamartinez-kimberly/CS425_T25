@@ -3,9 +3,18 @@
 
 import 'package:flutter/material.dart'; // material design
 import 'package:edna/screens/all.dart'; // all screens
+import 'package:edna/provider.dart'; // provider
+import 'package:provider/provider.dart'; // provider
 
 void main() async {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => PantryProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -18,6 +27,4 @@ class MyApp extends StatelessWidget {
       home: LoginPage(),
     );
   }
-
-  
 }
