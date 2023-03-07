@@ -15,7 +15,7 @@
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:edna/utils/calendar_utils.dart';
-import 'package:edna/provider.dart';
+import 'package:edna/utils/provider.dart';
 import 'package:provider/provider.dart';
 import 'package:edna/utils/pantry_item.dart';
 

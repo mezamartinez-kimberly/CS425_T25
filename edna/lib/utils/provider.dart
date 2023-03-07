@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:edna/dbs/pantry_db.dart';
+import 'package:edna/utils/pantry_item.dart';
 
 class PantryProvider with ChangeNotifier {
   List<Pantry> _activePantryItems = [];

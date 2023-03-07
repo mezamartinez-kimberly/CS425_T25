@@ -3,7 +3,7 @@
 
 import 'package:flutter/material.dart'; // material design
 import 'package:edna/screens/all.dart'; // all screens
-import 'package:edna/provider.dart'; // provider
+import 'package:edna/utils/provider.dart'; // provider
 import 'package:provider/provider.dart'; // provider
 
 void main() async {

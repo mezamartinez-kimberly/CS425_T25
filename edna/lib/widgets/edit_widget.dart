@@ -297,7 +297,7 @@ class EditWidgetState extends State<EditWidget> {
         // if user is creating widget on pantry page, add product to pantry
         else if (widget.callingWidget.runtimeType == PantryPage) {
           // add to pantry
-          await BackendUtils.addPantry(
+          var response = await BackendUtils.addPantry(
             Pantry(
               name: widget.pantryItem.name,
               expirationDate: widget.pantryItem.expirationDate,
@@ -308,9 +308,14 @@ class EditWidgetState extends State<EditWidget> {
               isDeleted: 0,
             ),
           );
+
           // refresh pantry list
           widget.refreshPantryList!();
-        } else if (widget.callingWidget.runtimeType == ProductWidget) {
+        }
+
+        // if user is editing an already existing item (ie item has a product widget)
+
+        else if (widget.callingWidget.runtimeType == ProductWidget) {
           // get access to calling widget
           ProductWidget callingWidget = widget.callingWidget as ProductWidget;
 

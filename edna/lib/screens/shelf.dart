@@ -16,7 +16,7 @@ import 'package:edna/screens/all.dart';
 import 'package:edna/utils/pantry_item.dart'; // pantry item
 import 'package:edna/widgets/product_widget.dart'; // pantry item widget
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
-import 'package:edna/provider.dart';
+import 'package:edna/utils/provider.dart';
 import 'package:provider/provider.dart';
 
 class PantryPage extends StatefulWidget {
