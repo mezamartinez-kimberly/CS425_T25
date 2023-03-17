@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:edna/utils/pantry_item.dart';
+import 'package:edna/utils/storage_location_db.dart';
 import 'package:http/http.dart' as http;
 
 // global variables
@@ -317,9 +318,8 @@ class BackendUtils {
   static Future<String> updatePantryItem(Pantry pantryItem) async {
     const String apiUrl = 'http://10.0.2.2:5000/updatePantryItem';
 
-    // print the pantryItem's dateAdded
-    print("update");
-    print(pantryItem.dateAdded);
+    print("inside update");
+    print(StorageLocation.nameFromId(pantryItem.storageLocation as int));
 
     // use the pantry item to create a map
     final Map<String, dynamic> pantryMap = pantryItem.toMap();

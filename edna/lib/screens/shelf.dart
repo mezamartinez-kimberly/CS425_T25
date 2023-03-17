@@ -35,9 +35,8 @@ class ShelfPageState extends State<ShelfPage> with TickerProviderStateMixin {
   int _currentTab = 0; // added variable to keep track of current tab
 
   refresh() async {
-    await _loadPantryItems(_currentTab);
-
-    setState(() {});
+    // this fixes part of error -- now page refreshes every time you save
+    await _loadPantryItems(_currentTab).then((value) => setState(() {}));
   }
 
   // @override
@@ -167,13 +166,12 @@ class ShelfPageState extends State<ShelfPage> with TickerProviderStateMixin {
   }
 
   Future<void> _loadPantryItems(int location) async {
-    allPantryItems = await BackendUtils.getAllPantry();
-
     final pantryProvider = Provider.of<PantryProvider>(context, listen: false);
 
-    allPantryItems = allPantryItems
+    // need to wait until GET request done before using allPantryItems
+    await BackendUtils.getAllPantry().then((allPantryItems) => allPantryItems
         .where((item) => item.storageLocation == location)
-        .toList();
+        .toList());
 
     pantryProvider.setAllPantryItems(allPantryItems);
 

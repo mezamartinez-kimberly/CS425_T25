@@ -7,6 +7,7 @@
 ==============================
 */
 
+import 'package:edna/utils/storage_location_db.dart';
 import 'package:intl/intl.dart'; // DateFormat
 
 class Pantry {
@@ -35,6 +36,13 @@ class Pantry {
     this.storageLocation,
     this.isDeleted = 0,
   });
+
+  // print
+  @override
+  String toString() {
+    storageLocation ??= 1; // default to pantry
+    return 'id: $id\nname: $name\ndateAdded: $dateAdded\ndateRemoved: $dateRemoved\nexpirationDate: $expirationDate\nquantity: $quantity\nupc: $upc\nplu: $plu\nstorageLocation: ${StorageLocation.nameFromId(storageLocation as int)}\nisDeleted: $isDeleted';
+  }
 
   // factory constructor to create pantry item from map
   factory Pantry.fromMap(Map<String, dynamic> json) => Pantry(

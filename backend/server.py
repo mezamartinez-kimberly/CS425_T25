@@ -423,6 +423,8 @@ def addPantry():
     plu = request.json['plu']
     quantity = request.json['quantity']
 
+    print(location)
+
 
     # get the session token from the authorization html header
     session_token = request.headers.get('Authorization').split()[1]
@@ -740,7 +742,7 @@ def updatePantryItem():
 
         # add the changes to the pantry item/ product/ expiration if not Null/None
         if pantry != None:
-            db.session.add(pantry)
+            db.session.add(pantry) # this works! it updates it in the db
         if product != None:
             db.session.add(product)
         if expiration != None:

@@ -225,13 +225,14 @@ class CameraPageState extends State<CameraPage> {
           borderRadius: BorderRadius.circular(23.0),
         ),
         onPressed: () async {
+          print(widget.itemsToInsert![0].pantryItem.toString());
           // insert scanned items into pantry database
           if (widget.itemsToInsert != null) {
             for (ProductWidget product in widget.itemsToInsert!) {
               // add to pantry database
               var backendResult =
                   await BackendUtils.addPantry(product.pantryItem);
-
+              print(backendResult.statusCode);
               // if camera page closed, don't do anything
               if (!mounted) return;
 

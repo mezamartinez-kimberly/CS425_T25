@@ -301,12 +301,15 @@ class EditWidgetState extends State<EditWidget> {
           // add to pantry
           await BackendUtils.addPantry(
             Pantry(
+              id: widget.pantryItem.id,
               name: widget.pantryItem.name,
+              dateAdded: DateTime.now(),
+              dateRemoved: widget.pantryItem.dateRemoved,
               expirationDate: widget.pantryItem.expirationDate,
               quantity: widget.pantryItem.quantity,
-              dateAdded: DateTime.now(),
               upc: widget.pantryItem.upc,
               plu: widget.pantryItem.plu,
+              storageLocation: widget.pantryItem.storageLocation,
               isDeleted: 0,
             ),
           );
@@ -337,10 +340,13 @@ class EditWidgetState extends State<EditWidget> {
             });
           }
 
-          // if user is editing a product widget on pantry page
+          // if user is editing a product widget on shelf page
           // then the item is already in the database
           // so update the item in the database
           else {
+            print("editing existing item on shelf");
+            print(StorageLocation.nameFromId(
+                widget.pantryItem.storageLocation as int));
             setState(() {
               // update pantry item in db with new values
               BackendUtils.updatePantryItem(widget.pantryItem);
