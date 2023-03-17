@@ -344,9 +344,6 @@ class EditWidgetState extends State<EditWidget> {
           // then the item is already in the database
           // so update the item in the database
           else {
-            print("editing existing item on shelf");
-            print(StorageLocation.nameFromId(
-                widget.pantryItem.storageLocation as int));
             setState(() {
               // update pantry item in db with new values
               BackendUtils.updatePantryItem(widget.pantryItem);
@@ -354,7 +351,6 @@ class EditWidgetState extends State<EditWidget> {
               widget.updateProductWidget!();
               // refresh pantry list
               widget.refreshPantryList!();
-              print(widget.refreshPantryList.runtimeType);
             });
           }
         } else {
