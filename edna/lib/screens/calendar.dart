@@ -35,7 +35,7 @@ class CalendarClassState extends State<CalendarClass> {
       .toggledOff; // Can be toggled on/off by longpressing a date
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
-  late final kEvents;
+  late final kEvents = createEvents();
 
   @override
   void didChangeDependencies() {
@@ -54,6 +54,25 @@ class CalendarClassState extends State<CalendarClass> {
     super.dispose();
   }
 
+//adding bc could help  
+Map<DateTime?, List<Pantry>> createEvents() {
+
+  final pantryProvider = Provider.of<PantryProvider>(context, listen: false);
+  // This creates a list of pantry items 
+  final List<Pantry> activePantryItems = pantryProvider.activePantryItems;
+
+  // This creates a map with the pantry item's expiry date as key and
+  // the pantry item as value.
+  Map<DateTime?, List<Pantry>> events = {};
+  for (int i = 0; i < activePantryItems.length; i++) {
+    final DateTime? expiryDate = activePantryItems[i].expirationDate;
+    if (events[expiryDate] == null) {
+      events[expiryDate] = [];
+    }
+    events[expiryDate]!.add(activePantryItems[i]);
+  }
+  return events;
+}
   
 
 // final kEvents = LinkedHashMap<DateTime, List<Pantry>>(
