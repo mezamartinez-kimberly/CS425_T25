@@ -58,16 +58,13 @@ class NotificationsPageState extends State<NotificationsPage>{
         items: daysList,
       ),
     );
-
-
-    
   }
 
 
   // create a circular back button thats in the upper left corner
   Widget _buildBackBtn() {
     return Container(
-      // pushh the button down
+      // push the button down
       padding: const EdgeInsets.only(top: 10),
       alignment: Alignment.topLeft,
       // wrap in circular button

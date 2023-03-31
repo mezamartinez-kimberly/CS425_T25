@@ -460,6 +460,7 @@ class BackendUtils {
   }
 
   //create a function to update the users first name, last name, email for the profile page and account settings
+  //need to handle error where you click the back button and it doesnt update the name on the profile page
   static Future<String> updateUserNameEmail(
       String firstName, String lastName, String email) async {
     const String apiUrl = 'http://10.0.2.2:5000/updateUserNameEmail';
@@ -493,3 +494,5 @@ class BackendUtils {
     }
   }
 }
+
+

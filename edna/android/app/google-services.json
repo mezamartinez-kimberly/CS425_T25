@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "442383056655",
+    "project_id": "edna-notifications",
+    "storage_bucket": "edna-notifications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:442383056655:android:4f2ea81da989df57f5487a",
+        "android_client_info": {
+          "package_name": "com.example.edna"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "442383056655-ehm94b9s4nhl61ue2b0jt7m7duqu9adf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC22BjRPTJy2zRotMcusM2DzHs3ESnU9F8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "442383056655-ehm94b9s4nhl61ue2b0jt7m7duqu9adf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
