@@ -202,7 +202,7 @@ def verifyOTP():
                 return jsonify({'error': 'OTP is incorrect'}), 402
             
 
-@app.route("/changPassword", methods=["POST"])
+@app.route("/changePassword", methods=["POST"])
 def resetPassword():
         
             # expected input:
@@ -214,7 +214,7 @@ def resetPassword():
             # parse the json input
             email = request.json['email']
             password = request.json['password']
-    
+
             # check if the email is registered
             user = User.query.filter_by(email=email).first()
     
