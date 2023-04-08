@@ -15,7 +15,7 @@ class CalendarClass extends StatefulWidget {
 }
 
 class CalendarClassState extends State<CalendarClass> {
-  late final ValueNotifier<List<Pantry>> _selectedEvents;
+  late final ValueNotifier<List<ProductWidget>> _selectedEvents;
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode
       .toggledOff; // Can be toggled on/off by longpressing a date
@@ -25,24 +25,27 @@ class CalendarClassState extends State<CalendarClass> {
   DateTime? _rangeEnd;
 
   late List<Pantry> activePantryItems;
+  List<ProductWidget> activePantryWidgets = [];
 
-  late final Map<DateTime, List<Pantry>> _kEventSource;
+  late final Map<DateTime, List<ProductWidget>> _kEventSource = <DateTime, List<ProductWidget>>{};
 
-  late LinkedHashMap<DateTime, List<Pantry>> _kEvents;
+  late LinkedHashMap<DateTime, List<ProductWidget>> _kEvents;
 
   // ignore: non_constant_identifier_names
   _TableEventsExampleState() {
     // get the active pantry items from the provider
     activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
 
-    // loop through the active patry list and translate it into a map where the key is the expiration date and the value is the pantry object
-    _kEventSource = {
-      for (final pantry in activePantryItems) pantry.expirationDate!: [pantry]
+    for(final pantry in activePantryItems) {
+      activePantryWidgets.add(ProductWidget(pantryItem: pantry, enableCheckbox: true,));
+    }
+   
+    for (final productWidget in activePantryWidgets) {
+      (_kEventSource[productWidget.pantryItem.expirationDate as DateTime] ??= []).add(productWidget);
+     
     };
 
-    print(_kEventSource);
-
-    _kEvents = LinkedHashMap<DateTime, List<Pantry>>(
+    _kEvents = LinkedHashMap<DateTime, List<ProductWidget>>(
       equals: isSameDay,
       hashCode: getHashCode,
     )..addAll(_kEventSource);
@@ -62,12 +65,12 @@ class CalendarClassState extends State<CalendarClass> {
     super.dispose();
   }
 
-  List<Pantry> _getEventsForDay(DateTime day) {
+  List<ProductWidget>_getEventsForDay(DateTime day) {
     // Implementation example
     return _kEvents[day] ?? [];
   }
 
-  List<Pantry> _getEventsForRange(DateTime start, DateTime end) {
+  List<ProductWidget> _getEventsForRange(DateTime start, DateTime end) {
     // Implementation example
     final days = daysInRange(start, end);
 
@@ -126,7 +129,7 @@ class CalendarClassState extends State<CalendarClass> {
       ),
       body: Column(
         children: [
-          TableCalendar<Pantry>(
+          TableCalendar<ProductWidget>(
             firstDay: kFirstDay,
             lastDay: kLastDay,
             focusedDay: _focusedDay,
@@ -203,26 +206,14 @@ class CalendarClassState extends State<CalendarClass> {
           ),
           const SizedBox(height: 8.0),
           Expanded(
-            child: ValueListenableBuilder<List<Pantry>>(
+            child: ValueListenableBuilder<List<ProductWidget>>(
               valueListenable: _selectedEvents,
               builder: (context, value, _) {
                 return ListView.builder(
                   itemCount: value.length,
                   itemBuilder: (context, index) {
-                    return Container(
-                      margin: const EdgeInsets.symmetric(
-                        horizontal: 12.0,
-                        vertical: 4.0,
-                      ),
-                      decoration: BoxDecoration(
-                        border: Border.all(),
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      child: ListTile(
-                        onTap: () => print('${value[index]}'),
-                        title: Text('${value[index]}'),
-                      ),
-                    );
+                  //  print(value[index]);
+                    return value[index];
                   },
                 );
               },

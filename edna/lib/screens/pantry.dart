@@ -170,6 +170,7 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
     allPantryItems = await BackendUtils.getAllPantry();
 
     final pantryProvider = Provider.of<PantryProvider>(context, listen: false);
+    //mounting catch
 
     allPantryItems = allPantryItems
         .where((item) => item.storageLocation == location)

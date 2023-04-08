@@ -493,6 +493,44 @@ class BackendUtils {
       return "Update failed";
     }
   }
-}
 
+  //create a function to obtain the users preferences
+  Future<List<String>> getUserPreferences() async {
+    const String apiUrl = 'http://10.0.2.2:5000/obtainNotificationPreferences';
+
+    // create a post request to the backend with the auth header
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': "Bearer $sessionToken",
+        // so connection doesn't close while retrieving data
+        "Connection": "Keep-Alive",
+      },
+    );
+
+    // check the status code for the result
+    if (response.statusCode == 200) {
+      //convert response body into a List<string> using jsonDecode
+      Map<String, dynamic> userPreferences = Map<String, dynamic>.from(jsonDecode(response.body));
+
+      //get is_notifications_on from response body
+      String isNotificationsOn = userPreferences['is_notifications_on'];
+
+      //get notification_range from response body
+      String notificationRange = userPreferences['notification_range'];
+
+      //create a list of the data
+      List<String> userPreferencesList = [
+        isNotificationsOn,
+        notificationRange
+      ];
+
+      //return the list
+      return userPreferencesList;
+    } else {
+      // return failed
+      return ["Failed to obtain user preferences"];
+    }
+  }
+}
 

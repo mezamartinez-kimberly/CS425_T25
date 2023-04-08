@@ -902,5 +902,28 @@ def updateNotificationPreferences():
 
     return jsonify({'message': 'Notification preferences updated successfully'}), 200
 
+# create a route that will obtain the users notification preferences
+@app.route('/obtainNotificationPreferences', methods=['POST'])
+@jwt_required() # authentication Required
+def obtainNotificationPreferences():
+    # expected output from json:
+    # {
+    #     "is_notifications_on": 1,
+    #     "notification_range": 3
+    # }
 
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # get the users preference id from the database
+    preference = UserPreference.query.filter_by(user_id=user.id).first()
+
+    # get the is_notifications_on and notification_range from the database
+    is_notifications_on = preference.is_notifications_on
+    notification_range = preference.notification_range
+
+    return jsonify({'is_notifications_on': is_notifications_on, 'notification_range': notification_range}), 200
     
