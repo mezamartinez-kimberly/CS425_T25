@@ -508,6 +508,8 @@ def addPantry():
         # make sure expiration is not null
         if expiration:
 
+            exp_time = 0
+
             # check the location of the product
             if location == 'fridge':
                 exp_time = expiration.expiration_time_fridge
