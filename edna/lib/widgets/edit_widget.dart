@@ -270,7 +270,10 @@ class _EditWidgetState extends State<EditWidget> {
             upc: widget.pantryItem.upc,
             plu: widget.pantryItem.plu,
             isDeleted: 0,
+            isVisibleInPantry: 0,
           );
+
+          await BackendUtils.addPantry(newPantryItem);
 
           // create product widget with new pantry item
           ProductWidget newProductWidget = ProductWidget(
@@ -297,6 +300,7 @@ class _EditWidgetState extends State<EditWidget> {
               upc: widget.pantryItem.upc,
               plu: widget.pantryItem.plu,
               isDeleted: 0,
+              isVisibleInPantry: 1,
             ),
           );
           // refresh pantry list

@@ -115,6 +115,21 @@ class BackendUtils {
     }
   }
 
+  // Create a function that on sumbit changes the visibilty of the pantry items added in the Camera Page
+  static Future<http.Response> changeVisibility() async {
+    const String apiUrl = "http://10.0.2.2:5000/changeVisibility";
+
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': "Bearer $sessionToken",
+        'Content-Type': 'application/json',
+      },
+    );
+
+    return response;
+  }
+
 // create a function to sent the smail adress to the backend
   static Future<String> sendOTPEmail(String email) async {
     const String apiUrl = 'http://10.0.2.2:5000/sendOTP';
@@ -207,38 +222,6 @@ class BackendUtils {
     }
   }
 
-// // create a function to send the index of the user's pantry list to the backend
-//   static Future<String> updateBackendIndex(Pantry pantryItem) async {
-//     const String apiUrl = 'http://10.0.2.2:5000/updateFlutterIndex';
-
-//     // create a map called "message" that contains the data to be sent to the backend
-//     final Map<String, dynamic> message = {
-//       'id': pantryItem.id,
-//       'date_added': pantryItem.dateAdded?.toIso8601String(),
-//     };
-
-//     // convert the map to a JSON string
-//     final String jsonPayload = json.encode(message);
-
-//     // send the request to the backend as POST request
-//     final http.Response response = await http.post(
-//       Uri.parse(apiUrl),
-//       headers: {
-//         'Authorization': "Bearer $sessionToken",
-//         'Content-Type': 'application/json',
-//       },
-//       body: jsonPayload,
-//     );
-
-//     if (response.statusCode == 200) {
-//       // grab the rest of the body
-//       return "Index Updates";
-//     } else {
-//       // Registration failed
-//       return "Index not updated";
-//     }
-//   }
-
 // // Create a upc get function to get the upc data
   static Future<http.Response> addPantry(Pantry pantryItem) async {
     const String apiUrl = 'http://10.0.2.2:5000/addPantry';
@@ -254,6 +237,7 @@ class BackendUtils {
       'quantity': pantryItem.quantity,
       'location': pantryItem.storageLocation,
       'is_delete': pantryItem.isDeleted,
+      'is_visible_in_pantry': pantryItem.isVisibleInPantry,
     };
 
     // convert the map to a JSON string

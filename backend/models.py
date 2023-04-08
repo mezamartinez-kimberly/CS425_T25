@@ -125,9 +125,10 @@ class Pantry(db.Model):
     location = db.Column(db.String(30), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     is_deleted = db.Column(db.Boolean, nullable=False)
+    is_visible_in_pantry = db.Column(db.Integer, nullable=False)
 
     # define the constructor
-    def __init__(self, user_id, product_id, date_added, date_removed, expiration_date, location, quantity, is_deleted):
+    def __init__(self, user_id, product_id, date_added, date_removed, expiration_date, location, quantity, is_deleted, is_visible_in_pantry):
     # def __init__(self, user_id, product_id, flutter_index, date_added, date_removed, expiration_date, location, quantity, is_deleted):
         self.user_id = user_id
         self.product_id = product_id
@@ -138,6 +139,7 @@ class Pantry(db.Model):
         self.location = location
         self.quantity = quantity
         self.is_deleted = is_deleted
+        self.is_visible_in_pantry = is_visible_in_pantry
 
 class Alias(db.Model):
     __tablename__ = 'alias'

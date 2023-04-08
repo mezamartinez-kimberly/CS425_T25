@@ -172,14 +172,17 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
     final pantryProvider = Provider.of<PantryProvider>(context, listen: false);
 
     allPantryItems = allPantryItems
-        .where((item) => item.storageLocation == location)
+        .where((item) =>
+            item.storageLocation == location && item.isVisibleInPantry == 1)
         .toList();
 
     pantryProvider.setAllPantryItems(allPantryItems);
 
     activePantryItems = allPantryItems
-        .where(
-            (item) => item.storageLocation == location && item.isDeleted == 0)
+        .where((item) =>
+            item.storageLocation == location &&
+            item.isDeleted == 0 &&
+            item.isVisibleInPantry == 1)
         .toList();
     pantryProvider.setActivePantryItems(activePantryItems);
 
