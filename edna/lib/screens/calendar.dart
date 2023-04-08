@@ -1,11 +1,10 @@
 import 'dart:collection';
-import 'package:edna/dbs/pantry_db.dart';
+import 'package:edna/utils/pantry_item.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:edna/utils/calendar_utils.dart';
 import 'package:edna/utils/provider.dart';
 import 'package:provider/provider.dart';
-import 'package:edna/utils/pantry_item.dart';
 
 class CalendarClass extends StatefulWidget {
   //can also turn off prefer_const_constructor under rules and put false so that you dont need these
@@ -33,7 +32,8 @@ class CalendarClassState extends State<CalendarClass> {
   // ignore: non_constant_identifier_names
   _TableEventsExampleState() {
     // get the active pantry items from the provider
-    activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
+    activePantryItems =
+        Provider.of<PantryProvider>(context, listen: false).activePantryItems;
 
     // loop through the active patry list and translate it into a map where the key is the expiration date and the value is the pantry object
     _kEventSource = {
@@ -168,25 +168,25 @@ class CalendarClassState extends State<CalendarClass> {
             ),
             //numbers UI customization
             calendarStyle: const CalendarStyle(
-            weekNumberTextStyle: TextStyle(
-              fontFamily: 'Noto Serif',
-              color: Color(0xFF4A5660),
-            ),
-            weekendTextStyle: TextStyle(
-              fontFamily: 'Noto Serif',
-              color: Color(0xFF4A5660),
-            ),
-            //todays color circle
-            todayDecoration: BoxDecoration(
-              color: Color(0xFFF7A4A2),
-              shape: BoxShape.circle,
-            ),
-            //selected color
-            selectedDecoration: BoxDecoration(
-              color: Color.fromARGB(131, 247, 164, 162),
-              shape: BoxShape.circle,
-            ),
-            outsideDaysVisible: false,
+              weekNumberTextStyle: TextStyle(
+                fontFamily: 'Noto Serif',
+                color: Color(0xFF4A5660),
+              ),
+              weekendTextStyle: TextStyle(
+                fontFamily: 'Noto Serif',
+                color: Color(0xFF4A5660),
+              ),
+              //todays color circle
+              todayDecoration: BoxDecoration(
+                color: Color(0xFFF7A4A2),
+                shape: BoxShape.circle,
+              ),
+              //selected color
+              selectedDecoration: BoxDecoration(
+                color: Color.fromARGB(131, 247, 164, 162),
+                shape: BoxShape.circle,
+              ),
+              outsideDaysVisible: false,
             ),
             onDaySelected: _onDaySelected,
             onRangeSelected: _onRangeSelected,

@@ -9,7 +9,7 @@
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart'; // all screens
 import 'package:google_fonts/google_fonts.dart';
-import 'package:edna/backend_utils.dart';
+import 'package:edna/utils/backend_utils.dart';
 
 class AccountSettingsPage extends StatefulWidget {
   const AccountSettingsPage({Key? key});

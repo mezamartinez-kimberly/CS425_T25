@@ -35,8 +35,10 @@ class ShelfPageState extends State<ShelfPage> with TickerProviderStateMixin {
   int _currentTab = 0; // added variable to keep track of current tab
 
   refresh() async {
-    // this fixes part of error -- now page refreshes every time you save
-    await _loadPantryItems(_currentTab).then((value) => setState(() {}));
+    // // this fixes part of error -- now page refreshes every time you save
+    // await _loadPantryItems(_currentTab).then((value) => setState(() {}));
+    await _loadPantryItems(_currentTab);
+    setState(() {});
   }
 
   // @override
@@ -166,12 +168,33 @@ class ShelfPageState extends State<ShelfPage> with TickerProviderStateMixin {
   }
 
   Future<void> _loadPantryItems(int location) async {
+    // final pantryProvider = Provider.of<PantryProvider>(context, listen: false);
+
+    // // need to wait until GET request done before using allPantryItems
+    // await BackendUtils.getAllPantry().then((allPantryItems) => allPantryItems
+    //     .where((item) => item.storageLocation == location)
+    //     .toList());
+
+    // pantryProvider.setAllPantryItems(allPantryItems);
+
+    // activePantryItems = allPantryItems
+    //     .where(
+    //         (item) => item.storageLocation == location && item.isDeleted == 0)
+    //     .toList();
+    // pantryProvider.setActivePantryItems(activePantryItems);
+
+    // setState(() {
+    //   // Call list builder to refresh list based on current tab and _showDeletedItems
+    //   _showDeletedItems ? _listAllItems() : _listActiveItems();
+    // });
+
+    allPantryItems = await BackendUtils.getAllPantry();
+
     final pantryProvider = Provider.of<PantryProvider>(context, listen: false);
 
-    // need to wait until GET request done before using allPantryItems
-    await BackendUtils.getAllPantry().then((allPantryItems) => allPantryItems
+    allPantryItems = allPantryItems
         .where((item) => item.storageLocation == location)
-        .toList());
+        .toList();
 
     pantryProvider.setAllPantryItems(allPantryItems);
 
