@@ -505,7 +505,6 @@ def addPantry():
 
         # make sure expiration is not null
         if expiration:
-
             # check the location of the product
             if location == 'fridge':
                 exp_time = expiration.expiration_time_fridge
@@ -520,7 +519,12 @@ def addPantry():
             else:
                 expiration_date = None
         else:
-            expiration_date = None
+            if location == 'fridge':
+                exp_time = 5
+            elif location == 'freezer':
+                exp_time = 10
+            elif location == 'pantry':
+                exp_time = 30
 
 
     # ok so by here we have the plu or upc and the product id, as well as the date created
