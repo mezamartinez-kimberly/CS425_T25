@@ -23,23 +23,48 @@ class NotificationsPageState extends State<NotificationsPage>{
   //expiration notif switch
   bool isSwitched = false;
   //drop down value
-  String dropDownValue = '1 days';
 
-  // NotificationsList = List<String>['3 Days', '5 Days', '7 Days', '10 Days']
-  //                 .map<DropdownMenuItem<String>>((String value) {
-  //               return DropdownMenuItem<String>(
-  //                 value: value,
-  //                 child: Text(
-  //                   value,
-  //                   style: const TextStyle(fontSize: 30),
-  //                 ),
-  //               );
-  //             }).toList(),
+
+  //create a widget for a drop down menu for expiration notification range
+  Widget buildDropDownMenu() {
+
+    List<DropdownMenuItem<String>> daysList = ['3 days', '5 days', '7 days', '10 days']
+        .map<DropdownMenuItem<String>>((String value) {
+      return DropdownMenuItem<String>(
+        value: value,
+        child: Text(value),
+      );
+    }).toList();
+
+    DropdownMenuItem<String> dropdownValue = daysList[0];
+    
+    return Container(
+      padding: const EdgeInsets.all(20.0),
+      child: DropdownButton<String>(
+        value: dropdownValue.value,
+        icon: const Icon(Icons.arrow_downward),
+        iconSize: 24,
+        elevation: 16,
+        style: const TextStyle(color: Colors.black),
+        underline: Container(
+          height: 2,
+          color: Colors.black,
+        ),
+        onChanged: (String? newValue) {
+          setState(() {
+            dropdownValue = newValue! as DropdownMenuItem<String>;
+          });
+        },
+        items: daysList,
+      ),
+    );
+  }
+
 
   // create a circular back button thats in the upper left corner
   Widget _buildBackBtn() {
     return Container(
-      // pushh the button down
+      // push the button down
       padding: const EdgeInsets.only(top: 10),
       alignment: Alignment.topLeft,
       // wrap in circular button
@@ -130,38 +155,10 @@ class NotificationsPageState extends State<NotificationsPage>{
                 fontSize: 15.0,
                 fontWeight: FontWeight.normal,
                 color: Color.fromARGB(255, 63, 61, 61),
-
               ),
             ),
-            const SizedBox(
-              height: 50,
-            ),
-            DropdownButton<String>(
-              value: dropDownValue,
-              items: <String>['3 Days', '5 Days', '7 Days', '10 Days']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: const TextStyle(fontSize: 30),
-                  ),
-                );
-              }).toList(),
-              // Step 5.
-              onChanged: (String? newValue) {
-                setState(() {
-                  dropDownValue = newValue!;
-                });
-              },
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            Text(
-              'Selected Value: $dropDownValue',
-              style: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
-            ),
+            //drop down menu
+            buildDropDownMenu(),
           ],
         ),
       ),

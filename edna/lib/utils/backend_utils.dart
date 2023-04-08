@@ -453,4 +453,41 @@ class BackendUtils {
       return "Logout failed";
     }
   }
+
+  //create a function to update the users first name, last name, email for the profile page and account settings
+  //need to handle error where you click the back button and it doesnt update the name on the profile page
+  static Future<String> updateUserNameEmail(
+      String firstName, String lastName, String email) async {
+    const String apiUrl = 'http://10.0.2.2:5000/updateUserNameEmail';
+
+    // create a map called "message" that contains the data to be sent to the backend
+    final Map<String, dynamic> message = {
+      'first_name': firstName,
+      'last_name': lastName,
+      'email': email,
+    };
+
+    // convert the map to a JSON string
+    final String jsonPayload = json.encode(message);
+
+    // send the request to the backend as POST request with auth header and JSON message
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: jsonPayload,
+    );
+
+    if (response.statusCode == 201) {
+      final Map<String, dynamic> responseBody = json.decode(response.body);
+      sessionToken = responseBody['session_token'];
+
+      return "Update successful";
+    } else {
+      return "Update failed";
+    }
+  }
 }
+
+

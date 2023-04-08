@@ -45,6 +45,9 @@ from flask_bcrypt import Bcrypt
 import bs4 # for html/ email editing
 import random # for generating random numbers for OTP
 
+from flask_ngrok import run_with_ngrok # for running flask on ngrok
+
+
 # Import the database object and the Model Classes from the models.py file
 from models import db, User, UserPreference, Person, Product, ExpirationData, Pantry, Alias
 
@@ -70,6 +73,7 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 mail = Mail(app) 
+run_with_ngrok(app)
 
 
 # set the token to never expire ~ this is for testing purposes
@@ -250,10 +254,10 @@ def register():
 
     # expected input:
     # {
-    #     "first_name": "John",
-    #     "last_name": "Doe",
-    #     "email": "johndoe123@gmail.com",
-    #     "password": "password123"
+        # "first_name": "John",
+        # "last_name": "Doe",
+        # "email": "johndoe123@gmail.com",
+        # "password": "password123"
     # }
 
     first_name = request.json['first_name']
@@ -876,3 +880,32 @@ def logout():
     user.session_token = None
 
     return jsonify({'message': 'User logged out successfully'}), 200
+
+
+# create a route that will update the is_notifications_on and notification_range of a persons user preferences table in the database
+@app.route('/updateNotificationPreferences', methods=['POST'])
+@jwt_required() # authentication Required
+def updateNotificationPreferences():
+    # expected input:
+    # {
+    #     "is_notifications_on": 1,
+    #     "notification_range": 3
+    # }
+
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # get the users preference id from the database
+    preference = UserPreference.query.filter_by(user_id=user.id).first()
+
+    # update the is_notifications_on and notification_range in the database
+    preference.is_notifications_on = request.json['is_notifications_on']
+    preference.notification_range = request.json['notification_range']
+
+    return jsonify({'message': 'Notification preferences updated successfully'}), 200
+
+
+    

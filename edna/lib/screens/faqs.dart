@@ -59,7 +59,7 @@ class FAQsPageState extends State<FAQsPage>{
         title: Stack(
           children: <Widget>[
             _buildBackBtn(),
-            const Text('    FAQs',
+            const Text('         FAQs',
               style: TextStyle(fontSize: 30.0,
                 color: Colors.black, 
                 fontWeight: FontWeight.bold,

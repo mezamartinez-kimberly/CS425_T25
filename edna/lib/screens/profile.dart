@@ -47,10 +47,7 @@ class ProfilePageState extends State<ProfilePage> {
             ),
           );
           _logOut().then((_) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
-            );
+            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute( builder: (ctx) => const LoginPage()), (route) => false);
           });
         },
         child: const Text(
@@ -99,7 +96,7 @@ class ProfilePageState extends State<ProfilePage> {
                 ),
                 textAlign: TextAlign.left,
               ),
-              const SizedBox(height: 40.0),
+              const SizedBox(height: 30.0),
 
               //card for greeting
               SizedBox(

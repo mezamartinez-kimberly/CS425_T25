@@ -424,9 +424,21 @@ class _RegisterPageState extends State<RegisterPage> {
                   height: 40,
                 ),
                 _buildFirstNameField(),
+                const SizedBox(
+                  height: 15,
+                ),
                 _buildLastNameField(),
+                const SizedBox(
+                  height: 15,
+                ),
                 _buildEmailField(),
+                const SizedBox(
+                  height: 15,
+                ),
                 _buildPasswordField(),
+                const SizedBox(
+                  height: 15,
+                ),
                 _buildConfirmPasswordField(),
                 _buildRegisterButton(),
                 const SizedBox(
