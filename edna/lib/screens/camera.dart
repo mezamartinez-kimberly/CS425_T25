@@ -124,28 +124,17 @@ class CameraPageState extends State<CameraPage> {
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: <Widget>[
-                    _addToPantry(),
+                    // add items to pantry
                     FutureBuilder(
-                      // get product name from UPC code
+                      future: _addToPantry(),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          // if first scan, then itemList is not a part of Camera page's widget tree
-                          // so must add it manually by returning here
-                          // otherwise will not load list until navigating away and back to camera page
-                          if (firstRun) {
-                            firstRun = false;
-                            return _buildItemList();
-                          } else {
-                            return Container();
-                          }
-                        } else if (snapshot.hasError) {
+                        if (snapshot.hasError) {
                           return Text('Error: ${snapshot.error}');
                         } else {
                           return Container();
                         }
                       },
                     ),
-
                     _buildItemList() // display camera page's list of items
                   ],
                 ),
@@ -385,7 +374,7 @@ class CameraPageState extends State<CameraPage> {
   }
 
   // get product name from upc code using backend
-  Widget _addToPantry() {
+  _addToPantry() async {
     if (!itemAdded) {
       // to inialize lastResult on first scan
       if (lastResult == null && result != null) {
@@ -411,43 +400,34 @@ class CameraPageState extends State<CameraPage> {
 
           // add the new pantry item using the backend utils functinon addPantry
           // capture the response of the function and get the pantry item from the json response
-          BackendUtils.addPantry(newPantryItem).then((value) {
-            // if the response is not null
-            if (value != null) {
-              // get the json response from the backend
-              dynamic jsonResponse = json.decode(value.body);
-              Pantry pantryItem = Pantry.fromMap(jsonResponse);
+          await BackendUtils.addPantry(newPantryItem).then((value) {
+            // get the json response from the backend
+            dynamic jsonResponse = json.decode(value.body);
+            Pantry pantryItem = Pantry.fromMap(jsonResponse);
 
-              ProductWidget newProductWidget = ProductWidget(
-                key: UniqueKey(),
-                pantryItem: pantryItem,
-                enableCheckbox: false,
-                // no need to refresh pantry since we're on camera page
-                refreshPantryList: () {},
-                onCameraPage: true,
-              );
+            ProductWidget newProductWidget = ProductWidget(
+              key: UniqueKey(),
+              pantryItem: pantryItem,
+              enableCheckbox: false,
+              // no need to refresh pantry since we're on camera page
+              refreshPantryList: () {},
+              onCameraPage: true,
+            );
 
-              // add to camera page's list of items
-              widget.addItem(newProductWidget);
-            }
+            // add to camera page's list of items
+            widget.addItem(newProductWidget);
+            // toggle itemAdded so item doesn't duplicate
+            itemAdded = true;
           });
-
-          // call refresh to update the list of items
-          setState(() {});
-
-          // toggle itemAdded so item doesn't duplicate
-          itemAdded = true;
         }
       }
     } else {
       // wait 5 seconds before user can scan another item
       // this way item doesn't duplicate over and over
-      Future.delayed(const Duration(seconds: 3), () {
+      Future.delayed(const Duration(seconds: 5), () {
         itemAdded = false;
       });
     }
-    // make return type a widget so it can be used in build widget tree
-    return Container();
   }
 
 // widget for list of items on camera page
