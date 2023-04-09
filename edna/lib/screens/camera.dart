@@ -114,9 +114,9 @@ class CameraPageState extends State<CameraPage> {
             // items list
             Expanded(
               flex: 5,
-              child: Container(
-                color: Colors.transparent,
-                child: ListView(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
                   children: <Widget>[
                     _addToPantry(),
                     FutureBuilder(
@@ -466,6 +466,9 @@ class CameraPageState extends State<CameraPage> {
         itemBuilder: (context, index) {
           return widget.itemsToInsert![index];
         },
+
+        // enable scrolling on list
+        physics: const BouncingScrollPhysics(),
       );
     } else {
       // if no items to insert, return empty container
