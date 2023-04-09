@@ -116,7 +116,7 @@ class CameraPageState extends State<CameraPage> {
               flex: 5,
               child: Container(
                 color: Colors.transparent,
-                child: Column(
+                child: ListView(
                   children: <Widget>[
                     _addToPantry(),
                     FutureBuilder(
@@ -140,23 +140,7 @@ class CameraPageState extends State<CameraPage> {
                         }
                       },
                     ),
-                    //       if (result == null) {
-                    //         return Container();
-                    //       }
-                    //       if (snapshot.data != null) {
-                    //         if (snapshot.data == 'UPC not found') {
-                    //           return Text("UPC ${result!.code} not found");
-                    //         } else {
-                    //           _retreivePantryItems();
 
-                    //           return _buildItemList();
-                    //         }
-                    //       } else if (snapshot.hasError) {
-                    //         return Text('Error: ${snapshot.error}');
-                    //       } else {
-                    //         return Container();
-                    //       }
-                    //     }),
                     _buildItemList() // display camera page's list of items
                   ],
                 ),
