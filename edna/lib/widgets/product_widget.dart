@@ -147,7 +147,7 @@ class ProductWidgetState extends State<ProductWidget> {
                 pantryItem: widget.pantryItem,
                 callingWidget: widget,
                 updateProductWidget: refresh,
-                refreshPantryList: () {},
+                refreshPantryList: widget.refreshPantryList,
               );
             });
       },
