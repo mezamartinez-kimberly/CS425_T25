@@ -569,7 +569,33 @@ def addPantry():
     db.session.add(pantry)
     db.session.commit()
 
-    return jsonify({'message': 'Pantry item added successfully'}), 201
+    if location == 'pantry':
+        location = 1
+    elif location == 'fridge':
+        location = 2
+    elif location == 'freezer':
+        location = 3
+    else:
+        location = 1
+
+    # make a pantry item dictionary to return
+    pantry_dict = {
+        'id': pantry.id,
+        'name': product.name,
+        'user_id': pantry.user_id,
+        'product_id': pantry.product_id,
+        'date_added': pantry.date_added,
+        'date_removed': pantry.date_removed,
+        'location': location,
+        'expiration_date': pantry.expiration_date,
+        'quantity': pantry.quantity,
+        'is_deleted': int(pantry.is_deleted),
+        'is_visible_in_pantry': pantry.is_visible_in_pantry
+    }
+
+
+    # return the pantry object and a response code of 201
+    return jsonify(pantry_dict), 201
 
 
 @app.route('/getAllPantry', methods=['GET'])

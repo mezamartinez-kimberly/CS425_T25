@@ -13,6 +13,7 @@
 
 import 'dart:developer'; // for debugPrint
 import 'dart:io'; // for Platform
+import 'dart:convert';
 
 import 'package:edna/main.dart'; // for main
 import 'package:edna/screens/all.dart'; // for pantry page
@@ -26,6 +27,7 @@ import 'package:loader_overlay/loader_overlay.dart'; // loading wheel
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // product widget
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
+import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class CameraPage extends StatefulWidget {
@@ -33,6 +35,10 @@ class CameraPage extends StatefulWidget {
   addItem(ProductWidget product) {
     itemsToInsert ??= []; // initialize if null
     itemsToInsert?.add(product);
+  }
+
+  clearList() {
+    itemsToInsert = [];
   }
 
   CameraPage({Key? key, this.itemsToInsert}) : super(key: key);
@@ -121,7 +127,6 @@ class CameraPageState extends State<CameraPage> {
                     _addToPantry(),
                     FutureBuilder(
                       // get product name from UPC code
-                      future: _retrievePantryItems(),
                       builder: (context, snapshot) {
                         if (snapshot.connectionState == ConnectionState.done) {
                           // if first scan, then itemList is not a part of Camera page's widget tree
@@ -404,8 +409,31 @@ class CameraPageState extends State<CameraPage> {
 
           lastResult = result;
 
-          // add that item to the pantry
-          BackendUtils.addPantry(newPantryItem);
+          // add the new pantry item using the backend utils functinon addPantry
+          // capture the response of the function and get the pantry item from the json response
+          BackendUtils.addPantry(newPantryItem).then((value) {
+            // if the response is not null
+            if (value != null) {
+              // get the json response from the backend
+              dynamic jsonResponse = json.decode(value.body);
+              Pantry pantryItem = Pantry.fromMap(jsonResponse);
+
+              ProductWidget newProductWidget = ProductWidget(
+                key: UniqueKey(),
+                pantryItem: pantryItem,
+                enableCheckbox: false,
+                // no need to refresh pantry since we're on camera page
+                refreshPantryList: () {},
+                onCameraPage: true,
+              );
+
+              // add to camera page's list of items
+              widget.addItem(newProductWidget);
+            }
+          });
+
+          // call refresh to update the list of items
+          setState(() {});
 
           // toggle itemAdded so item doesn't duplicate
           itemAdded = true;
@@ -420,39 +448,6 @@ class CameraPageState extends State<CameraPage> {
     }
     // make return type a widget so it can be used in build widget tree
     return Container();
-  }
-
-  // if user scans item and gets upc and product name
-  // create a pantry item and product widget from it
-  // add product widget to camera page's list of items
-  _retrievePantryItems() async {
-    // call backend to get all pantry items
-    late List<Pantry> allPantryItems;
-
-    await BackendUtils.getAllPantry().then((value) {
-      allPantryItems = value;
-    });
-
-    // filter the pantry items to only get the ones with isVisibleInPantry = 0
-    if (allPantryItems != null) {
-      for (Pantry item in allPantryItems) {
-        // if item is not deleted
-        if (item.isVisibleInPantry == 0) {
-          // create product widget with pantry item
-          ProductWidget newProductWidget = ProductWidget(
-            key: UniqueKey(),
-            pantryItem: item,
-            enableCheckbox: false,
-            // no need to refresh pantry since we're on camera page
-            refreshPantryList: () {},
-            onCameraPage: true,
-          );
-
-          // add to camera page's list of items
-          widget.addItem(newProductWidget);
-        }
-      }
-    }
   }
 
 // widget for list of items on camera page
