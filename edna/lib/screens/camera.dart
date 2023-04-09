@@ -215,46 +215,29 @@ class CameraPageState extends State<CameraPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(23.0),
         ),
+
         onPressed: () async {
-          // insert scanned items into pantry database
-          if (widget.itemsToInsert != null) {
-            for (ProductWidget product in widget.itemsToInsert!) {
-              // add to pantry database
-              var backendResult = await BackendUtils.changeVisibility();
+          await BackendUtils.changeVisibility();
 
-              // if camera page closed, don't do anything
-              if (!mounted) return;
+          if (!mounted) return;
 
-              // success/error messages
-              if (backendResult.statusCode != 200 &&
-                  backendResult.statusCode != 201) {
-                const MyApp().createErrorMessage(context,
-                    "Error ${backendResult.statusCode}: ${backendResult.body}");
-                print(backendResult.body);
-              } else {
-                // const MyApp()
-                //     .createSuccessMessage(context, "Item added to pantry");
-              }
-            }
-            // show loading indicator for 0.5 sec before submit
-            // ignore: use_build_context_synchronously
-            showDialog(
-                context: context,
-                builder: (context) {
-                  // wait 0.5 sec
-                  Future.delayed(const Duration(milliseconds: 500), () {
-                    // clear scanned list
-                    widget.itemsToInsert!.clear();
-                    // refresh page
-                    refresh(); // resets state
-                    // close dialog
-                    Navigator.of(context).pop(true);
-                  });
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+          showDialog(
+              context: context,
+              builder: (context) {
+                // wait 0.5 sec
+                Future.delayed(const Duration(milliseconds: 200), () {
+                  // clear scanned list
+                  widget.itemsToInsert!.clear();
+                  // refresh page
+                  refresh(); // resets state
+                  // close dialog
+                  Navigator.of(context).pop(true);
                 });
-          }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              });
+          // insert scanned items into pantry database
         },
         elevation: 3,
         child: const Icon(

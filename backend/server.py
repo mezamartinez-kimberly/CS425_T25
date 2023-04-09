@@ -417,11 +417,11 @@ def changeVisibility():
     # we need to update all the users pantry items that contain the visibilty as 0 to 1
 
     # get all the pantry items that are not visible
-    pantry_items = Pantry.query.filter_by(user_id=user_id, visible=0).all()
+    pantry_items = Pantry.query.filter_by(user_id=user_id, is_visible_in_pantry=0).all()
 
     # update the visibility of all the pantry items
     for item in pantry_items:
-        item.visible = 1
+        item.is_visible_in_pantry = 1
         db.session.add(item)
         db.session.commit()
 
@@ -647,7 +647,8 @@ def getAllPantry():
                 'expiration_date': expiration_date,
                 'is_deleted': int(item.is_deleted),
                 'upc': product.upc,
-                'plu': product.plu
+                'plu': product.plu,
+                'is_visible_in_pantry': item.is_visible_in_pantry
             }
 
            
