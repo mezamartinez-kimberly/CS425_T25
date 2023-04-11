@@ -18,6 +18,9 @@ import 'package:flutter/material.dart'; // material design
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert'; // json
+import 'package:another_flushbar/flushbar.dart'; // error display
+import 'package:another_flushbar/flushbar_helper.dart';
+import 'package:another_flushbar/flushbar_route.dart';
 
 class EditWidget extends StatefulWidget {
   @override
@@ -51,6 +54,9 @@ class _EditWidgetState extends State<EditWidget> {
   final List<Widget> codeTypes = <Widget>[const Text('UPC'), const Text('PLU')];
   // for exp date
   TextEditingController dateController = TextEditingController();
+  // for errors
+  var errorText = const Color.fromARGB(255, 88, 15, 15);
+  var errorBackground = const Color.fromARGB(255, 238, 37, 37);
 
   // init state
   @override
@@ -236,7 +242,6 @@ class _EditWidgetState extends State<EditWidget> {
       child: const Text('Save',
           style: TextStyle(fontSize: 20, color: Colors.black)),
       onPressed: () async {
-        print("calling widget: ${widget.callingWidget}");
         // if no upc/plu code, show error
         if (widget.pantryItem.upc == null && widget.pantryItem.plu == null) {
           const MyApp().createErrorMessage(context, "Please enter a code.");
@@ -263,8 +268,6 @@ class _EditWidgetState extends State<EditWidget> {
         if (widget.callingWidget.runtimeType == CameraPage) {
           CameraPage cameraPage = widget.callingWidget as CameraPage;
 
-          print("plu: ${widget.pantryItem.plu}");
-
           // create new pantry item with user entered values
           Pantry newPantryItem = Pantry(
             name: widget.pantryItem.name,
@@ -279,6 +282,29 @@ class _EditWidgetState extends State<EditWidget> {
 
           // add to pantry
           await BackendUtils.addPantry(newPantryItem).then((value) {
+            // error check
+            if (value.statusCode != 200 || value.statusCode != 201) {
+              Flushbar(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                message: "Error: ${value.statusCode} ${value.reasonPhrase}",
+                messageSize: 25,
+                messageColor: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : errorText,
+                duration: const Duration(seconds: 3),
+                backgroundColor: errorBackground,
+                flushbarPosition: FlushbarPosition.BOTTOM,
+                flushbarStyle: FlushbarStyle.FLOATING,
+                margin:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                borderRadius: BorderRadius.circular(30.0),
+                maxWidth: MediaQuery.of(context).size.width * 0.8,
+                isDismissible: true,
+                dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+              ).show(context);
+            }
+
             // get the json response from the backend
             dynamic jsonResponse = json.decode(value.body);
             Pantry pantryItem = Pantry.fromMap(jsonResponse);
@@ -446,7 +472,7 @@ class _EditWidgetState extends State<EditWidget> {
           // resize text field
           child: (_selectedCodeType[0]) // if upc code is selected
               ? _takeUPCInput()
-              : _takePLUInput(), 
+              : _takePLUInput(),
         ),
       ],
     );
