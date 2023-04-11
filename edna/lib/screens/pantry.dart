@@ -11,6 +11,7 @@
 */
 
 import 'package:edna/backend_utils.dart';
+import 'package:edna/dbs/storage_location_db.dart';
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart';
 import 'package:google_fonts/google_fonts.dart'; // fonts
@@ -181,6 +182,7 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
               item.isDeleted == 0 &&
               item.isVisibleInPantry == 1)
           .toList();
+
       pantryProvider.setActivePantryItems(activePantryItems);
 
       setState(() {

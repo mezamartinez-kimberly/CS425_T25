@@ -158,27 +158,24 @@ class ProductWidgetState extends State<ProductWidget> {
         Checkbox(
             value: _isChecked, // unchecked by default
             onChanged: widget.pantryItem.isDeleted! == 1
-                // if isDeleted is true and user clicks on checkbox, change checkbox to unchecked, "undelete" item
-                ? (bool? value) {
-                    setState(() {
-                      _isChecked = false;
-                      widget.pantryItem.isDeleted = 0;
-                      // refresh the pantry item in the backend
-                      BackendUtils.updatePantryItem(widget.pantryItem);
-
-                      widget.refreshPantryList!();
-                    });
+                // if isDeleted is true and user clicks on checkbox, change checkbox to unchecked, ie "undelete" item
+                ? (bool? value) async {
+                    _isChecked = false;
+                    widget.pantryItem.isDeleted = 0;
+                    // refresh the pantry item in the backend
+                    await BackendUtils.updatePantryItem(widget.pantryItem)
+                        .then((value) => widget.refreshPantryList!());
+                    setState(() {});
                   }
                 :
                 // if isDeleted is not true and user clicks on checkbox, check box and delete item
                 (bool? value) {
-                    setState(() {
-                      _isChecked = true;
-                      widget.pantryItem.isDeleted = 1;
-                      BackendUtils.updatePantryItem(widget.pantryItem);
-
-                      _showIsExpiredDialog();
-                    });
+                    _isChecked = true;
+                    widget.pantryItem.isDeleted = 1;
+                    BackendUtils.updatePantryItem(widget.pantryItem);
+                    // ask user if item is expired or not
+                    _showIsExpiredDialog();
+                    setState(() {});
                   },
           )
         : // if checkmark disabled, return empty container
