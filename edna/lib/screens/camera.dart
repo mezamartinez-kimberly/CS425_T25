@@ -411,7 +411,7 @@ class CameraPageState extends State<CameraPage> {
               enableCheckbox: false,
               // no need to refresh pantry since we're on camera page
               refreshPantryList: () {},
-              onCameraPage: true,
+              callingWidget: widget,
             );
 
             // add to camera page's list of items

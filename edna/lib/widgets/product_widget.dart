@@ -12,8 +12,7 @@ class ProductWidget extends StatefulWidget {
   final Pantry pantryItem;
   bool enableCheckbox;
   final Function()? refreshPantryList;
-  bool? onCameraPage;
-  bool? onPantryPage;
+  Widget callingWidget;
 
   // constructor
   ProductWidget({
@@ -21,13 +20,11 @@ class ProductWidget extends StatefulWidget {
     required this.pantryItem,
     this.enableCheckbox = false, // enabled by default
     this.refreshPantryList,
-    this.onCameraPage = false,
-    this.onPantryPage = false,
+    required this.callingWidget,
   }) : super(key: key);
 }
 
 class ProductWidgetState extends State<ProductWidget> {
-  bool _isEditing = false;
   bool _isChecked = false;
 
   @override
@@ -139,7 +136,6 @@ class ProductWidgetState extends State<ProductWidget> {
     return IconButton(
       icon: const Icon(Icons.edit),
       onPressed: () {
-        _isEditing = true;
         showDialog(
             context: context,
             builder: (context) {
