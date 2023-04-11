@@ -154,11 +154,7 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                   _showDeletedItems = !_showDeletedItems;
                 });
 
-                if (_showDeletedItems) {
-                  _listAllItems(); // call _listAllItems if _showDeletedItems is true
-                } else {
-                  _listActiveItems(); // call _listActiveItems if _showDeletedItems is false
-                }
+                _loadPantryItems(_currentTab);
               },
             ),
           ),
@@ -174,8 +170,15 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
     await BackendUtils.getAllPantry().then((value) {
       allPantryItems = value;
 
+      // only get pantry items for current location
+      allPantryItems = allPantryItems
+          .where((item) =>
+              item.storageLocation == location && item.isVisibleInPantry == 1)
+          .toList();
+
       pantryProvider.setAllPantryItems(allPantryItems);
 
+      // only get active pantry items for current location
       activePantryItems = allPantryItems
           .where((item) =>
               item.storageLocation == location &&
@@ -185,16 +188,10 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
 
       pantryProvider.setActivePantryItems(activePantryItems);
 
-      setState(() {
-        // Call list builder to refresh list based on current tab and _showDeletedItems
-        _showDeletedItems ? _listAllItems() : _listActiveItems();
-      });
-    }, onError: (e) => print("error: $e"));
+      _showDeletedItems ? _listAllItems() : _listActiveItems();
 
-    // allPantryItems = allPantryItems
-    //     .where((item) =>
-    //         item.storageLocation == location && item.isVisibleInPantry == 1)
-    //     .toList();
+      setState(() {});
+    }, onError: (e) => print("error: $e"));
   }
 
   Widget _listActiveItems() {
