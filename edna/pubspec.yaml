@@ -76,6 +76,9 @@ dependencies:
   firebase_core: ^2.9.0   #to use any firebase service w/ flutter
   firebase_messaging: ^14.4.0   #for receiving notifs in app 
   overlay_support: ^2.1.0     # builds overlay UI
+  # flutter_local_notifications: ^8.2.0
+  # rxdart: ^0.27.7
+
 
 dev_dependencies:
   flutter_test:

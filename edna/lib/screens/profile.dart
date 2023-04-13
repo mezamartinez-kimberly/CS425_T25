@@ -197,33 +197,33 @@ class ProfilePageState extends State<ProfilePage> {
               ),
 
               // Appearance Settings Card
-              Card(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  side: const BorderSide(color: Colors.grey, width: 1.0),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 16.0),
-                  leading: const Icon(Icons.palette),
-                  title: const Text(
-                    'Appearance Settings',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  subtitle: const Text(
-                    'Tap to switch between light and dark mode',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  onTap: () {
-                    // switch between modes
-                  },
-                ),
-              ),
+              // Card(
+              //   elevation: 5,
+              //   shape: RoundedRectangleBorder(
+              //     side: const BorderSide(color: Colors.grey, width: 1.0),
+              //     borderRadius: BorderRadius.circular(10.0),
+              //   ),
+              //   child: ListTile(
+              //     contentPadding: const EdgeInsets.symmetric(
+              //         vertical: 10.0, horizontal: 16.0),
+              //     leading: const Icon(Icons.palette),
+              //     title: const Text(
+              //       'Appearance Settings',
+              //       style: TextStyle(
+              //         fontSize: 20.0,
+              //         fontWeight: FontWeight.bold,
+              //       ),
+              //     ),
+              //     subtitle: const Text(
+              //       'Tap to switch between light and dark mode',
+              //       maxLines: 2,
+              //       overflow: TextOverflow.ellipsis,
+              //     ),
+              //     onTap: () {
+              //       // switch between modes
+              //     },
+              //   ),
+              // ),
 
               const SizedBox(height: 10.0),
               Card(

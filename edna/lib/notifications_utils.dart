@@ -10,6 +10,9 @@ import 'package:overlay_support/overlay_support.dart';
 import 'package:edna/backend_utils.dart';
 
 
+//function run when app opens, store and schedule them 
+//have function run in background 
+
 class PushNotification {
   PushNotification({
     this.title,
@@ -32,8 +35,13 @@ class NotificationsClassState extends State{
   int notificationOn = 0;
   int notifRange = 0;
 
-  //create a function that calls the getUserNotifications function
-  Future<void> _getUserNotifications() async {
+  //create a function that calls the getUserPreferences function
+  Future<void> createNotifications() async {
+    //get the current date
+    DateTime today = DateTime.now();
+
+    print('in createNotif functio');
+
     // create an instance of BackendUtils
     BackendUtils backendUtils = BackendUtils();
 
@@ -44,10 +52,37 @@ class NotificationsClassState extends State{
       notifRange = data[1] as int;
     });
 
+    print(notificationOn);
+
     //if the notificationOn is 1 then call the getAllPantry function
     if (notificationOn == 1) {
-      await BackendUtils.getAllPantry();
+      // ignore: use_build_context_synchronously
+      late List<Pantry> activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
+
+      //access expiration dates
+      for (final item in activePantryItems){
+
+        print('in for loop');
+
+        //subtract the notification range from the expiration date
+        DateTime withinRangeDate = item.expirationDate!.subtract(Duration(days: notifRange));
+        //check if today falls in between the expiration date and the new date
+        if (today.isAfter(withinRangeDate) && today.isBefore(item.expirationDate!)){
+          //if it does then create and send a notification containing the item name and expiration date
+
+
+          //create a notification
+          PushNotification notification = PushNotification(
+            title: item.name,
+            body: item.expirationDate.toString(),
+          );
+
+          //send the notification
+
+        }
+      }
     }
+
   }
 
 
@@ -72,7 +107,7 @@ class NotificationsClassState extends State{
       // handling the received notifications
       FirebaseMessaging.onMessage.listen((RemoteMessage message) {
         print(
-            'Message title: ${message.notification?.title}, body: ${message.notification?.body}, data: ${message.data}');
+            'Message title: ${message.notification?.title}, body: ${message.notification?.body}');
         // Parse the message received
         PushNotification notification = PushNotification(
           title: message.notification?.title,
@@ -125,7 +160,7 @@ class NotificationsClassState extends State{
     //_totalNotifications = 0;
     registerNotification();
     checkForInitialMessage();
-    _getUserNotifications().then((_) {
+    createNotifications().then((_) {
     });
 
     // For handling notification when the app is in background
@@ -152,8 +187,6 @@ class NotificationsClassState extends State{
 
     super.initState();
   }
-
-
 
   @override
   dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
