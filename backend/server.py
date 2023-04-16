@@ -239,8 +239,8 @@ def deleteAll():
     Pantry.query.delete()
 
     # delete user and person table
-    # User.query.delete()
-    # Person.query.delete()
+    User.query.delete()
+    Person.query.delete()
 
 
     db.session.commit()
