@@ -902,3 +902,54 @@ def logout():
     user.session_token = None
 
     return jsonify({'message': 'User logged out successfully'}), 200
+
+
+
+# create a route that will increment the leaderboard_points by 1
+@app.route('/addPoints', methods=['POST'])
+@jwt_required() # authentication Required
+def addPoints():
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # get the user's user preferences
+    user_preference_id = user.user_preference_id
+
+    #query the user preferences table
+    user_preference = UserPreference.query.filter_by(id=user_preference_id).first()
+    
+    # increment the leaderboard points by 1
+    leaderboard_points = user_preference.leaderboard_points
+    leaderboard_points += 1
+
+    user_preference.leaderboard_points =  leaderboard_points
+
+    # commit the changes to the database
+    db.session.commit()
+
+    return jsonify({'message': 'User points incremented successfully'}), 200
+
+
+# create a route that will grab the points from the user preferences table
+@app.route('/getPoints', methods=['POST'])
+@jwt_required() # authentication Required
+def getPoints():
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # get the user's user preferences
+    user_preference_id = user.user_preference_id
+
+    #query the user preferences table
+    user_preference = UserPreference.query.filter_by(id=user_preference_id).first()
+    
+    # get the leaderboard points
+    leaderboard_points = user_preference.leaderboard_points
+
+    return jsonify({'leaderboard_points': leaderboard_points}), 200

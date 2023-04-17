@@ -222,6 +222,9 @@ class ProductWidgetState extends State<ProductWidget> {
                 onPressed: () {
                   Navigator.of(context).pop();
 
+                  // call the backend untils function to increment the points counter
+                  BackendUtils.addPoints();
+
                   // wait 0.4 sec before deleting on page
                   Future.delayed(const Duration(milliseconds: 400), () {
                     widget.refreshPantryList!();
