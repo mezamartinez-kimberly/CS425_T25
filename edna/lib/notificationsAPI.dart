@@ -1,12 +1,18 @@
-// import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:edna/screens/all.dart';
+import 'package:edna/provider.dart';
+import 'package:provider/provider.dart';
+import 'package:edna/dbs/pantry_db.dart';
 
-// import 'package:edna/screens/all.dart';
-// import 'package:edna/provider.dart';
-// import 'package:provider/provider.dart';
-// import 'package:edna/dbs/pantry_db.dart';
+import 'package:edna/backend_utils.dart';
 
-// import 'package:edna/backend_utils.dart';
-// import 'package:rxdart/rxdart.dart';
+
+
+//import 'package:rxdart/rxdart.dart';
+
+//to do
+//use local notifications plugin to send notifications
+// add a background function that will run a function every 24 hrs to check if a new item falls within range and send notifications
 
 // class NotificationApi{
 //   static final _notifications = FlutterLocalNotificationsPlugin();

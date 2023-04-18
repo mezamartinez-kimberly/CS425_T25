@@ -65,9 +65,9 @@ class NotificationsClassState extends State{
         print('in for loop');
 
         //subtract the notification range from the expiration date
-        DateTime withinRangeDate = item.expirationDate!.subtract(Duration(days: notifRange));
+        DateTime firstDate = item.expirationDate!.subtract(Duration(days: notifRange));
         //check if today falls in between the expiration date and the new date
-        if (today.isAfter(withinRangeDate) && today.isBefore(item.expirationDate!)){
+        if (today.isAfter(firstDate) && today.isBefore(item.expirationDate!)){
           //if it does then create and send a notification containing the item name and expiration date
 
 

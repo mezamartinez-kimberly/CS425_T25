@@ -6,12 +6,6 @@ import 'package:edna/calendar_utils.dart';
 import 'package:edna/provider.dart';
 import 'package:provider/provider.dart';
 import 'package:edna/widgets/product_widget.dart'; // pantry item widget
-import 'package:edna/notificationsAPI.dart'; // notifications api
-import 'package:edna/backend_utils.dart'; // backend utils
-
-
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 class CalendarClass extends StatefulWidget {
   //can also turn off prefer_const_constructor under rules and put false so that you dont need these
@@ -63,9 +57,6 @@ class CalendarClassState extends State<CalendarClass> {
     _TableEventsExampleState();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
-
-    //call notification api 
-    //NotificationApi.init();
   }
 
   @override
