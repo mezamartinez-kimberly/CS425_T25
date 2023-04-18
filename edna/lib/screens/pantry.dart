@@ -11,6 +11,7 @@
 */
 
 import 'package:edna/backend_utils.dart';
+import 'package:edna/dbs/storage_location_db.dart';
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart';
 import 'package:google_fonts/google_fonts.dart'; // fonts
@@ -36,8 +37,8 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
   int _currentTab = 0; // added variable to keep track of current tab
 
   refresh() async {
-    await _loadPantryItems(_currentTab);
-    setState(() {});
+    await _loadPantryItems(_currentTab)
+        .then((value) => setState(() {}), onError: (e) => print("error: $e"));
   }
 
   // @override
@@ -153,11 +154,7 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                   _showDeletedItems = !_showDeletedItems;
                 });
 
-                if (_showDeletedItems) {
-                  _listAllItems(); // call _listAllItems if _showDeletedItems is true
-                } else {
-                  _listActiveItems(); // call _listActiveItems if _showDeletedItems is false
-                }
+                _loadPantryItems(_currentTab);
               },
             ),
           ),
@@ -166,27 +163,35 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
     );
   }
 
-  Future<void> _loadPantryItems(int location) async {
-    allPantryItems = await BackendUtils.getAllPantry();
-
+  _loadPantryItems(int location) async {
+    // ignore: use_build_context_synchronously
     final pantryProvider = Provider.of<PantryProvider>(context, listen: false);
 
-    allPantryItems = allPantryItems
-        .where((item) => item.storageLocation == location)
-        .toList();
+    await BackendUtils.getAllPantry().then((value) {
+      allPantryItems = value;
 
-    pantryProvider.setAllPantryItems(allPantryItems);
+      // only get pantry items for current location
+      allPantryItems = allPantryItems
+          .where((item) =>
+              item.storageLocation == location && item.isVisibleInPantry == 1)
+          .toList();
 
-    activePantryItems = allPantryItems
-        .where(
-            (item) => item.storageLocation == location && item.isDeleted == 0)
-        .toList();
-    pantryProvider.setActivePantryItems(activePantryItems);
+      pantryProvider.setAllPantryItems(allPantryItems);
 
-    setState(() {
-      // Call list builder to refresh list based on current tab and _showDeletedItems
+      // only get active pantry items for current location
+      activePantryItems = allPantryItems
+          .where((item) =>
+              item.storageLocation == location &&
+              item.isDeleted == 0 &&
+              item.isVisibleInPantry == 1)
+          .toList();
+
+      pantryProvider.setActivePantryItems(activePantryItems);
+
       _showDeletedItems ? _listAllItems() : _listActiveItems();
-    });
+
+      setState(() {});
+    }, onError: (e) => print("error: $e"));
   }
 
   Widget _listActiveItems() {
@@ -225,6 +230,7 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                         pantryItem: item,
                         enableCheckbox: true,
                         refreshPantryList: refresh,
+                        callingWidget: widget,
                       )
                     : item.isDeleted == 1
                         ? Container()
@@ -233,6 +239,7 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                               pantryItem: item,
                               enableCheckbox: true,
                               refreshPantryList: refresh,
+                              callingWidget: widget,
                             ),
                           );
               },

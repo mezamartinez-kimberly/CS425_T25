@@ -13,6 +13,7 @@
 
 import 'dart:developer'; // for debugPrint
 import 'dart:io'; // for Platform
+import 'dart:convert';
 
 import 'package:edna/main.dart'; // for main
 import 'package:edna/screens/all.dart'; // for pantry page
@@ -26,6 +27,7 @@ import 'package:loader_overlay/loader_overlay.dart'; // loading wheel
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // product widget
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
+import 'package:http/http.dart' as http;
 
 // ignore: must_be_immutable
 class CameraPage extends StatefulWidget {
@@ -33,6 +35,10 @@ class CameraPage extends StatefulWidget {
   addItem(ProductWidget product) {
     itemsToInsert ??= []; // initialize if null
     itemsToInsert?.add(product);
+  }
+
+  clearList() {
+    itemsToInsert = [];
   }
 
   CameraPage({Key? key, this.itemsToInsert}) : super(key: key);
@@ -43,6 +49,7 @@ class CameraPage extends StatefulWidget {
 
 class CameraPageState extends State<CameraPage> {
   Barcode? result;
+  Barcode? lastResult;
   QRViewController? controller;
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   String productName = '';
@@ -51,6 +58,8 @@ class CameraPageState extends State<CameraPage> {
   bool itemAdded = false; // flag to check if item was just added to pantry
   bool firstRun =
       true; // flag to check if this is the first time item is scanned
+
+  List<Pantry> allPantryItems = [];
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -111,48 +120,21 @@ class CameraPageState extends State<CameraPage> {
             // items list
             Expanded(
               flex: 5,
-              child: Container(
-                color: Colors.transparent,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: <Widget>[
+                    // add items to pantry
                     FutureBuilder(
-                        // get product name from UPC code
-                        future: _getProductName(),
-                        builder: (context, snapshot) {
-                          // while not scanning, return empty container
-                          if (result == null) {
-                            return Container();
-                          }
-                          // once backend call complete and we've gotten data
-                          if (snapshot.data != null) {
-                            // if UPC not found, show error message
-                            if (snapshot.data == 'UPC not found') {
-                              // display error message
-                              return Text("UPC ${result!.code} not found");
-                            }
-                            // if UPC found, add product to camera page's list
-                            else {
-                              _addItemToList();
-
-                              // if first scan, must manually add itemList to Camera Page's widget tree by returning it
-                              // since it's not already there
-                              if (firstRun) {
-                                firstRun = false;
-                                return _buildItemList();
-                              } else {
-                                return Container();
-                              }
-                            }
-                          }
-                          // if error, show error message
-                          else if (snapshot.hasError) {
-                            return Text('Error: ${snapshot.error}');
-                          }
-                          // if data returned is null (ie UPC not found)
-                          else {
-                            return Container();
-                          }
-                        }),
+                      future: _addToPantry(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasError) {
+                          return Text('Error: ${snapshot.error}');
+                        } else {
+                          return Container();
+                        }
+                      },
+                    ),
                     _buildItemList() // display camera page's list of items
                   ],
                 ),
@@ -226,47 +208,29 @@ class CameraPageState extends State<CameraPage> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(23.0),
         ),
+
         onPressed: () async {
-          // insert scanned items into pantry database
-          if (widget.itemsToInsert != null) {
-            for (ProductWidget product in widget.itemsToInsert!) {
-              // add to pantry database
-              var backendResult =
-                  await BackendUtils.addPantry(product.pantryItem);
+          await BackendUtils.changeVisibility();
 
-              // if camera page closed, don't do anything
-              if (!mounted) return;
+          if (!mounted) return;
 
-              // success/error messages
-              if (backendResult.statusCode != 200 &&
-                  backendResult.statusCode != 201) {
-                const MyApp().createErrorMessage(context,
-                    "Error ${backendResult.statusCode}: ${backendResult.body}");
-                print(backendResult.body);
-              } else {
-                // const MyApp()
-                //     .createSuccessMessage(context, "Item added to pantry");
-              }
-            }
-            // show loading indicator for 0.5 sec before submit
-            // ignore: use_build_context_synchronously
-            showDialog(
-                context: context,
-                builder: (context) {
-                  // wait 0.5 sec
-                  Future.delayed(const Duration(milliseconds: 500), () {
-                    // clear scanned list
-                    widget.itemsToInsert!.clear();
-                    // refresh page
-                    refresh(); // resets state
-                    // close dialog
-                    Navigator.of(context).pop(true);
-                  });
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
+          showDialog(
+              context: context,
+              builder: (context) {
+                // wait 0.5 sec
+                Future.delayed(const Duration(milliseconds: 200), () {
+                  // clear scanned list
+                  widget.itemsToInsert!.clear();
+                  // refresh page
+                  refresh(); // resets state
+                  // close dialog
+                  Navigator.of(context).pop(true);
                 });
-          }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              });
+          // insert scanned items into pantry database
         },
         elevation: 3,
         child: const Icon(
@@ -410,79 +374,80 @@ class CameraPageState extends State<CameraPage> {
   }
 
   // get product name from upc code using backend
-  _getProductName() async {
-    // if successfully scanned
-    if (result != null) {
-      // if code can be found in UPC database
-      if (result!.format == BarcodeFormat.ean13 ||
-          result!.format == BarcodeFormat.ean8 ||
-          result!.format == BarcodeFormat.upcA ||
-          result!.format == BarcodeFormat.upcE) {
-        // get data from backend
-        var data = await BackendUtils.getUpcData(result!.code as String);
-        // if data is not null
-        if (data != null) {
-          // if data 'UPC code not found'
-          if (data == 'UPC not found') {
-            // do nothing
-          } else {
-            // set productName to data, return
-            return productName = data;
-          }
+  _addToPantry() async {
+    if (!itemAdded) {
+      // to inialize lastResult on first scan
+      if (lastResult == null && result != null) {
+        lastResult = result;
+      }
+
+      // if successfully scanned
+      if (result != null && result != lastResult) {
+        // if code can be found in UPC database
+        if (result!.format == BarcodeFormat.ean13 ||
+            result!.format == BarcodeFormat.ean8 ||
+            result!.format == BarcodeFormat.upcA ||
+            result!.format == BarcodeFormat.upcE) {
+          // create a new pantry object with the scanned upc code
+          Pantry newPantryItem = Pantry(
+            dateAdded: DateTime.now(),
+            upc: result!.code,
+            isDeleted: 0,
+            isVisibleInPantry: 0,
+          );
+
+          lastResult = result;
+
+          // add the new pantry item using the backend utils functinon addPantry
+          // capture the response of the function and get the pantry item from the json response
+          await BackendUtils.addPantry(newPantryItem).then((value) {
+            // get the json response from the backend
+            dynamic jsonResponse = json.decode(value.body);
+            Pantry pantryItem = Pantry.fromMap(jsonResponse);
+
+            ProductWidget newProductWidget = ProductWidget(
+              key: UniqueKey(),
+              pantryItem: pantryItem,
+              enableCheckbox: false,
+              // no need to refresh pantry since we're on camera page
+              refreshPantryList: () {},
+              callingWidget: widget,
+            );
+
+            // add to camera page's list of items
+            widget.addItem(newProductWidget);
+            // toggle itemAdded so item doesn't duplicate
+            itemAdded = true;
+          });
         }
       }
-    }
-  }
-
-  // if user scans item and gets upc and product name
-  // create a pantry item and product widget from it
-  // add product widget to camera page's list of items
-  _addItemToList() {
-    // itemAdded is used to prevent items from being added multiple times
-    if (!itemAdded) {
-      // create new pantry item with values
-      Pantry newPantryItem = Pantry(
-        name: productName,
-        dateAdded: DateTime.now(),
-        upc: result!.code,
-        isDeleted: 0,
-      );
-
-      // create product widget with new pantry item
-      ProductWidget newProductWidget = ProductWidget(
-        key: UniqueKey(),
-        pantryItem: newPantryItem,
-        enableCheckbox: false,
-        // no need to refresh pantry since we're on camera page
-        refreshPantryList: () {},
-        onCameraPage: true,
-      );
-
-      // add to camera page's list of items
-      widget.addItem(newProductWidget);
-      // toggle itemAdded so item doesn't duplicate
-      itemAdded = true;
     } else {
       // wait 5 seconds before user can scan another item
       // this way item doesn't duplicate over and over
-      Future.delayed(const Duration(seconds: 3), () {
+      Future.delayed(const Duration(seconds: 5), () {
         itemAdded = false;
       });
     }
   }
 
-  // widget for list of items on camera page
+// widget for list of items on camera page
   _buildItemList() {
     // if there are items to insert, return list of items
-    return widget.itemsToInsert != null
-        ? Expanded(
-            child: ListView.builder(
-            shrinkWrap: true, // prevents overflow
-            itemCount: widget.itemsToInsert?.length,
-            itemBuilder: (context, index) {
-              return widget.itemsToInsert![index];
-            },
-          ))
-        : Container();
+    if (widget.itemsToInsert != null && widget.itemsToInsert!.isNotEmpty) {
+      return ListView.builder(
+        scrollDirection: Axis.vertical,
+        shrinkWrap: true,
+        itemCount: widget.itemsToInsert!.length,
+        itemBuilder: (context, index) {
+          return widget.itemsToInsert![index];
+        },
+
+        // enable scrolling on list
+        physics: const BouncingScrollPhysics(),
+      );
+    } else {
+      // if no items to insert, return empty container
+      return Container();
+    }
   }
 }

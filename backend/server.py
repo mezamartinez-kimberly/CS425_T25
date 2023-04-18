@@ -63,6 +63,7 @@ from models import db, User, UserPreference, Person, Product, ExpirationData, Pa
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+# 078742369815
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ SETUP ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # create the flask app
@@ -202,7 +203,7 @@ def verifyOTP():
                 return jsonify({'error': 'OTP is incorrect'}), 402
             
 
-@app.route("/changPassword", methods=["POST"])
+@app.route("/changePassword", methods=["POST"])
 def resetPassword():
         
             # expected input:
@@ -214,7 +215,7 @@ def resetPassword():
             # parse the json input
             email = request.json['email']
             password = request.json['password']
-    
+
             # check if the email is registered
             user = User.query.filter_by(email=email).first()
     
@@ -401,6 +402,32 @@ def upc():
         return jsonify({'message': 'UPC API call successful', 'name': product_name}), 200
    
 
+
+@app.route('/changeVisibility', methods=['POST'])
+@jwt_required() # authentication Required
+def changeVisibility():
+
+    # get the session token from the authorization html header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user id from the session token
+    user_id = User.query.filter_by(session_token=session_token).first().id
+
+
+    # we need to update all the users pantry items that contain the visibilty as 0 to 1
+
+    # get all the pantry items that are not visible
+    pantry_items = Pantry.query.filter_by(user_id=user_id, is_visible_in_pantry=0).all()
+
+    # update the visibility of all the pantry items
+    for item in pantry_items:
+        item.is_visible_in_pantry = 1
+        db.session.add(item)
+        db.session.commit()
+
+    return jsonify({'message': 'Visibility changed successfully'}), 200
+
+
 @app.route('/addPantry', methods=['POST'])
 @jwt_required() # authentication Required
 def addPantry():
@@ -422,6 +449,7 @@ def addPantry():
     parameterUPC = str(parameterUPC)
     plu = request.json['plu']
     quantity = request.json['quantity']
+    isVisibleInPantry = request.json['is_visible_in_pantry']
 
 
     # get the session token from the authorization html header
@@ -444,7 +472,7 @@ def addPantry():
 
             if response_tuple[1] != 200:
                 # if the product name is not null, then we will add the product to the database
-                if name != None and name != "":
+                if name != None or name != "":
                     # add the product to the database
                     product = Product(name=name,
                                     upc=parameterUPC, plu = None, logical_delete=False)
@@ -502,25 +530,26 @@ def addPantry():
         # query the expiration table to see if this product has an expiration date
         expiration = ExpirationData.query.filter_by(product_id=product.id).first()
 
-
         # make sure expiration is not null
+        exp_time = None
         if expiration:
-
             # check the location of the product
-            if location == 'fridge':
+            if location == 'fridge' :
                 exp_time = expiration.expiration_time_fridge
             elif location == 'freezer':
                 exp_time = expiration.expiration_time_freezer
             elif location == 'pantry':
                 exp_time = expiration.expiration_time_pantry
 
-            # check if expiration time is null
-            if exp_time:
-                expiration_date = date_added + timedelta(days=exp_time)
-            else:
-                expiration_date = None
-        else:
-            expiration_date = None
+        if exp_time == None:
+            if location == 'fridge':
+                exp_time = 5
+            elif location == 'freezer':
+                exp_time = 10
+            elif location == 'pantry':
+                exp_time = 30
+
+        expiration_date = date_added + timedelta(days=exp_time)
 
 
     # ok so by here we have the plu or upc and the product id, as well as the date created
@@ -533,12 +562,40 @@ def addPantry():
                     location=location,
                     expiration_date=expiration_date,
                     quantity=quantity,
-                    is_deleted=False)
+                    is_deleted=False,
+                    is_visible_in_pantry= isVisibleInPantry
+                    )
     
     db.session.add(pantry)
     db.session.commit()
 
-    return jsonify({'message': 'Pantry item added successfully'}), 201
+    if location == 'pantry':
+        location = 1
+    elif location == 'fridge':
+        location = 2
+    elif location == 'freezer':
+        location = 3
+    else:
+        location = 1
+
+    # make a pantry item dictionary to return
+    pantry_dict = {
+        'id': pantry.id,
+        'name': product.name,
+        'user_id': pantry.user_id,
+        'product_id': pantry.product_id,
+        'date_added': pantry.date_added,
+        'date_removed': pantry.date_removed,
+        'location': location,
+        'expiration_date': pantry.expiration_date,
+        'quantity': pantry.quantity,
+        'is_deleted': int(pantry.is_deleted),
+        'is_visible_in_pantry': pantry.is_visible_in_pantry
+    }
+
+
+    # return the pantry object and a response code of 201
+    return jsonify(pantry_dict), 201
 
 
 @app.route('/getAllPantry', methods=['GET'])
@@ -616,7 +673,8 @@ def getAllPantry():
                 'expiration_date': expiration_date,
                 'is_deleted': int(item.is_deleted),
                 'upc': product.upc,
-                'plu': product.plu
+                'plu': product.plu,
+                'is_visible_in_pantry': item.is_visible_in_pantry
             }
 
            
@@ -628,7 +686,6 @@ def getAllPantry():
 
         # return the list of pantry items
         return jsonify(pantry_list), 200
-
 
 
 # create a route to update an item in the pantry

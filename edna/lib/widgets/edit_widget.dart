@@ -17,6 +17,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'; // material design
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
+import 'dart:convert'; // json
+import 'package:another_flushbar/flushbar.dart'; // error display
+import 'package:another_flushbar/flushbar_helper.dart';
+import 'package:another_flushbar/flushbar_route.dart';
 
 class EditWidget extends StatefulWidget {
   @override
@@ -50,6 +54,9 @@ class _EditWidgetState extends State<EditWidget> {
   final List<Widget> codeTypes = <Widget>[const Text('UPC'), const Text('PLU')];
   // for exp date
   TextEditingController dateController = TextEditingController();
+  // for errors
+  var errorText = const Color.fromARGB(255, 88, 15, 15);
+  var errorBackground = const Color.fromARGB(255, 238, 37, 37);
 
   // init state
   @override
@@ -270,19 +277,51 @@ class _EditWidgetState extends State<EditWidget> {
             upc: widget.pantryItem.upc,
             plu: widget.pantryItem.plu,
             isDeleted: 0,
+            isVisibleInPantry: 0,
           );
 
-          // create product widget with new pantry item
-          ProductWidget newProductWidget = ProductWidget(
-              pantryItem: newPantryItem,
-              enableCheckbox: false,
-              // no need to refresh pantry since we're still on camera page
-              refreshPantryList: () {});
+          // add to pantry
+          await BackendUtils.addPantry(newPantryItem).then((value) {
+            // error check
+            if (value.statusCode != 200 || value.statusCode != 201) {
+              Flushbar(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                message: "Error: ${value.statusCode} ${value.reasonPhrase}",
+                messageSize: 25,
+                messageColor: Theme.of(context).brightness == Brightness.dark
+                    ? Colors.white
+                    : errorText,
+                duration: const Duration(seconds: 3),
+                backgroundColor: errorBackground,
+                flushbarPosition: FlushbarPosition.BOTTOM,
+                flushbarStyle: FlushbarStyle.FLOATING,
+                margin:
+                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                borderRadius: BorderRadius.circular(30.0),
+                maxWidth: MediaQuery.of(context).size.width * 0.8,
+                isDismissible: true,
+                dismissDirection: FlushbarDismissDirection.HORIZONTAL,
+              ).show(context);
+            }
 
-          // add to scanned list on camera page
-          cameraPage.addItem(newProductWidget);
-          // refresh camera page
-          widget.refreshCameraPage!();
+            // get the json response from the backend
+            dynamic jsonResponse = json.decode(value.body);
+            Pantry pantryItem = Pantry.fromMap(jsonResponse);
+
+            //  create product widget with new pantry item
+            ProductWidget newProductWidget = ProductWidget(
+                pantryItem: pantryItem,
+                enableCheckbox: false,
+                // no need to refresh pantry since we're still on camera page
+                refreshPantryList: () {},
+                callingWidget: widget);
+
+            // add to camera page's list of items
+            cameraPage.addItem(newProductWidget);
+            // refresh camera page
+            widget.refreshCameraPage!();
+          });
         }
 
         // if user is creating widget on pantry page, add product to pantry
@@ -297,39 +336,38 @@ class _EditWidgetState extends State<EditWidget> {
               upc: widget.pantryItem.upc,
               plu: widget.pantryItem.plu,
               isDeleted: 0,
+              isVisibleInPantry: 1,
             ),
           );
           // refresh pantry list
           widget.refreshPantryList!();
-        } else if (widget.callingWidget.runtimeType == ProductWidget) {
-          // get access to calling widget
-          ProductWidget callingWidget = widget.callingWidget as ProductWidget;
+        }
+        // else if user is editing a product widget that already exists
+        else if (widget.callingWidget.runtimeType == ProductWidget) {
+          // get access to the product widget that is parent of edit widget
+          ProductWidget productWidget = widget.callingWidget as ProductWidget;
+          Widget productWidgetParent = productWidget.callingWidget;
 
           // if user is editing a product widget on camera page
-          // item is not in database yet
-          // so update loca item, not the item in the database
-          if (callingWidget.onCameraPage == true) {
-            setState(() {
-              // update local pantry item with new values
+          // save changes to backend
+          if (productWidgetParent.runtimeType == CameraPage) {
+            // update local pantry item with new values
+            await BackendUtils.updatePantryItem(widget.pantryItem);
 
-              // update product widget
-              widget.updateProductWidget!();
-            });
+            // update product widget
+            widget.updateProductWidget!();
           }
 
           // if user is editing a product widget on pantry page
           // then the item is already in the database
           // so update the item in the databaseelse
-          else {
-            print("Editing on pantry page");
-            setState(() {
-              // update pantry item in db with new values
-              BackendUtils.updatePantryItem(widget.pantryItem);
-              // update product widget
-              widget.updateProductWidget!();
-              // refresh pantry list
-              widget.refreshPantryList!();
-            });
+          else if (productWidgetParent.runtimeType == PantryPage) {
+            // update pantry item in db with new values
+            await BackendUtils.updatePantryItem(widget.pantryItem);
+            // update product widget
+            widget.updateProductWidget!();
+            // refresh pantry list
+            widget.refreshPantryList!();
           }
         } else {
           print(
@@ -396,13 +434,6 @@ class _EditWidgetState extends State<EditWidget> {
 
   Widget _buildCodeInput() {
     Color borderColor = const Color.fromARGB(255, 34, 34, 34);
-
-    // return Card(
-    //   color: MyTheme().pinkColor,
-    //   child: SizedBox(
-    //     width: 320,
-    //     height: 150,
-    //child:
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -444,8 +475,6 @@ class _EditWidgetState extends State<EditWidget> {
               : _takePLUInput(),
         ),
       ],
-      //   ),
-      // ),
     );
   }
 
@@ -489,6 +518,15 @@ class _EditWidgetState extends State<EditWidget> {
       controller.text = widget.pantryItem.plu.toString();
     }
     return TextField(
+      onChanged: (value) {
+        if (value != "") {
+          widget.pantryItem.plu =
+              value.length <= 4 ? value : widget.pantryItem.plu;
+        } else {
+          // if user deletes all text
+          widget.pantryItem.plu = null;
+        }
+      },
       style: const TextStyle(fontSize: 20),
       textAlign: TextAlign.center,
       controller: controller,
@@ -500,15 +538,6 @@ class _EditWidgetState extends State<EditWidget> {
         // only show hint text if upc null
         // hintText: widget.pantryItem.plu == null ? "Enter PLU Code" : ""
       ),
-      onChanged: (value) {
-        if (value != "") {
-          widget.pantryItem.plu =
-              value.length <= 4 ? value : widget.pantryItem.plu;
-        } else {
-          // if user deletes all text
-          widget.pantryItem.plu = null;
-        }
-      },
       keyboardType: TextInputType.number,
       inputFormatters: <TextInputFormatter>[
         FilteringTextInputFormatter.allow(RegExp(r'[0-9]')), // only allow nums

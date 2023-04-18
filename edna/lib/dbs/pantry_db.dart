@@ -17,6 +17,7 @@ class Pantry {
   String? plu;
   int? storageLocation;
   int? isDeleted;
+  int isVisibleInPantry;
 
   Pantry({
     this.id,
@@ -29,6 +30,7 @@ class Pantry {
     this.plu,
     this.storageLocation,
     this.isDeleted = 0,
+    this.isVisibleInPantry = 0,
   });
 
   factory Pantry.fromMap(Map<String, dynamic> json) => Pantry(
@@ -51,6 +53,7 @@ class Pantry {
         plu: json["plu"],
         storageLocation: json["location"],
         isDeleted: json["is_deleted"],
+        isVisibleInPantry: json["is_visible_in_pantry"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -66,6 +69,7 @@ class Pantry {
         "plu": plu,
         "location": storageLocation,
         "is_deleted": isDeleted,
+        "is_visible_in_pantry": isVisibleInPantry,
       };
 }
 
