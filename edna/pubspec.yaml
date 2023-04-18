@@ -66,6 +66,12 @@ dependencies:
   loader_overlay: ^2.1.0
   #sets val in memory so data doesnt get lost
   shared_preferences: ^2.0.18
+  timelines: ^0.1.0
+  flutter_rounded_progress_bar: ^0.2.0
+  confetti: ^0.7.0
+
+
+
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -94,32 +100,32 @@ flutter:
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
-  fonts:
-    - family: Noto Sans
-    - fonts:
-      - asset: assets/fonts/NotoSans-Regular.ttf
+  # fonts:
+  #   - family: Noto Sans
+  #   - fonts:
+  #     - asset: assets/fonts/NotoSans-Regular.ttf
 
-    - family: Dekko
-    - fonts:
-      - asset: assets/fonts/Dekko-Regular.ttf
+  #   # - family: Dekko
+  #   # - fonts:
+  #   #   - asset: assets/fonts/Dekko-Regular.ttf
 
-    - family: Noto Serif
-    - fonts:
-      - asset: assets/fonts/NotoSerif-Regular.ttf
+  #   - family: Noto Serif
+  #   - fonts:
+  #     - asset: assets/fonts/NotoSerif-Regular.ttf
 
-    - family: Roboto
-    - fonts:
-        - asset: fonts/Roboto-Regular.ttf
-        - asset: fonts/Roboto-Black.ttf
-        - asset: fonts/Roboto-BlackItalic.ttf
-        - asset: fonts/Roboto-Italic.ttf
-        - asset: fonts/Roboto-Light.ttf
-        - asset: fonts/Roboto-LightItalic.ttf
-        - asset: fonts/Roboto-Medium.ttf
-        - asset: fonts/Roboto-MediumItalic.ttf
-        - asset: fonts/Roboto-Thin.ttf
-        - asset: fonts/Roboto-ThinItalic.ttf
-          weight: 700
+  #   - family: Roboto
+  #   - fonts:
+  #       - asset: fonts/Roboto-Regular.ttf
+  #       - asset: fonts/Roboto-Black.ttf
+  #       - asset: fonts/Roboto-BlackItalic.ttf
+  #       - asset: fonts/Roboto-Italic.ttf
+  #       - asset: fonts/Roboto-Light.ttf
+  #       - asset: fonts/Roboto-LightItalic.ttf
+  #       - asset: fonts/Roboto-Medium.ttf
+  #       - asset: fonts/Roboto-MediumItalic.ttf
+  #       - asset: fonts/Roboto-Thin.ttf
+  #       - asset: fonts/Roboto-ThinItalic.ttf
+  #         weight: 700
 
   assets:
     - assets/images/Stage_1.png  
@@ -129,6 +135,13 @@ flutter:
     - assets/images/Stage_5.png  
     - assets/images/Stage_6.png  
 
+    - assets/images/tb1.png  
+    - assets/images/tb2.png  
+    - assets/images/tb3.png  
+    - assets/images/tb4.png  
+    - assets/images/tb5.png
+    - assets/images/tb6.png  
+  
     - assets/logos/g-logo.png
 
   # To add assets to your application, add an assets section, like this:

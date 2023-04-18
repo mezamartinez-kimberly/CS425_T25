@@ -347,6 +347,51 @@ class BackendUtils {
     }
   }
 
+// Add points to the user
+  static Future<String> addPoints() async {
+    const String apiUrl = 'http://10.0.2.2:5000/addPoints';
+
+    // create a post request to the backend with the auth header and JSON message
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': "Bearer $sessionToken",
+      },
+    );
+
+    if (response.statusCode == 201) {
+      return "Points added successfully.";
+    } else {
+      return "Error adding points.";
+    }
+  }
+
+// retreive the points from the backend
+  static Future<int> getPoints() async {
+    const String apiUrl = 'http://10.0.2.2:5000/getPoints';
+
+    // create a post request to the backend with the auth header and JSON message
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': "Bearer $sessionToken",
+      },
+    );
+
+    // cast the response into an integer if successful
+    if (response.statusCode == 200) {
+      // parse the json in the response body and return the leaderboard points
+      Map<String, dynamic> response_data =
+          Map<String, dynamic>.from(jsonDecode(response.body));
+
+      int points = response_data['leaderboard_points'];
+
+      return points;
+    } else {
+      return 0;
+    }
+  }
+
   static Future<String> deletePantryItem(Pantry pantryItem) async {
     const String apiUrl = 'http://10.0.2.2:5000/deletePantryItem';
 
