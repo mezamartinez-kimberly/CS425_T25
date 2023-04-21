@@ -18,6 +18,11 @@ class ProfilePageState extends State<ProfilePage> {
   String lastName = "";
   String email = "";
 
+  refresh() async {
+    await _getUserData();
+    setState(() {});
+  }
+
   //create an initialization function to get user data
   @override
   void initState() {

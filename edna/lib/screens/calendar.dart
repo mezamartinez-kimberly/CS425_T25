@@ -37,7 +37,7 @@ class CalendarClassState extends State<CalendarClass> {
     activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
 
     for(final pantry in activePantryItems) {
-      activePantryWidgets.add(ProductWidget(pantryItem: pantry, enableCheckbox: true,));
+      activePantryWidgets.add(ProductWidget(pantryItem: pantry));
     }
    
     for (final productWidget in activePantryWidgets) {

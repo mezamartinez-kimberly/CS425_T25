@@ -77,12 +77,4 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.activity:activity:1.6.0-alpha05" // gesture recognition
 
-    // Firebase dependencies
-    //firebase BoM
-    //using Firebase Android BoM, app will always use compatible Firebase library versions
-    implementation platform('com.google.firebase:firebase-bom:31.3.0')
-    // TODO: Add the dependencies for Firebase products you want to use
-    // When using the BoM, don't specify versions in Firebase dependencies
-    implementation 'com.google.firebase:firebase-analytics-ktx'
-
 }
