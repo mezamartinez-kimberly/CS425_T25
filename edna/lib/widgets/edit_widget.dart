@@ -15,6 +15,7 @@ import 'package:edna/screens/all.dart';
 import 'package:edna/widgets/product_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'; // material design
+import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert'; // json
@@ -30,7 +31,6 @@ class EditWidget extends StatefulWidget {
   final Pantry pantryItem;
   Widget? callingWidget;
   String? notes;
-  bool isEditing;
   final Function()? updateProductWidget;
   final Function()? refreshPantryList;
   final Function()? refreshCameraPage;
@@ -41,7 +41,6 @@ class EditWidget extends StatefulWidget {
     required this.pantryItem,
     this.callingWidget,
     this.notes,
-    this.isEditing = true,
     this.updateProductWidget,
     this.refreshPantryList,
     this.refreshCameraPage,
@@ -231,7 +230,6 @@ class _EditWidgetState extends State<EditWidget> {
           style: TextStyle(fontSize: 20, color: Colors.black)),
       onPressed: () {
         // set is not editing
-        widget.isEditing = false;
         Navigator.of(context).pop();
       },
     );
@@ -242,6 +240,12 @@ class _EditWidgetState extends State<EditWidget> {
       child: const Text('Save',
           style: TextStyle(fontSize: 20, color: Colors.black)),
       onPressed: () async {
+        if (!mounted) {
+          return;
+        }
+        // close dialog
+        Navigator.of(context).pop();
+
         // if no upc/plu code, show error
         if (widget.pantryItem.upc == null && widget.pantryItem.plu == null) {
           const MyApp().createErrorMessage(context, "Please enter a code.");
@@ -266,6 +270,7 @@ class _EditWidgetState extends State<EditWidget> {
 
         // if user creating item on camera page, add to camera's list
         if (widget.callingWidget.runtimeType == CameraPage) {
+          print("NEW ITEM: ${widget.pantryItem.plu}");
           CameraPage cameraPage = widget.callingWidget as CameraPage;
 
           // create new pantry item with user entered values
@@ -276,14 +281,19 @@ class _EditWidgetState extends State<EditWidget> {
             dateAdded: DateTime.now(),
             upc: widget.pantryItem.upc,
             plu: widget.pantryItem.plu,
+            storageLocation: widget.pantryItem.storageLocation,
             isDeleted: 0,
             isVisibleInPantry: 0,
           );
 
+          // store upc and plu codes to add to pantry item once we get name
+          // since pantry items in backend only have product id, not actual codes
+          var tempCodes = [widget.pantryItem.upc, widget.pantryItem.plu];
+
           // add to pantry
-          await BackendUtils.addPantry(newPantryItem).then((value) {
+          await BackendUtils.addPantry(newPantryItem).then((value) async {
             // error check
-            if (value.statusCode != 200 || value.statusCode != 201) {
+            if (value.statusCode != 200 && value.statusCode != 201) {
               Flushbar(
                 padding:
                     const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
@@ -307,15 +317,19 @@ class _EditWidgetState extends State<EditWidget> {
 
             // get the json response from the backend
             dynamic jsonResponse = json.decode(value.body);
+            print("JSON RESPONSE: $jsonResponse");
             Pantry pantryItem = Pantry.fromMap(jsonResponse);
+            pantryItem.upc = tempCodes[0];
+            pantryItem.plu = tempCodes[1];
 
             //  create product widget with new pantry item
             ProductWidget newProductWidget = ProductWidget(
-                pantryItem: pantryItem,
-                enableCheckbox: false,
-                // no need to refresh pantry since we're still on camera page
-                refreshPantryList: () {},
-                callingWidget: widget);
+              pantryItem: pantryItem,
+              enableCheckbox: false,
+              // no need to refresh pantry since we're still on camera page
+              refreshPantryList: () {},
+              callingWidget: widget,
+            );
 
             // add to camera page's list of items
             cameraPage.addItem(newProductWidget);
@@ -342,6 +356,7 @@ class _EditWidgetState extends State<EditWidget> {
           // refresh pantry list
           widget.refreshPantryList!();
         }
+
         // else if user is editing a product widget that already exists
         else if (widget.callingWidget.runtimeType == ProductWidget) {
           // get access to the product widget that is parent of edit widget
@@ -370,14 +385,8 @@ class _EditWidgetState extends State<EditWidget> {
             widget.refreshPantryList!();
           }
         } else {
-          print(
-              "Error: no actions specified for calling widget ${widget.callingWidget.runtimeType}");
+          print("Error in EditWidget._buildSaveButton");
         }
-
-        // close dialog box
-        Navigator.of(context).pop();
-        // no longer editing
-        widget.isEditing = false;
       },
     );
   }

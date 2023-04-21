@@ -168,6 +168,7 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
     final pantryProvider = Provider.of<PantryProvider>(context, listen: false);
 
     await BackendUtils.getAllPantry().then((value) {
+      print("VALUE: $value");
       allPantryItems = value;
 
       // only get pantry items for current location

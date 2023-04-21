@@ -318,10 +318,7 @@ class TreePageState extends State<TreePage> {
           FloatingActionButton(
             onPressed: () {
               setState(() {
-                if (points > 25) {
-                  // print(points);
-                  points += 25;
-                }
+                points += 25;
               });
             },
             child: const Icon(Icons.add),
@@ -331,7 +328,6 @@ class TreePageState extends State<TreePage> {
             onPressed: () {
               setState(() {
                 if (points > 25) {
-                  // print(points);
                   points -= 25;
                 }
               });

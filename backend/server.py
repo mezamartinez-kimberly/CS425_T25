@@ -451,7 +451,6 @@ def addPantry():
     quantity = request.json['quantity']
     isVisibleInPantry = request.json['is_visible_in_pantry']
 
-
     # get the session token from the authorization html header
     session_token = request.headers.get('Authorization').split()[1]
     # get the user id from the session token
@@ -468,7 +467,6 @@ def addPantry():
         if not product:
             # call the upc route function and capture the response
             response_tuple = apiCall(parameterUPC)
-
 
             if response_tuple[1] != 200:
                 # if the product name is not null, then we will add the product to the database
@@ -534,23 +532,22 @@ def addPantry():
         exp_time = None
         if expiration:
             # check the location of the product
-            if location == 'fridge' :
+            if location == 2: # fridge
                 exp_time = expiration.expiration_time_fridge
-            elif location == 'freezer':
+            elif location == 3: # freezer
                 exp_time = expiration.expiration_time_freezer
-            elif location == 'pantry':
+            elif location == 1: # pantry
                 exp_time = expiration.expiration_time_pantry
-
+       
         if exp_time == None:
-            if location == 'fridge':
+            if location == 2: # fridge
                 exp_time = 5
-            elif location == 'freezer':
+            elif location == 3: # freezer
                 exp_time = 10
-            elif location == 'pantry':
+            elif location == 1: # pantry
                 exp_time = 30
-
+        
         expiration_date = date_added + timedelta(days=exp_time)
-
 
     # ok so by here we have the plu or upc and the product id, as well as the date created
     # now we need to add the product to the pantry
@@ -558,7 +555,6 @@ def addPantry():
                     product_id=product.id,
                     date_added=date_added,
                     date_removed=None,
-                    # if the location is not provided, we will default it to pantry
                     location=location,
                     expiration_date=expiration_date,
                     quantity=quantity,
@@ -568,15 +564,6 @@ def addPantry():
     
     db.session.add(pantry)
     db.session.commit()
-
-    if location == 'pantry':
-        location = 1
-    elif location == 'fridge':
-        location = 2
-    elif location == 'freezer':
-        location = 3
-    else:
-        location = 1
 
     # make a pantry item dictionary to return
     pantry_dict = {
