@@ -270,7 +270,6 @@ class _EditWidgetState extends State<EditWidget> {
 
         // if user creating item on camera page, add to camera's list
         if (widget.callingWidget.runtimeType == CameraPage) {
-          print("NEW ITEM: ${widget.pantryItem.plu}");
           CameraPage cameraPage = widget.callingWidget as CameraPage;
 
           // create new pantry item with user entered values

@@ -243,8 +243,6 @@ class BackendUtils {
     // convert the map to a JSON string
     final String jsonPayload = json.encode(message);
 
-    print("jsonPayload: $jsonPayload");
-
     // send the request to the backend as POST request
     final http.Response response = await http.post(
       Uri.parse(apiUrl),

@@ -413,7 +413,6 @@ def changeVisibility():
     # get the user id from the session token
     user_id = User.query.filter_by(session_token=session_token).first().id
 
-
     # we need to update all the users pantry items that contain the visibilty as 0 to 1
 
     # get all the pantry items that are not visible
@@ -561,7 +560,7 @@ def addPantry():
                     is_deleted=False,
                     is_visible_in_pantry= isVisibleInPantry
                     )
-    
+    print(pantry.location)
     db.session.add(pantry)
     db.session.commit()
 
@@ -617,21 +616,21 @@ def getAllPantry():
 
                 if expiration != None:
                     # where is the food stored?
-                    if item.location == 'pantry' and expiration.expiration_time_pantry != None:
+                    if item.location == 1 and expiration.expiration_time_pantry != None:
                         expiration_date = item.date_added + datetime(days=expiration.expiration_time_pantry)
-                    elif item.location == 'fridge' and expiration.expiration_time_fridge != None:
+                    elif item.location == 2 and expiration.expiration_time_fridge != None:
                         expiration_date = item.date_added + datetime(days=expiration.expiration_time_fridge)
-                    elif item.location == 'freezer' and expiration.expiration_time_freezer != None:
+                    elif item.location == 3 and expiration.expiration_time_freezer != None:
                         expiration_date = item.date_added + datetime(days=expiration.expiration_time_freezer)
                 else:
                     expiration_date = None
           
             # check to see where the food is stored and conver to int for the front end
-            if item.location == 'pantry':
+            if item.location == '1':
                 location = 1
-            elif item.location == 'fridge':
+            elif item.location == '2':
                 location = 2
-            elif item.location == 'freezer':
+            elif item.location == '3':
                 location = 3
             else:
                 location = 1
@@ -663,8 +662,6 @@ def getAllPantry():
                 'plu': product.plu,
                 'is_visible_in_pantry': item.is_visible_in_pantry
             }
-
-           
 
             # add the dictionary to the list
             pantry_list.append(pantry_item)
