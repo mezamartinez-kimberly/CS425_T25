@@ -2,7 +2,6 @@ import 'package:edna/screens/all.dart';
 import 'package:flutter/material.dart';
 import 'package:edna/backend_utils.dart';
 
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -22,8 +21,7 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _getUserData().then((_) {
-    });
+    _getUserData().then((_) {});
   }
 
   Widget _buildLogOutButton() {
@@ -47,7 +45,9 @@ class ProfilePageState extends State<ProfilePage> {
             ),
           );
           _logOut().then((_) {
-            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute( builder: (ctx) => const LoginPage()), (route) => false);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (ctx) => const LoginPage()),
+                (route) => false);
           });
         },
         child: const Text(
@@ -152,8 +152,8 @@ class ProfilePageState extends State<ProfilePage> {
                     // Navigate to the account settings page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const AccountSettingsPage(),
-                      
+                      MaterialPageRoute(
+                        builder: (context) => const AccountSettingsPage(),
                       ),
                     );
                   },
@@ -189,7 +189,8 @@ class ProfilePageState extends State<ProfilePage> {
                     // Navigate to the notification settings page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const NotificationsPage(),
+                      MaterialPageRoute(
+                        builder: (context) => const NotificationsPage(),
                       ),
                     );
                   },
@@ -197,33 +198,6 @@ class ProfilePageState extends State<ProfilePage> {
               ),
 
               // Appearance Settings Card
-              Card(
-                elevation: 5,
-                shape: RoundedRectangleBorder(
-                  side: const BorderSide(color: Colors.grey, width: 1.0),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: ListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 16.0),
-                  leading: const Icon(Icons.palette),
-                  title: const Text(
-                    'Appearance Settings',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  subtitle: const Text(
-                    'Tap to switch between light and dark mode',
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  onTap: () {
-                    // switch between modes
-                  },
-                ),
-              ),
 
               const SizedBox(height: 10.0),
               Card(
@@ -251,10 +225,10 @@ class ProfilePageState extends State<ProfilePage> {
                   onTap: () {
                     // Navigate to the FAQs page
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const FAQsPage(),
-                      )
-                    );
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FAQsPage(),
+                        ));
                   },
                 ),
               ),
