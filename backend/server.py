@@ -511,7 +511,7 @@ def addPantry():
 
     # see if in the json there is an entry for location, if not then default to pantry
     if location == None:
-        location = 'pantry'
+        location = 1
 
     # Deal with Time and expiration Dates
     if request.json['date_added'] != None:
@@ -560,7 +560,6 @@ def addPantry():
                     is_deleted=False,
                     is_visible_in_pantry= isVisibleInPantry
                     )
-    print(pantry.location)
     db.session.add(pantry)
     db.session.commit()
 

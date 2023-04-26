@@ -23,11 +23,14 @@ import 'package:qr_code_scanner/qr_code_scanner.dart'; // barcode scanner
 import 'package:edna/backend_utils.dart'; // for API calls
 import 'package:google_fonts/google_fonts.dart'; // fonts
 import 'package:loader_overlay/loader_overlay.dart'; // loading wheel
+import 'package:msh_checkbox/msh_checkbox.dart'; // checkbox animation
 
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // product widget
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
-import 'package:http/http.dart' as http;
+import 'package:another_flushbar/flushbar.dart'; // error display
+import 'package:another_flushbar/flushbar_helper.dart';
+import 'package:another_flushbar/flushbar_route.dart';
 
 // ignore: must_be_immutable
 class CameraPage extends StatefulWidget {
@@ -55,11 +58,17 @@ class CameraPageState extends State<CameraPage> {
   String productName = '';
   bool _flashOn = false;
 
-  bool itemAdded = false; // flag to check if item was just added to pantry
-  bool firstRun =
-      true; // flag to check if this is the first time item is scanned
+  static bool itemAdded =
+      false; // flag to check if item was just added to pantry
 
   List<Pantry> allPantryItems = [];
+
+  // for errors
+  var errorText = const Color.fromARGB(255, 88, 15, 15);
+  var errorBackground = const Color.fromARGB(255, 238, 37, 37);
+
+  // checkbox animation
+  bool isChecked = false;
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -94,6 +103,21 @@ class CameraPageState extends State<CameraPage> {
           children: <Widget>[
             // scan area
             Expanded(flex: 4, child: _buildQrView(context)),
+            // Expanded(
+            //     flex: 1,
+            //     child: MSHCheckbox(
+            //       size: 60,
+            //       value: isChecked,
+            //       colorConfig: MSHColorConfig.fromCheckedUncheckedDisabled(
+            //         checkedColor: Colors.blue,
+            //       ),
+            //       style: MSHCheckboxStyle.stroke,
+            //       onChanged: (selected) {
+            //         setState(() {
+            //           isChecked = selected;
+            //         });
+            //       },
+            //     )),
             // toolbar
             Expanded(
                 flex: 1,
@@ -129,8 +153,50 @@ class CameraPageState extends State<CameraPage> {
                       future: _addToPantry(),
                       builder: (context, snapshot) {
                         if (snapshot.hasError) {
-                          return Text('Error: ${snapshot.error}');
+                          isChecked = false;
+                          return AlertDialog(
+                            // make dialog red
+                            backgroundColor: errorBackground,
+                            // make text centered
+                            contentPadding: const EdgeInsets.fromLTRB(
+                                24.0, 20.0, 24.0, 24.0),
+                            // make corners rounded
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(20)),
+                            // make text error text
+                            titleTextStyle: TextStyle(color: errorText),
+                            // make title larger and bold
+                            title: const Text(
+                              'Error',
+                              style: TextStyle(
+                                  fontSize: 30, fontWeight: FontWeight.bold),
+                            ),
+                            content: Text('Error: ${snapshot.error}'),
+                            actions: <Widget>[
+                              TextButton(
+                                onPressed: () {
+                                  // reload camera page
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) => CameraPage()));
+                                },
+                                // make text larger and white and bold
+                                child: const Text(
+                                  'OK',
+                                  style: TextStyle(
+                                      fontSize: 25,
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ],
+                          );
                         } else {
+                          isChecked = true;
+                          // wait 3 seconds
+                          Future.delayed(const Duration(seconds: 3), () {
+                            isChecked = false;
+                          });
                           return Container();
                         }
                       },
@@ -213,7 +279,7 @@ class CameraPageState extends State<CameraPage> {
           await BackendUtils.changeVisibility();
 
           if (!mounted) return;
-          
+
           showDialog(
               context: context,
               builder: (context) {
@@ -380,7 +446,6 @@ class CameraPageState extends State<CameraPage> {
       if (lastResult == null && result != null) {
         lastResult = result;
       }
-
       // if successfully scanned
       if (result != null && result != lastResult) {
         // if code can be found in UPC database
@@ -416,17 +481,16 @@ class CameraPageState extends State<CameraPage> {
 
             // add to camera page's list of items
             widget.addItem(newProductWidget);
-            // toggle itemAdded so item doesn't duplicate
-            itemAdded = true;
           });
+
+          // toggle itemAdded so item doesn't duplicate
+          itemAdded = true;
+
+          // wait 5 seconds before allowing another item to be added
+          await Future.delayed(const Duration(seconds: 3));
+          itemAdded = false;
         }
       }
-    } else {
-      // wait 5 seconds before user can scan another item
-      // this way item doesn't duplicate over and over
-      Future.delayed(const Duration(seconds: 5), () {
-        itemAdded = false;
-      });
     }
   }
 

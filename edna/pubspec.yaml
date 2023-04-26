@@ -69,6 +69,7 @@ dependencies:
   timelines: ^0.1.0
   flutter_rounded_progress_bar: ^0.2.0
   confetti: ^0.7.0
+  msh_checkbox: ^2.0.1
 
 
 
