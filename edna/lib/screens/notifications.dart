@@ -96,7 +96,8 @@ class NotificationsPageState extends State<NotificationsPage>{
       //convert to bool by passing into function
       isSwitched = convertStringToBoolSwitch(onOffHolder);
       //convert valueHolder to string
-      ddValue = addDaysString(valueHolder);
+      ddValue = valueHolder;
+      //ddValue = addDaysString(valueHolder);
       print('after conversion isSwitched: $isSwitched');
       print('range ddValue: $ddValue');
     }); 
@@ -138,17 +139,17 @@ class NotificationsPageState extends State<NotificationsPage>{
   }
 
   //create a function that uses valueHolder and adds " days"
-  String addDaysString(String numDays) {
-    String fullString;
-    if (numDays != '3 days' || numDays != '5 days' || numDays != '7 days' || numDays != '10 days') {
-      fullString = '$numDays days';
-    return fullString;
-    }
-    else {
-      fullString = numDays;
-      return fullString;
-    }
-  }
+  //  String addDaysString(String numDays) {
+  //   String fullString;
+  //   if (numDays != '3 days' || numDays != '5 days' || numDays != '7 days' || numDays != '10 days') {
+  //     fullString = '$numDays days';
+  //   return fullString;
+  //   }
+  //   else {
+  //     fullString = numDays;
+  //     return fullString;
+  //   }
+  // }
 
   //create function to call updateUserPreferences to update database
   Future<void> updateUserNotificationRange(String notifRange) async {
