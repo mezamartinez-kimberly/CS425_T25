@@ -752,17 +752,17 @@ def updatePantryItem():
 
         if request.json['location']:
             if request.json['location'] == 1:
-                location = "pantry"
+                location = "1"
             elif request.json['location'] == 2:
-                location = "fridge"
+                location = "2"
             elif request.json['location'] == 3:
-                location = "freezer"
+                location = "3"
             else:
-                location = "pantry"
+                location = "1"
 
             pantry.location = location  
         else:
-            pantry.location = "pantry"
+            pantry.location = 1
 
         if request.json['upc']:
             product.upc = request.json['upc']
