@@ -40,6 +40,10 @@ class CameraPage extends StatefulWidget {
     itemsToInsert?.add(product);
   }
 
+  void removeItem(ProductWidget product) {
+    itemsToInsert?.remove(product);
+  }
+
   clearList() {
     itemsToInsert = [];
   }
