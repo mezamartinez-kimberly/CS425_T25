@@ -461,6 +461,11 @@ class CameraPageState extends State<CameraPage> {
             isVisibleInPantry: 0,
           );
 
+          // need to store upc to put in product widget later
+          // since we map the pantry item from the backend json response
+          // and pantry items in backend only have product id, not actual codes
+          var tempUPC = result!.code;
+
           lastResult = result;
 
           // add the new pantry item using the backend utils functinon addPantry
@@ -469,6 +474,8 @@ class CameraPageState extends State<CameraPage> {
             // get the json response from the backend
             dynamic jsonResponse = json.decode(value.body);
             Pantry pantryItem = Pantry.fromMap(jsonResponse);
+            // add upc code
+            pantryItem.upc = tempUPC;
 
             ProductWidget newProductWidget = ProductWidget(
               key: UniqueKey(),
