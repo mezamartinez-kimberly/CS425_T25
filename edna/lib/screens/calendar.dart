@@ -27,23 +27,30 @@ class CalendarClassState extends State<CalendarClass> {
   late List<Pantry> activePantryItems;
   List<ProductWidget> activePantryWidgets = [];
 
-  late final Map<DateTime, List<ProductWidget>> _kEventSource = <DateTime, List<ProductWidget>>{};
+  late final Map<DateTime, List<ProductWidget>> _kEventSource =
+      <DateTime, List<ProductWidget>>{};
 
   late LinkedHashMap<DateTime, List<ProductWidget>> _kEvents;
 
   // ignore: non_constant_identifier_names
   _TableEventsExampleState() {
     // get the active pantry items from the provider
-    activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
+    activePantryItems =
+        Provider.of<PantryProvider>(context, listen: false).activePantryItems;
 
-    for(final pantry in activePantryItems) {
-      activePantryWidgets.add(ProductWidget(pantryItem: pantry));
+    for (final pantry in activePantryItems) {
+      activePantryWidgets.add(ProductWidget(
+        pantryItem: pantry,
+        callingWidget: widget,
+      ));
     }
-   
+
     for (final productWidget in activePantryWidgets) {
-      (_kEventSource[productWidget.pantryItem.expirationDate as DateTime] ??= []).add(productWidget);
-     
-    };
+      (_kEventSource[productWidget.pantryItem.expirationDate as DateTime] ??=
+              [])
+          .add(productWidget);
+    }
+    ;
 
     _kEvents = LinkedHashMap<DateTime, List<ProductWidget>>(
       equals: isSameDay,
@@ -65,7 +72,7 @@ class CalendarClassState extends State<CalendarClass> {
     super.dispose();
   }
 
-  List<ProductWidget>_getEventsForDay(DateTime day) {
+  List<ProductWidget> _getEventsForDay(DateTime day) {
     // Implementation example
     return _kEvents[day] ?? [];
   }
@@ -171,25 +178,25 @@ class CalendarClassState extends State<CalendarClass> {
             ),
             //numbers UI customization
             calendarStyle: const CalendarStyle(
-            weekNumberTextStyle: TextStyle(
-              fontFamily: 'Noto Serif',
-              color: Color(0xFF4A5660),
-            ),
-            weekendTextStyle: TextStyle(
-              fontFamily: 'Noto Serif',
-              color: Color(0xFF4A5660),
-            ),
-            //todays color circle
-            todayDecoration: BoxDecoration(
-              color: Color(0xFFF7A4A2),
-              shape: BoxShape.circle,
-            ),
-            //selected color
-            selectedDecoration: BoxDecoration(
-              color: Color.fromARGB(131, 247, 164, 162),
-              shape: BoxShape.circle,
-            ),
-            outsideDaysVisible: false,
+              weekNumberTextStyle: TextStyle(
+                fontFamily: 'Noto Serif',
+                color: Color(0xFF4A5660),
+              ),
+              weekendTextStyle: TextStyle(
+                fontFamily: 'Noto Serif',
+                color: Color(0xFF4A5660),
+              ),
+              //todays color circle
+              todayDecoration: BoxDecoration(
+                color: Color(0xFFF7A4A2),
+                shape: BoxShape.circle,
+              ),
+              //selected color
+              selectedDecoration: BoxDecoration(
+                color: Color.fromARGB(131, 247, 164, 162),
+                shape: BoxShape.circle,
+              ),
+              outsideDaysVisible: false,
             ),
             onDaySelected: _onDaySelected,
             onRangeSelected: _onRangeSelected,
@@ -212,7 +219,7 @@ class CalendarClassState extends State<CalendarClass> {
                 return ListView.builder(
                   itemCount: value.length,
                   itemBuilder: (context, index) {
-                  //  print(value[index]);
+                    //  print(value[index]);
                     return value[index];
                   },
                 );

@@ -24,7 +24,8 @@ class NotificationsPage extends StatefulWidget {
   @override
   NotificationsPageState createState() => NotificationsPageState();
 }
-class NotificationsPageState extends State<NotificationsPage>{
+
+class NotificationsPageState extends State<NotificationsPage> {
   //expiration notif switch
 
   String ddValue = '';
@@ -41,24 +42,28 @@ class NotificationsPageState extends State<NotificationsPage>{
   @override
   void initState() {
     super.initState();
-    getUserPreferences().then((_) {
-    });
+    getUserPreferences().then((_) {});
   }
 
   //create a widget for a drop down menu for expiration notification range
   Widget buildDropDownMenu() {
-
-    List<DropdownMenuItem<String>> daysList = ['3 days', '5 days', '7 days', '10 days']
-        .map<DropdownMenuItem<String>>((String value) {
+    List<DropdownMenuItem<String>> daysList = [
+      '3 days',
+      '5 days',
+      '7 days',
+      '10 days'
+    ].map<DropdownMenuItem<String>>((String value) {
       return DropdownMenuItem<String>(
         value: value,
         child: Text(value),
       );
     }).toList();
 
-    DropdownMenuItem<String> dropdownValue = daysList[0];
+    //  DropdownMenuItem<String> dropdownValue = daysList[0];
     //DropdownMenuItem<String> dropdownValue = ddValue as DropdownMenuItem<String>;
-    
+    DropdownMenuItem<String> dropdownValue = daysList[0];
+    dropdownValue = daysList.firstWhere((element) => element.value == ddValue);
+
     return Container(
       padding: const EdgeInsets.all(20.0),
       child: DropdownButton<String>(
@@ -77,7 +82,6 @@ class NotificationsPageState extends State<NotificationsPage>{
             print(ddValue);
             //call to udpate range
             updateUserNotificationRange(ddValue);
-
           });
         },
         items: daysList,
@@ -90,7 +94,8 @@ class NotificationsPageState extends State<NotificationsPage>{
     //call /getUserPreferences from backend
     List<String> userPrefList = await BackendUtils.getUserPreferences();
     setState(() {
-      onOffHolder = userPrefList[0];    // they are currently stirngs but since its going to be isSwitched need to convert to bool
+      onOffHolder = userPrefList[
+          0]; // they are currently stirngs but since its going to be isSwitched need to convert to bool
       valueHolder = userPrefList[1];
       print('before conversion onOffHolder: $onOffHolder');
       //convert to bool by passing into function
@@ -100,9 +105,10 @@ class NotificationsPageState extends State<NotificationsPage>{
       //ddValue = addDaysString(valueHolder);
       print('after conversion isSwitched: $isSwitched');
       print('range ddValue: $ddValue');
-    }); 
+    });
   }
-    late bool isSwitched;
+
+  late bool isSwitched;
 
   //create a function that will pass in onOffHolder and convert it to a bool
   bool convertStringToBoolSwitch(String onOffHolder) {
@@ -110,9 +116,8 @@ class NotificationsPageState extends State<NotificationsPage>{
     if (onOffHolder == 'true') {
       switchOr = true;
       return switchOr;
-    }
-    else {
-     return switchOr;
+    } else {
+      return switchOr;
     }
   }
 
@@ -131,8 +136,7 @@ class NotificationsPageState extends State<NotificationsPage>{
     if (notifOnOff == true) {
       notifOnOffS = 'true';
       return notifOnOffS;
-    }
-    else {
+    } else {
       notifOnOffS = 'false';
       return notifOnOffS;
     }
@@ -195,15 +199,17 @@ class NotificationsPageState extends State<NotificationsPage>{
   }
 
   @override
-  Widget build(BuildContext context){
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Stack(
           children: <Widget>[
             _buildBackBtn(),
-            const Text('       Notification Settings',
-              style: TextStyle(fontSize: 30.0,
-                color: Colors.black, 
+            const Text(
+              '       Notification Settings',
+              style: TextStyle(
+                fontSize: 30.0,
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
@@ -221,49 +227,53 @@ class NotificationsPageState extends State<NotificationsPage>{
           child: ListView(
             children: <Widget>[
               //expiration notif toggle
-            SwitchListTile(
-              contentPadding:  const EdgeInsets.all(0),
-              title: const Text('Expiration Notifications',
-                style: TextStyle(fontSize: 20.0,
-                  color: Colors.black, 
+              SwitchListTile(
+                contentPadding: const EdgeInsets.all(0),
+                title: const Text(
+                  'Expiration Notifications',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  textAlign: TextAlign.left,
+                ),
+                value: isSwitched,
+                onChanged: (value) {
+                  setState(() {
+                    isSwitched = value;
+                    //call to update db
+                    updateNotificationOnOff(isSwitched);
+                  });
+                },
+                activeTrackColor: const Color(0xFF7D9AE4),
+                activeColor: Colors.white,
+              ),
+              //notifcation range area
+              const SizedBox(height: 30.0),
+              Text(
+                'Notification Range: $ddValue',
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
                 textAlign: TextAlign.left,
               ),
-              value: isSwitched,
-              onChanged: (value) {
-                setState(() {
-                  isSwitched = value;
-                  //call to update db
-                  updateNotificationOnOff(isSwitched);
-                });
-              },
-              activeTrackColor: const Color(0xFF7D9AE4), 
-              activeColor: Colors.white,
-            ),
-            //notifcation range area
-            const SizedBox(height: 30.0),
-            Text('Notification Range: $ddValue',
-              style: const TextStyle(fontSize: 20.0,
-                color: Colors.black, 
-                fontWeight: FontWeight.bold,
+              const SizedBox(height: 10.0),
+              const Text(
+                'When an expiring food item falls in this range you’ll get a notification.',
+                style: TextStyle(
+                  fontSize: 15.0,
+                  fontWeight: FontWeight.normal,
+                  color: Color.fromARGB(255, 63, 61, 61),
+                ),
               ),
-              textAlign: TextAlign.left,
-            ),
-            const SizedBox(height: 10.0),
-            const Text(
-              'When an expiring food item falls in this range you’ll get a notification.',
-              style: TextStyle(
-                fontSize: 15.0,
-                fontWeight: FontWeight.normal,
-                color: Color.fromARGB(255, 63, 61, 61),
-              ),
-            ),
-            //drop down menu
-            buildDropDownMenu(),
-          ],
+              //drop down menu
+              buildDropDownMenu(),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
