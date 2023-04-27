@@ -40,7 +40,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
       width: 300,
       child: TextFormField(
         decoration: InputDecoration(
-          labelText: 'First Name*',
+          labelText: 'First Name',
           labelStyle: GoogleFonts.openSans(
             textStyle: const TextStyle(
               color: Colors.black,
@@ -53,10 +53,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
           ),
         ),
         validator: (String? value) {
-          if (value!.isEmpty) {
-            return 'First Name is Required';
-          }
-          if (value.length > 30) {
+          if (value!.length > 30) {
             return 'First Name must be less than 30 characters';
           }
           return null;
@@ -88,7 +85,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
           ),
         ),
 
-        // create a validator that checks to see if the feild is empty and check that the value is under 30 characters
+        // create a validator that checks to see if the field is empty and check that the value is under 30 characters
         validator: (String? value) {
           if (value!.isEmpty) {
             return 'Last Name is Required';
@@ -148,7 +145,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
   // create a circular back button thats in the upper left corner
   Widget _buildBackBtn() {
     return Container(
-      // pushh the button down
+      // push the button down
       padding: const EdgeInsets.only(top: 10),
       alignment: Alignment.topLeft,
       // wrap in circular button

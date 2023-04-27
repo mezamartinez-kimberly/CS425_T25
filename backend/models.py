@@ -50,8 +50,8 @@ class UserPreference(db.Model):
     is_first_login = db.Column(db.Boolean, nullable=False)
     leaderboard_points = db.Column(db.Integer, nullable=False)
     is_dark_mode = db.Column(db.Boolean, nullable=False)
-    is_notifications_on = db.Column(db.Boolean, nullable=False)
-    notification_range = db.Column(db.Integer, nullable=False)
+    is_notifications_on = db.Column(db.String, nullable=False)
+    notification_range = db.Column(db.String, nullable=False)
 
     users = db.relationship("User", backref="user_preference", uselist=False)
 
