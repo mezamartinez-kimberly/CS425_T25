@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 import 'package:edna/dbs/pantry_db.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
@@ -495,7 +496,7 @@ class BackendUtils {
   }
 
   //create a function to obtain the users preferences
-  Future<List<String>> getUserPreferences() async {
+  static Future<List<String>> getUserPreferences() async {
     const String apiUrl = 'http://10.0.2.2:5000/obtainNotificationPreferences';
 
     // create a post request to the backend with the auth header
@@ -519,11 +520,8 @@ class BackendUtils {
       //get notification_range from response body
       String notificationRange = userPreferences['notification_range'];
 
-      //create a list of the data
-      List<String> userPreferencesList = [
-        isNotificationsOn,
-        notificationRange
-      ];
+      //create a list of the user data
+      List<String> userPreferencesList = [isNotificationsOn, notificationRange];
 
       //return the list
       return userPreferencesList;
@@ -532,5 +530,98 @@ class BackendUtils {
       return ["Failed to obtain user preferences"];
     }
   }
+
+  //create funtion to update the users preferences
+  static Future<String> updateUserPreferences(
+      Int isNotificationsOn, Int  notificationRange) async {
+    const String apiUrl = 'http://10.0.2.2:5000/updateUserPreferences';
+
+    // create a map called "message" that contains the data to be sent to the backend
+    final Map<String, dynamic> message = {
+      'is_notifications_on': isNotificationsOn,
+      'notification_range': notificationRange,
+    };
+
+    // convert the map to a JSON string
+    final String jsonPayload = json.encode(message);
+
+    // send the request to the backend as POST request with auth header and JSON message
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Bearer $sessionToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonPayload,
+    );
+
+    if (response.statusCode == 201) {
+      return "Update successful";
+    } else {
+      return "Update failed";
+    }
+
+  }
+
+  //create function to update the users isNotificationOn preference
+  static Future<String> updateNotificationOnOff(String isNotificationOn) async {
+    const String apiUrl = 'http://10.0.2.2:5000/updateNotificationOnOff';
+
+    // create a map called "message" that contains the data to be sent to the backend
+    final Map<String, dynamic> message = {
+      'is_notifications_on': isNotificationOn,
+    };
+
+    // convert the map to a JSON string
+    final String jsonPayload = json.encode(message);
+
+    // send the request to the backend as POST request with auth header and JSON message
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Bearer $sessionToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonPayload,
+    );
+
+    if (response.statusCode == 201) {
+      return "Update successful";
+    } else {
+      return "Update failed";
+    }
+
+  }
+
+  //create function to update the users notification range
+  static Future<String> updateUserNotificationRange(String notificationRange) async {
+    const String apiUrl = 'http://10.0.2.2:5000/updateNotificationRange';
+
+    // create a map called "message" that contains the data to be sent to the backend
+    final Map<String, dynamic> message = {
+      'notification_range': notificationRange,
+    };
+
+    // convert the map to a JSON string
+    final String jsonPayload = json.encode(message);
+
+    // send the request to the backend as POST request with auth header and JSON message
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': 'Bearer $sessionToken',
+        'Content-Type': 'application/json',
+      },
+      body: jsonPayload,
+    );
+
+    if (response.statusCode == 201) {
+      return "Update successful";
+    } else {
+      return "Update failed";
+    }
+
+  }
+
 }
 

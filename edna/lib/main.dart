@@ -77,7 +77,7 @@ void main() async {
     // your frequency to 15 min
     // if you have configured a lower frequency.
     //frequency: const Duration(days: 1),
-    frequency: const Duration(seconds: 14),
+    frequency: const Duration(minutes: 15),
   );
   //-------ABOVE IS THE CODE FOR NOTIFICATIONS---------------
 
@@ -91,6 +91,7 @@ void main() async {
   );
 }
 
+@pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) {
     // initialise the plugin of flutterlocalnotifications.
@@ -106,20 +107,28 @@ void callbackDispatcher() {
   });
 }
 
-int notificationOn = 0;
-int notifRange = 0;
+late String notificationOn;
+late String notifRange;
 
 
  
 Future showNotificationWithDefaultSound(flip) async {
   print('in showNotificationWithDefaultSound');
-  BackendUtils backendUtils = BackendUtils();
 
-  List<String> userPrefs = await backendUtils.getUserPreferences();
-  notificationOn = int.parse(userPrefs[0]);
-  notifRange = int.parse(userPrefs[1]);
+  List<String> userPrefs = await BackendUtils.getUserPreferences();
+  notificationOn = userPrefs[0];  //output is 'true' or 'false' in string
+  notifRange = userPrefs[1];    //ouptut is '3 days' etc in string
+  print('reg notifRange is $notifRange');
 
-  if (notificationOn == 1) {
+  //extract the numbers in notifRange value and change to int
+  notifRange = notifRange.replaceAll(RegExp(r'[^0-9]'), '');
+  print('notifRange is $notifRange');
+
+  //convert notifRange to int
+  int notifRangeInt = int.parse(notifRange);
+  print('notifRangeInt is $notifRangeInt');
+
+  if (notificationOn == 'true') {
     print('in showNotificationWithDefaultSound if statement');
     //get the current date
     DateTime today = DateTime.now();
@@ -135,7 +144,7 @@ Future showNotificationWithDefaultSound(flip) async {
     for (final item in activePantryItems){
       print('in showNotificationWithDefaultSound for loop');
       //subtract the notification range from the expiration date
-          DateTime firstDate = item.expirationDate!.subtract(Duration(days: notifRange));
+          DateTime firstDate = item.expirationDate!.subtract(Duration(days: notifRangeInt));
           //check if today falls in between the expiration date and the new date
           if (today.isAfter(firstDate) && today.isBefore(item.expirationDate!)){
             //if it does then create and send a notification containing the item name and expiration date

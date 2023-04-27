@@ -277,8 +277,8 @@ def register():
     user_preference = UserPreference(is_first_login=True, 
                                      leaderboard_points=0, 
                                      is_dark_mode=False,
-                                     is_notifications_on=True, 
-                                     notification_range=10)
+                                     is_notifications_on='true', 
+                                     notification_range= '10 days')
     
     db.session.add(person)
     db.session.add(user_preference)
@@ -894,7 +894,7 @@ def updateNotificationPreferences():
     user = User.query.filter_by(session_token=session_token).first()
 
     # get the users preference id from the database
-    preference = UserPreference.query.filter_by(user_id=user.id).first()
+    preference = UserPreference.query.filter_by(id=user.user_preference_id).first()
 
     # update the is_notifications_on and notification_range in the database
     preference.is_notifications_on = request.json['is_notifications_on']
@@ -902,14 +902,14 @@ def updateNotificationPreferences():
 
     return jsonify({'message': 'Notification preferences updated successfully'}), 200
 
-# create a route that will obtain the users notification preferences
-@app.route('/obtainNotificationPreferences', methods=['POST'])
+
+# create a route that will update the users is_notifications_on only
+@app.route('/updateNotificationOnOff', methods=['POST'])
 @jwt_required() # authentication Required
-def obtainNotificationPreferences():
-    # expected output from json:
-    # {
-    #     "is_notifications_on": 1,
-    #     "notification_range": 3
+def updateNotificationOnOff():
+    # expected input example:
+    # { 
+    #     "is_notifications_on": true
     # }
 
     # get the session token from thehtml authorization header
@@ -919,7 +919,47 @@ def obtainNotificationPreferences():
     user = User.query.filter_by(session_token=session_token).first()
 
     # get the users preference id from the database
-    preference = UserPreference.query.filter_by(user_id=user.id).first()
+    preference = UserPreference.query.filter_by(id=user.user_preference_id).first()
+
+    # update the is_notifications_on in the database
+    preference.is_notifications_on = request.json['is_notifications_on']
+
+    return jsonify({'message': 'Notification on/off updated successfully'}), 200
+
+
+# create a route that will update the users notification_range only 
+@app.route('/updateNotificationRange', methods=['POST'])
+@jwt_required() # authentication Required
+def updateNotificationRange():
+
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # get the users preference id from the database
+    preference = UserPreference.query.filter_by(id=user.user_preference_id).first()
+
+    # update the is_notifications_on and notification_range in the database
+    preference.notification_range = request.json['notification_range']
+
+    return jsonify({'message': 'Notification range updated successfully'}), 200
+
+
+# create a route that will obtain the users notification preferences
+@app.route('/obtainNotificationPreferences', methods=['POST'])
+@jwt_required() # authentication Required
+def obtainNotificationPreferences():
+
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # get the users preference id from the database
+    preference = UserPreference.query.filter_by(id=user.user_preference_id).first()
 
     # get the is_notifications_on and notification_range from the database
     is_notifications_on = preference.is_notifications_on
