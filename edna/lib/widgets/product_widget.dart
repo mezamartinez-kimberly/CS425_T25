@@ -3,6 +3,7 @@ import 'package:edna/widgets/edit_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // DateFormat
 import 'package:edna/backend_utils.dart';
+import 'package:edna/screens/camera.dart';
 
 class ProductWidget extends StatefulWidget {
   @override
@@ -80,6 +81,11 @@ class ProductWidgetState extends State<ProductWidget> {
         onDismissed: (direction) {
           // if deleted, remove from list
           BackendUtils.deletePantryItem(widget.pantryItem);
+
+          // if the calling widget is the CamerPage then access its removeitem function
+          if (widget.callingWidget is CameraPage) {
+            (widget.callingWidget as CameraPage).removeItem(widget);
+          }
         },
         child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),

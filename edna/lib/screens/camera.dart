@@ -40,6 +40,10 @@ class CameraPage extends StatefulWidget {
     itemsToInsert?.add(product);
   }
 
+  void removeItem(ProductWidget product) {
+    itemsToInsert?.remove(product);
+  }
+
   clearList() {
     itemsToInsert = [];
   }
@@ -493,8 +497,12 @@ class CameraPageState extends State<CameraPage> {
           // toggle itemAdded so item doesn't duplicate
           itemAdded = true;
 
-          // wait 5 seconds before allowing another item to be added
+          //refresh pantry list
+          refresh();
+
+          // wait 3 seconds before allowing another item to be added
           await Future.delayed(const Duration(seconds: 3));
+          refresh();
           itemAdded = false;
         }
       }
