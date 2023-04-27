@@ -59,10 +59,9 @@ class NotificationsPageState extends State<NotificationsPage> {
       );
     }).toList();
 
-    //  DropdownMenuItem<String> dropdownValue = daysList[0];
-    //DropdownMenuItem<String> dropdownValue = ddValue as DropdownMenuItem<String>;
     DropdownMenuItem<String> dropdownValue = daysList[0];
-    dropdownValue = daysList.firstWhere((element) => element.value == ddValue);
+    // DropdownMenuItem<String> dropdownValue = daysList[0];
+    // dropdownValue = daysList.firstWhere((element) => element.value == ddValue);
 
     return Container(
       padding: const EdgeInsets.all(20.0),
