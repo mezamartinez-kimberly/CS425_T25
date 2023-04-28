@@ -1,6 +1,14 @@
+import 'package:edna/provider.dart';
 import 'package:edna/screens/all.dart';
 import 'package:flutter/material.dart';
 import 'package:edna/backend_utils.dart';
+
+
+import 'package:edna/dbs/pantry_db.dart'; // pantry db
+
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 
 class ProfilePage extends StatefulWidget {
@@ -27,6 +35,8 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    WidgetsFlutterBinding.ensureInitialized();
+    NotificationService().initNotification();
     _getUserData().then((_) {
     });
   }
@@ -40,6 +50,7 @@ class ProfilePageState extends State<ProfilePage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          padding: const EdgeInsets.all(8.0),
           backgroundColor: const Color(0xFF7D9AE4),
         ),
         onPressed: () {
@@ -101,7 +112,7 @@ class ProfilePageState extends State<ProfilePage> {
                 ),
                 textAlign: TextAlign.left,
               ),
-              const SizedBox(height: 30.0),
+              const SizedBox(height: 20.0),
 
               //card for greeting
               SizedBox(
@@ -128,7 +139,7 @@ class ProfilePageState extends State<ProfilePage> {
                 ),
               ),
 
-              const SizedBox(height: 30.0),
+              const SizedBox(height: 20.0),
 
               // Account Settings Card
               Card(
@@ -201,34 +212,62 @@ class ProfilePageState extends State<ProfilePage> {
                 ),
               ),
 
+              const SizedBox(height: 10.0),
+
               // Appearance Settings Card
-              // Card(
-              //   elevation: 5,
-              //   shape: RoundedRectangleBorder(
-              //     side: const BorderSide(color: Colors.grey, width: 1.0),
-              //     borderRadius: BorderRadius.circular(10.0),
-              //   ),
-              //   child: ListTile(
-              //     contentPadding: const EdgeInsets.symmetric(
-              //         vertical: 10.0, horizontal: 16.0),
-              //     leading: const Icon(Icons.palette),
-              //     title: const Text(
-              //       'Appearance Settings',
-              //       style: TextStyle(
-              //         fontSize: 20.0,
-              //         fontWeight: FontWeight.bold,
-              //       ),
-              //     ),
-              //     subtitle: const Text(
-              //       'Tap to switch between light and dark mode',
-              //       maxLines: 2,
-              //       overflow: TextOverflow.ellipsis,
-              //     ),
-              //     onTap: () {
-              //       // switch between modes
-              //     },
-              //   ),
-              // ),
+              Card(
+                elevation: 5,
+                shape: RoundedRectangleBorder(
+                  side: const BorderSide(color: Colors.grey, width: 1.0),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: ListTile(
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 16.0),
+                  leading: const Icon(Icons.notifications),
+                  title: const Text(
+                    'Tap to receive notifications',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  subtitle: const Text(
+                    'Since our notifications are scheduled, we have implemented a way to show you the notifications you would have received.',
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  onTap: () async {
+                    //call backend utils getAllPantry to get all pantry items
+                    //List<Pantry> activePantryItems = await BackendUtils.getAllPantry();
+                    late List<Pantry> activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
+                    List<String> userPrefs = await BackendUtils.getUserPreferences();
+                    String notificationOn = userPrefs[0];  //output is 'true' or 'false' in string
+                    String notifRange = userPrefs[1];    //ouptut is '3 days' etc in string\
+
+                    //extract the numbers in notifRange value and change to int
+                    notifRange = notifRange.replaceAll(RegExp(r'[^0-9]'), '');
+                    //convert notifRange to int
+                    int notifRangeInt = int.parse(notifRange);
+                    //get the current date
+                    DateTime today = DateTime.now();
+                    for (final item in activePantryItems){
+                      print(activePantryItems.length);
+                      //subtract the notification range from the expiration date
+                      DateTime firstDate = item.expirationDate!.subtract(Duration(days: notifRangeInt));
+                      //check if today falls in between the expiration date and the new date
+                      if (today.isAfter(firstDate) && today.isBefore(item.expirationDate!)){
+                        String name = item.name!;
+                        String expirDate = DateFormat('MM/dd/yyyy').format(item.expirationDate!);
+                        String? titleContent = 'EDNA, $name is expiring soon!';
+                        String? bodyContent = 'Your $name will expire on $expirDate. Consider using it soon!';
+                        //show notification
+                        NotificationService().showNotification(title: titleContent, body: bodyContent);
+                      }
+                    }
+                  },
+                ),
+              ),
 
               const SizedBox(height: 10.0),
               Card(
@@ -270,5 +309,31 @@ class ProfilePageState extends State<ProfilePage> {
         ),
       ),
     );
+  }
+}
+//----------- notifications code below
+class NotificationService {
+  final FlutterLocalNotificationsPlugin notificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  Future<void> initNotification() async {
+    AndroidInitializationSettings initializationSettingsAndroid =
+        const AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    var initializationSettings = InitializationSettings(
+        android: initializationSettingsAndroid);
+    await notificationsPlugin.initialize(initializationSettings);
+  }
+
+  notificationDetails() {
+    return const NotificationDetails(
+        android: AndroidNotificationDetails('channelId', 'channelName', 'channel description',
+            importance: Importance.max));
+  }
+
+  Future showNotification(
+      {int id = 0, String? title, String? body}) async {
+    return notificationsPlugin.show(
+        id, title, body, await notificationDetails());
   }
 }

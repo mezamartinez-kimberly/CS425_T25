@@ -52,30 +52,70 @@ class FAQsPageState extends State<FAQsPage>{
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
+  final questions = [
+  {
+    'question': 'What is the purpose of EDNA?',
+    'answer': 'EDNA strives to help you decrease your food waste and save money while doing so. With our notifications and tree growing capabilities we try to remind and encourage you to eat your food before it goes bad!'
+  },
+  {
+    'question': 'How do I add a PLU code?',
+    'answer': 'You can add a PLU code when you go into the Camera Page or the Pantry Page and click on the + sign. You can then fill in the fields including the PLU codes.'
+  },
+  {
+    'question': 'How do I find items in the Calendar?',
+    'answer': 'To find events in the Calendar, you flip through the weeks or months until you see a dot under a date indicating an item is going to expire on that date.'
+  },
+  {
+    'question': 'How do I grow my tree?',
+    'answer': 'Your tree grows when you click on an item to mark as consumed and when prompted if the item is expired, you click on the no button. This is because the tree is a fun incentive for not wasting food and eating it before it expires!'
+  },
+  {
+    'question': 'How do I reset my password?',
+    'answer': 'To change your password simply go into the Profile Page, click on Account Settings, then fill in your email under the Change Password field. This will send an email verification code that you can enter when prompted. After which if it is correct, it will allow you to go onto the next page where you can change your password.'
+  },
+];
+
+@override
+Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Stack(
           children: <Widget>[
             _buildBackBtn(),
-            const Text('         FAQs',
-              style: TextStyle(fontSize: 30.0,
-                color: Colors.black, 
+            const Text(
+              '         FAQs',
+              style: TextStyle(
+                fontSize: 30.0,
+                color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),
           ],
-          
-      ),
-      automaticallyImplyLeading: false,
-      backgroundColor: Colors.transparent,
-      elevation: 0,
+        ),
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
       body: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.all(20.0),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: ListView.builder(
+            itemCount: questions.length,
+            itemBuilder: (context, index) {
+              final question = questions[index]['question'];
+              final answer = questions[index]['answer'];
+              return ExpansionTile(
+                title: Text(question!),
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(answer!),
+                  ),
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

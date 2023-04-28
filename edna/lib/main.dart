@@ -6,6 +6,7 @@ import 'package:another_flushbar/flushbar.dart'; // snackbars
 import 'package:another_flushbar/flushbar_helper.dart'; // snackbars
 import 'package:another_flushbar/flushbar_route.dart'; // snackbars
 import 'package:edna/provider.dart'; // provider
+import 'package:intl/intl.dart';
 import 'package:path/path.dart'; // path
 import 'package:provider/provider.dart'; // provider
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
@@ -62,7 +63,7 @@ void main() async {
       callbackDispatcher,
       // If enabled it will post a notification whenever
       // the task is running. Handy for debugging tasks
-      isInDebugMode: true
+      isInDebugMode: false
   );
   // Periodic task registration
   Workmanager().registerPeriodicTask(
@@ -94,6 +95,7 @@ void main() async {
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) {
+    print('in call back dispatcher');
     // initialise the plugin of flutterlocalnotifications.
     FlutterLocalNotificationsPlugin flip = FlutterLocalNotificationsPlugin();
     // app_icon needs to be a added as a drawable
@@ -102,6 +104,7 @@ void callbackDispatcher() {
     // initialise settings for both Android and iOS device.
     var settings = InitializationSettings(android: android);
     flip.initialize(settings);
+
     showNotificationWithDefaultSound(flip);
     return Future.value(true);
   });
@@ -110,12 +113,43 @@ void callbackDispatcher() {
 late String notificationOn;
 late String notifRange;
 
+//example code 
+// Future showNotificationWithDefaultSound(flip) async {
+// print(' in _showNotificationWithDefaultSound function in edna app');
+
+// List<String> userPrefs = await BackendUtils.getUserPreferences();
+
+// notificationOn = userPrefs[0];  //output is 'true' or 'false' in string
+// notifRange = userPrefs[1];    //ouptut is '3 days' etc in string
+// print('reg notifRange is $notifRange, notificationOn is $notificationOn');
+// // Show a notification after every 15 minute with the first
+// // appearance happening a minute after invoking the method
+// var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+// 	'your channel id',
+// 	'your channel name',
+//   'channel description',
+// 	importance: Importance.max,
+// 	priority: Priority.high
+// );
+
+// // initialise channel platform for both Android and iOS device.
+// var platformChannelSpecifics = NotificationDetails(
+// 	android: androidPlatformChannelSpecifics,
+// );
+// await flip.show(0, 'GeeksforGeeks',
+// 	'Your are one step away to connect with GeeksforGeeks',
+// 	platformChannelSpecifics, payload: 'Default_Sound'
+// );
+// print('Notification fired');
+
+// }
+
 
  
 Future showNotificationWithDefaultSound(flip) async {
-  print('in showNotificationWithDefaultSound');
+  print('in showNotificationWithDefaultSound for function with pantry stuff');
 
-  List<String> userPrefs = await BackendUtils.getUserPreferences();
+  List<String> userPrefs = const MyApp().getUserPreferences() as List<String>;
   notificationOn = userPrefs[0];  //output is 'true' or 'false' in string
   notifRange = userPrefs[1];    //ouptut is '3 days' etc in string
   print('reg notifRange is $notifRange');
@@ -139,6 +173,8 @@ Future showNotificationWithDefaultSound(flip) async {
     //late List<Pantry> activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
     //Future<List<Pantry>> Function() activePantryItems = BackendUtils.getAllPantry;
     //call function from MyApp to get activePantryItems
+    //call backend utils getAllPantry function to get active pantry items
+    //List<Pantry> activePantryItems = await BackendUtils.getAllPantry();
     List<Pantry> activePantryItems = const MyApp().getActivePantryItems as List<Pantry>;
 
     for (final item in activePantryItems){
@@ -161,10 +197,12 @@ Future showNotificationWithDefaultSound(flip) async {
             var platformChannelSpecifics = NotificationDetails(
                 android: androidPlatformChannelSpecifics
             );
+            String name = item.name!;
+            String date = DateFormat('MM/dd/yyyy').format(item.expirationDate!);
+            String flipTitle = '$name is expiring soon!';
+            String flipBody = 'It expires on $date. Remember to use it before it expires to grow your tree and save the planet!';
             print(flip);
-            await flip.show(0, '${item.name} is expiring soon!', 
-              'It expires on ${item.expirationDate}. Remember to use it before it expires to grow your tree and save the planet!',
-              platformChannelSpecifics, payload: 'Default_Sound'
+            await flip.show(flipTitle,flipBody, platformChannelSpecifics, payload: 'Default_Sound'
             );
         }
      }
@@ -179,6 +217,13 @@ class MyApp extends StatelessWidget {
     //use provider class to get active pantry items
     late List<Pantry> activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
     return activePantryItems;
+  }
+
+  //create a function that gets the user preferences
+  Future<List<String>> getUserPreferences() async {
+    //get the user preferences from the backend
+    List<String> userPrefs = await BackendUtils.getUserPreferences();
+    return userPrefs;
   }
 
   @override
@@ -220,8 +265,8 @@ class MyApp extends StatelessWidget {
   }
 
   createSuccessMessage(context, errorMsg) {
-    var errorText = Color.fromARGB(255, 15, 88, 47);
-    var errorBackground = Color.fromARGB(255, 78, 249, 36);
+    var errorText = const Color.fromARGB(255, 15, 88, 47);
+    var errorBackground = const Color.fromARGB(255, 78, 249, 36);
 
     Flushbar(
       padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),

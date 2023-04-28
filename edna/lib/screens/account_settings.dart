@@ -22,6 +22,11 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
   String firstName = "";
   String lastName = "";
   String email = "";
+  String newEmail = '';
+  bool isFirstName = false;
+  bool isLastName = false;
+  bool isNewEmail = false;
+  bool isPEmail = false;
 
   //create an initialization function to get user data
   @override
@@ -53,13 +58,19 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
           ),
         ),
         validator: (String? value) {
-          if (value!.length > 30) {
-            return 'First Name must be less than 30 characters';
+          if (value != null && value.isNotEmpty && value.length > 30) {
+            return 'Frist Name must be less than 30 characters';
           }
           return null;
         },
         onSaved: (String? value) {
-          firstName = value!;
+          if (value != null && value.isNotEmpty) {
+            firstName= value;
+            isFirstName = true;
+          } else {
+            firstName = firstName;
+            isFirstName = false;
+          }
         },
       ),
     );
@@ -72,7 +83,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
       width: 300,
       child: TextFormField(
         decoration: InputDecoration(
-          labelText: 'Last Name*',
+          labelText: 'Last Name',
           labelStyle: GoogleFonts.openSans(
             textStyle: const TextStyle(
               color: Colors.black,
@@ -84,36 +95,35 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
             borderRadius: BorderRadius.circular(10),
           ),
         ),
-
-        // create a validator that checks to see if the field is empty and check that the value is under 30 characters
         validator: (String? value) {
-          if (value!.isEmpty) {
-            return 'Last Name is Required';
-          }
-          if (value.length > 30) {
+          if (value != null && value.isNotEmpty && value.length > 30) {
             return 'Last Name must be less than 30 characters';
           }
           return null;
         },
-
-        // save the value of the field
         onSaved: (String? value) {
-          lastName = value!;
+          if (value != null && value.isNotEmpty) {
+            lastName = value;
+            isLastName = true;
+          } else {
+            lastName = lastName;
+            isLastName = false;
+          }
         },
       ),
     );
   }
 
-// build email field
-  Widget _buildEmailField() {
+
+// build email field for updating email
+  Widget _buildNewEmailField() {
     return SizedBox(
       height: 80,
       width: 250,
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
-          // show the label text even when unfocused
-          labelText: 'E-mail*',
+          labelText: 'E-mail',
           labelStyle: GoogleFonts.openSans(
             textStyle: const TextStyle(
               color: Colors.black,
@@ -126,17 +136,59 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
           ),
         ),
         validator: (String? value) {
-          if (value!.isEmpty) {
-            return 'Email is required';
-          }
-          if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-              .hasMatch(value)) {
-            return 'Please enter a valid email address';
+          if (value != null && value.isNotEmpty) {
+            if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+              return 'Please enter a valid email address';
+            }
           }
           return null;
         },
         onSaved: (String? value) {
-          email = value!;
+          if (value != null && value.isNotEmpty) {
+            newEmail = value;
+            isNewEmail = true;
+          } else {
+            isNewEmail = false;
+          }
+        },
+      ),
+    );
+  }
+
+  //build email field for password reset
+  Widget _buildPassEmailField() {
+    return SizedBox(
+      height: 80,
+      width: 250,
+      child: TextFormField(
+        keyboardType: TextInputType.emailAddress,
+        decoration: InputDecoration(
+          labelText: 'E-mail',
+          labelStyle: GoogleFonts.openSans(
+            textStyle: const TextStyle(
+              color: Colors.black,
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        validator: (String? value) {
+          if (value!.isNotEmpty) {
+            if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+              return 'Please enter a valid email address';
+            }
+          }
+          return null;
+        },
+        onSaved: (String? value) {
+          if (value!.isNotEmpty && RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+            isPEmail = true;
+          } else {
+            isPEmail = false;
+          }
         },
       ),
     );
@@ -177,28 +229,37 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
   }
 
   Widget _buildSubmitButton() {
-    return SizedBox(
-      height: 50,
-      width: 350,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          backgroundColor: const Color(0xFF7D9AE4),
+  return SizedBox(
+    height: 50,
+    width: 350,
+    child: ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
         ),
-        onPressed: ()async {
-          formKey.currentState!.save(); // Always save the form data
+        backgroundColor: const Color(0xFF7D9AE4),
+      ),
+      onPressed: () async {
+        formKey.currentState!.save(); // Always save the form data
 
-          if (formKey.currentState!.validate()) {
-            // print email
-            print(email);
+        if (formKey.currentState!.validate()) {
+          if (isFirstName) {
+            //make call to backend utils function to update first name
+            await BackendUtils.updateFirstName(firstName);
+          }
 
-            _updateUserNameEmail(firstName, lastName, email);
+          if (isLastName) {
+            await BackendUtils.updateLastName(lastName);
+          }
 
-            String result = await BackendUtils.sendOTPEmail(email);
+          if (isNewEmail) {
+            await BackendUtils.updateEmail(newEmail);
+          }
 
-            // Resolved an aync + naviagation issue
+          if (isPEmail) {
+              String result = await BackendUtils.sendOTPEmail(email);
+
+            // Resolved an async + navigation issue
             // https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html
             if (!mounted) return;
 
@@ -229,22 +290,26 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
                   ),
                   behavior: SnackBarBehavior.floating,
                   margin: const EdgeInsets.symmetric(
-                      horizontal: 30.0, vertical: 50),
+                    horizontal: 30.0,
+                    vertical: 50,
+                  ),
                 ),
               );
             }
           }
-        },
-        child: const Text(
-          'Submit',
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-          ),
+        }
+      },
+      child: const Text(
+        'Submit',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 18,
         ),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   //function to get user data from backend
   Future<void> _getUserData() async {
@@ -336,7 +401,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
                 ),
               ),
               const SizedBox(height: 20.0),
-              _buildEmailField(),
+              _buildNewEmailField(),
               const SizedBox(height: 20.0),
               //change password area
               const Text(
@@ -356,7 +421,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
                 ),
               ),
               const SizedBox(height: 20.0),
-              _buildEmailField(),
+              _buildPassEmailField(),
               const SizedBox(height: 20.0),
               _buildSubmitButton(),
             ],

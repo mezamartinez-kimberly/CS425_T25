@@ -108,13 +108,13 @@ class NotificationsPageState extends State<NotificationsPage> {
     });
   }
 
-  late bool isSwitched;
+  late Future<bool> isSwitched;
 
   //create a function that will pass in onOffHolder and convert it to a bool
-  bool convertStringToBoolSwitch(String onOffHolder) {
-    bool switchOr = false;
+  Future<bool> convertStringToBoolSwitch(String onOffHolder) {
+    Future<bool> switchOr = false as Future<bool>;
     if (onOffHolder == 'true') {
-      switchOr = true;
+      switchOr = true as Future<bool>;
       return switchOr;
     } else {
       return switchOr;
@@ -238,10 +238,10 @@ class NotificationsPageState extends State<NotificationsPage> {
                   ),
                   textAlign: TextAlign.left,
                 ),
-                value: isSwitched,
+                value: isSwitched as bool,
                 onChanged: (value) {
                   setState(() {
-                    isSwitched = value;
+                    isSwitched = value as Future<bool>;
                     //call to update db
                     updateNotificationOnOff(isSwitched);
                   });
