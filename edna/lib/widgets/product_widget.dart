@@ -133,11 +133,11 @@ class ProductWidgetState extends State<ProductWidget> {
                       ),
                       subtitle: _formatDate(),
                       trailing: SizedBox(
-                          width: 73,
+                          width: 70,
                           child: Row(
                             children: [
                               Expanded(
-                                flex: 3,
+                                flex: 4,
                                 child: Text(
                                   // show quantity
                                   "(x${widget.pantryItem.quantity})",
@@ -148,8 +148,9 @@ class ProductWidgetState extends State<ProductWidget> {
                                   ),
                                 ),
                               ),
+
                               Expanded(
-                                flex: 4,
+                                flex: 5,
                                 child: _buildEditButton(),
                               ),
                               // spacer
