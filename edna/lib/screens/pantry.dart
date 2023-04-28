@@ -255,6 +255,7 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
         padding: const EdgeInsets.only(right: 15),
         alignment: Alignment.bottomRight,
         child: FloatingActionButton(
+          elevation: 3,
           backgroundColor: MyTheme().blueColor,
           onPressed: () {
             // show edit widget
@@ -269,7 +270,6 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                   );
                 });
           },
-          elevation: 0,
           child: const Icon(
             Icons.add,
             size: 35.0,

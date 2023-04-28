@@ -326,6 +326,32 @@ class BackendUtils {
     }
   }
 
+// create a function called add expiration data
+  static Future<dynamic> addExpirationData(Pantry pantryItem) async {
+    const String apiUrl = 'http://192.168.1.135:5000/addExpirationData';
+
+    // from the pantry item extract the upc, plu, date added and dateRemoved and zip them into a json map
+    final Map<String, dynamic> message = {
+      'upc': pantryItem.upc,
+      'plu': pantryItem.plu,
+      'location': pantryItem.storageLocation,
+      'date_added': pantryItem.dateAdded?.toIso8601String(),
+      'date_removed': pantryItem.expirationDate?.toIso8601String(),
+    };
+
+    // create a post request to the backend with the auth header
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': "Bearer $sessionToken",
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(message),
+    );
+
+    return response;
+  }
+
   // delete all database items
   // for debugging
   static Future<String> deleteAll() async {

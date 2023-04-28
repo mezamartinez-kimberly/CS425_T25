@@ -591,6 +591,84 @@ def addPantry():
     return jsonify(pantry_dict), 201
 
 
+# create an app route to add expiration information from the user
+@app.route('/addExpirationData', methods=['POST'])
+@jwt_required() # authentication Required
+def addExpirationData():
+    # expected input json
+    # {
+    #     "upc": "123456789012",
+    #     "plu": "1234",
+    #     "location" : 1,
+    #     "date_added": "2020-04-20T00:00:00.000Z",
+    #    "date_removed": "2020-04-20T00:00:00.000Z", 
+    # }
+
+    # get the user ID from the session token
+    session_token = request.headers.get('Authorization').split()[1]
+    user_id = User.query.filter_by(session_token=session_token).first().id
+
+    # get all information from the json
+    upc = request.json['upc']
+    plu = request.json['plu']
+    location = request.json['location']
+    date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
+    expiration_date = datetime.strptime(str(request.json['date_removed']), '%Y-%m-%dT%H:%M:%S.%f')
+
+
+    # check to make sure that expiration date is after the date added
+    if expiration_date < date_added:
+        return 
+    else:
+        # subtract the expiration date from the date added to get the expiration time
+        expiration_time = expiration_date - date_added
+
+        # get rid of everything but the days
+        expiration_time = int(expiration_time.days)
+
+
+    # based on location, we will asign the correct value to the correct expiration time
+    if location == 1: # pantry
+        expiration_time_pantry = expiration_time
+        expiration_time_fridge = None
+        expiration_time_freezer = None
+    elif location == 2: # fridge
+        expiration_time_pantry = None
+        expiration_time_fridge = expiration_time
+        expiration_time_freezer = None
+    elif location == 3: # freezer
+        expiration_time_pantry = None
+        expiration_time_fridge = None
+        expiration_time_freezer = expiration_time
+
+    # query the product table to get the product id
+    if upc != None:
+        product = Product.query.filter_by(upc=upc).first()
+    else :
+        product = Product.query.filter_by(plu=plu).first()
+
+    # add the expiration data to the expiration data table
+    expiration_data = ExpirationData(user_id = user_id, product_id=product.id, expiration_time_pantry=expiration_time, expiration_time_fridge=expiration_time, expiration_time_freezer=expiration_time)
+
+    print(expiration_data)
+
+    # add the expiration data to the database
+    db.session.add(expiration_data)
+    db.session.commit()
+
+    # return a response code of 201
+    return jsonify({'message': 'Expiration data added'}), 201
+
+
+
+
+     
+
+
+
+
+
+
 @app.route('/getAllPantry', methods=['GET'])
 @jwt_required() # authentication Required
 def getAllPantry():

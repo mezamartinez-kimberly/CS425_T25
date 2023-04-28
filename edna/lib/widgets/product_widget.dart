@@ -210,6 +210,9 @@ class ProductWidgetState extends State<ProductWidget> {
                   // cell function to update this in the backend
                   BackendUtils.updatePantryItem(widget.pantryItem);
 
+                  // Add expiration info to the backend
+                  BackendUtils.addExpirationData(widget.pantryItem);
+
                   // wait 0.4 sec before deleting on page
                   Future.delayed(const Duration(milliseconds: 400), () {
                     widget.refreshPantryList!();
