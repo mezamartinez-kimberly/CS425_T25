@@ -84,6 +84,7 @@ dependencies:
   #background_fetch: ^1.1.5
   flutter_local_notifications: ^8.2.0
   workmanager: ^0.5.1
+  rive: ^0.10.4
   # rxdart: ^0.27.7
 
 
@@ -152,6 +153,10 @@ flutter:
     - assets/images/tb6.png  
   
     - assets/logos/g-logo.png
+
+    - assets/animation/checkmark_icon.riv
+    - assets/animation/food_loading.riv
+
 
   # To add assets to your application, add an assets section, like this:
   # assets:

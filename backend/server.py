@@ -243,8 +243,8 @@ def deleteAll():
     Pantry.query.delete()
 
     # delete user and person table
-    User.query.delete()
-    Person.query.delete()
+    # User.query.delete()
+    # Person.query.delete()
 
 
     db.session.commit()
@@ -392,6 +392,8 @@ def upc():
     if product is None:
         response_tuple = apiCall(upc)
 
+        print(response_tuple[0])
+
         # if the API call was successful, save the data to the database
         if response_tuple[1] == 200:
             product = Product(name=response_tuple[0], upc=upc, plu=None, logical_delete=False)
@@ -494,6 +496,8 @@ def addPantry():
             return jsonify({'error': 'PLU not found'}), 404
     else:
         return jsonify({'error': 'No UPC or PLU provided'}), 400
+    
+
     
 
     # now we have to see if the name provided matches the name of the product in the database 
@@ -828,8 +832,6 @@ def deletePantryItem():
         return jsonify({'message': 'Pantry item deleted successfully'}), 201
     
 
-
-
 # create a route that will obtain the user's first name, last name, and email
 @app.route('/obtainUserNameEmail', methods=['POST'])
 @jwt_required() # authentication Required
@@ -1007,9 +1009,6 @@ def obtainNotificationPreferences():
 
     return jsonify({'is_notifications_on': is_notifications_on, 'notification_range': notification_range}), 200
     
-
-
-
 # create a route that will increment the leaderboard_points by 1
 @app.route('/addPoints', methods=['POST'])
 @jwt_required() # authentication Required
