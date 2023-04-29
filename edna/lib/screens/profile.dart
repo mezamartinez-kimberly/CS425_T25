@@ -3,7 +3,6 @@ import 'package:edna/screens/all.dart';
 import 'package:flutter/material.dart';
 import 'package:edna/backend_utils.dart';
 
-
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
 
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -11,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
-
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -24,12 +22,10 @@ class ProfilePageState extends State<ProfilePage> {
   //dark/light mode switch
   bool isSwitched = false;
 
-  String firstName = "";
-  String lastName = "";
-  String email = "";
+  Future<List<String>>? userData;
 
   refresh() async {
-    _getUserData();
+    await _getUserData();
     setState(() {});
   }
 
@@ -37,24 +33,17 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    _getUserData().then((_) {
-    });
+    _getUserData().then((_) {});
     WidgetsFlutterBinding.ensureInitialized();
     NotificationService().initNotification();
-  }
-  //create a didChangeDependencies to check if user data has changed
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _getUserData().then((_) {
-      setState(() {});
-    });
   }
 
   Widget _buildLogOutButton() {
     return SizedBox(
+      //center align
+
       height: 50,
-      width: 350,
+      width: MediaQuery.of(context).size.width * 0.885,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
@@ -73,7 +62,9 @@ class ProfilePageState extends State<ProfilePage> {
             ),
           );
           _logOut().then((_) {
-            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute( builder: (ctx) => const LoginPage()), (route) => false);
+            Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (ctx) => const LoginPage()),
+                (route) => false);
           });
         },
         child: const Text(
@@ -90,10 +81,7 @@ class ProfilePageState extends State<ProfilePage> {
   //function to get user data from backend
   Future<void> _getUserData() async {
     //get user data from backend
-    List<String> userData = await BackendUtils.getUserData();
-      firstName = userData[0];
-      lastName = userData[1];
-      email = userData[2];
+    userData = BackendUtils.getUserData();
   }
 
   //function to call logout from backend
@@ -123,28 +111,45 @@ class ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 20.0),
 
               //card for greeting
-              SizedBox(
-                child: Center(
-                  child: Column(
-                    children: [
-                      Text(
-                        'Hello, $firstName $lastName!',
-                        style: const TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
+              FutureBuilder<List<String>>(
+                future: userData,
+                builder: (BuildContext context,
+                    AsyncSnapshot<List<String>> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.done) {
+                    if (snapshot.hasError) {
+                      return Text("Error: ${snapshot.error}");
+                    } else {
+                      final firstName = snapshot.data![0];
+                      final lastName = snapshot.data![1];
+                      final email = snapshot.data![2];
+                      return Center(
+                        child: Column(
+                          children: [
+                            Text(
+                              'Hello, $firstName $lastName!',
+                              style: const TextStyle(
+                                fontSize: 20.0,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 10.0),
+                            Text(
+                              email,
+                              style: const TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                      const SizedBox(height: 10.0),
-                      Text(
-                        email,
-                        style: const TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                      );
+                    }
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
               ),
 
               const SizedBox(height: 20.0),
@@ -173,14 +178,13 @@ class ProfilePageState extends State<ProfilePage> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   onTap: () {
-                    Navigator.push( context, MaterialPageRoute( builder: (context) => const AccountSettingsPage()), ).then((value) => setState(() { refresh();}));
-                    // Navigate to the account settings page
-                    // Navigator.push(
-                    //   context,
-                    //   MaterialPageRoute(builder: (context) => const AccountSettingsPage(),
-                      
-                    //   ),
-                    // );
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const AccountSettingsPage()),
+                    ).then((value) => setState(() {
+                          refresh();
+                        }));
                   },
                 ),
               ),
@@ -214,7 +218,8 @@ class ProfilePageState extends State<ProfilePage> {
                     // Navigate to the notification settings page
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => const NotificationsPage(),
+                      MaterialPageRoute(
+                        builder: (context) => const NotificationsPage(),
                       ),
                     );
                   },
@@ -249,10 +254,15 @@ class ProfilePageState extends State<ProfilePage> {
                   onTap: () async {
                     //call backend utils getAllPantry to get all pantry items
                     //List<Pantry> activePantryItems = await BackendUtils.getAllPantry();
-                    late List<Pantry> activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
-                    List<String> userPrefs = await BackendUtils.getUserPreferences();
-                    String notificationOn = userPrefs[0];  //output is 'true' or 'false' in string
-                    String notifRange = userPrefs[1];    //ouptut is '3 days' etc in string\
+                    late List<Pantry> activePantryItems =
+                        Provider.of<PantryProvider>(context, listen: false)
+                            .activePantryItems;
+                    List<String> userPrefs =
+                        await BackendUtils.getUserPreferences();
+                    String notificationOn =
+                        userPrefs[0]; //output is 'true' or 'false' in string
+                    String notifRange =
+                        userPrefs[1]; //ouptut is '3 days' etc in string\
 
                     //extract the numbers in notifRange value and change to int
                     notifRange = notifRange.replaceAll(RegExp(r'[^0-9]'), '');
@@ -264,35 +274,26 @@ class ProfilePageState extends State<ProfilePage> {
                     for (final item in activePantryItems) {
                       print(activePantryItems.length);
                       //subtract the notification range from the expiration date
-                      DateTime firstDate = item.expirationDate!.subtract(Duration(days: notifRangeInt));
+                      DateTime firstDate = item.expirationDate!
+                          .subtract(Duration(days: notifRangeInt));
                       //check if today falls in between the expiration date and the new date
-                      if (today.isAfter(firstDate) && today.isBefore(item.expirationDate!)) {
+                      if (today.isAfter(firstDate) &&
+                          today.isBefore(item.expirationDate!)) {
                         String name = item.name!;
-                        String expirDate = DateFormat('MM/dd/yyyy').format(item.expirationDate!);
+                        String expirDate = DateFormat('MM/dd/yyyy')
+                            .format(item.expirationDate!);
                         String titleContent = 'EDNA $name is expiring soon!';
-                        String bodyContent = 'Your $name will expire on $expirDate. Consider using it soon!';
+                        String bodyContent =
+                            'Your $name will expire on $expirDate. Consider using it soon!';
                         print(name);
                         print(titleContent);
                         print(bodyContent);
                         //show notification
-                        NotificationService().showNotification(title: titleContent, body: bodyContent);
+                        NotificationService().showNotification(
+                            title: titleContent, body: bodyContent);
                         int indexValue = notifRangeInt;
                         int loopValue = indexValue;
-                        //loops through the index value and subtract -1 each time to schedule a notification for each day leading up to the expiration date
-                        // for (int i = 0; i < indexValue; i++) {
-                        //   //create a value for the scheduled notification date time that is a every day leading up to the expiration date
-                        //   DateTime scheduledNotificationDateTime = item.expirationDate!.subtract(Duration(days: loopValue));
-                        //   NotificationService().scheduleNotification(scheduledNotificationDateTime: scheduledNotificationDateTime);
-                        //   //delay notification by 5 seconds
-                        //   await Future.delayed(const Duration(seconds: 5));
-                        //   //subtract 1 from the index value
-                        //   loopValue = loopValue - 1;
-                        //   print('scheduled notification for $scheduledNotificationDateTime');
-                        // }
-                        // //create a value for the scheduled notification date time that is a every day leading up to the expiration date
-                        // DateTime scheduledNotificationDateTime = item.expirationDate!.subtract(Duration(days: notifRangeInt));
-                        // NotificationService().scheduleNotification(scheduledNotificationDateTime: scheduledNotificationDateTime);
-                        
+
                         //delay notification by 5 seconds
                         await Future.delayed(const Duration(seconds: 5));
                       }
@@ -327,15 +328,17 @@ class ProfilePageState extends State<ProfilePage> {
                   onTap: () {
                     // Navigate to the FAQs page
                     Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const FAQsPage(),
-                      )
-                    );
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FAQsPage(),
+                        ));
                   },
                 ),
               ),
               const SizedBox(height: 10.0),
-              _buildLogOutButton(),
+              Center(
+                child: _buildLogOutButton(),
+              )
             ],
           ),
         ),
@@ -343,6 +346,7 @@ class ProfilePageState extends State<ProfilePage> {
     );
   }
 }
+
 //----------- notifications code below
 class NotificationService {
   final FlutterLocalNotificationsPlugin notificationsPlugin =
@@ -352,40 +356,20 @@ class NotificationService {
     AndroidInitializationSettings initializationSettingsAndroid =
         const AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    var initializationSettings = InitializationSettings(
-        android: initializationSettingsAndroid);
+    var initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
     await notificationsPlugin.initialize(initializationSettings);
   }
 
   notificationDetails() {
     return const NotificationDetails(
-        android: AndroidNotificationDetails('channelId', 'channelName', 'channel description',
+        android: AndroidNotificationDetails(
+            'channelId', 'channelName', 'channel description',
             importance: Importance.max));
   }
 
-  Future showNotification(
-      {int id = 0, String? title, String? body}) async {
+  Future showNotification({int id = 0, String? title, String? body}) async {
     return notificationsPlugin.show(
         id, title, body, await notificationDetails());
   }
-
-  // Future scheduleNotification(
-  //     {int id = 0,
-  //     String? title,
-  //     String? body,
-  //     String? payLoad,
-  //     required DateTime scheduledNotificationDateTime}) async {
-  //   return notificationsPlugin.zonedSchedule(
-  //       id,
-  //       title,
-  //       body,
-  //       tz.TZDateTime.from(
-  //         scheduledNotificationDateTime,
-  //         tz.local,
-  //       ),
-  //       await notificationDetails(),
-  //       androidAllowWhileIdle: true,
-  //       uiLocalNotificationDateInterpretation:
-  //           UILocalNotificationDateInterpretation.absoluteTime);
-  // }
 }

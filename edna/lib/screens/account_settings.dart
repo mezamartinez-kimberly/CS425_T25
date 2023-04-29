@@ -32,8 +32,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
   @override
   void initState() {
     super.initState();
-    _getUserData().then((_) {
-    });
+    _getUserData().then((_) {});
   }
 
   refresh() async {
@@ -70,7 +69,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
         },
         onSaved: (String? value) {
           if (value != null && value.isNotEmpty) {
-            firstName= value;
+            firstName = value;
             isFirstName = true;
           } else {
             firstName = firstName;
@@ -119,7 +118,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
     );
   }
 
-
+// build email field for updating email
 // build email field for updating email
   Widget _buildNewEmailField() {
     return SizedBox(
@@ -128,7 +127,7 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
-          labelText: 'E-mail',
+          labelText: 'New E-mail',
           labelStyle: GoogleFonts.openSans(
             textStyle: const TextStyle(
               color: Colors.black,
@@ -142,7 +141,8 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
         ),
         validator: (String? value) {
           if (value != null && value.isNotEmpty) {
-            if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+            if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                .hasMatch(value)) {
               return 'Please enter a valid email address';
             }
           }
@@ -152,6 +152,8 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
           if (value != null && value.isNotEmpty) {
             newEmail = value;
             isNewEmail = true;
+            email = newEmail; // update email variable
+            setState(() {}); // trigger a rebuild
           } else {
             isNewEmail = false;
           }
@@ -182,14 +184,17 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
         ),
         validator: (String? value) {
           if (value!.isNotEmpty) {
-            if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+            if (!RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                .hasMatch(value)) {
               return 'Please enter a valid email address';
             }
           }
           return null;
         },
         onSaved: (String? value) {
-          if (value!.isNotEmpty && RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(value)) {
+          if (value!.isNotEmpty &&
+              RegExp(r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                  .hasMatch(value)) {
             isPEmail = true;
           } else {
             isPEmail = false;
@@ -220,7 +225,6 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
             child: const Icon(
               Icons.arrow_back_ios,
               size: 20,
-
             ),
           ),
         ),
@@ -229,85 +233,87 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
   }
 
   Widget _buildSubmitButton() {
-  return SizedBox(
-    height: 50,
-    width: 350,
-    child: ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+    return SizedBox(
+      height: 50,
+      width: 350,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          backgroundColor: const Color(0xFF7D9AE4),
         ),
-        backgroundColor: const Color(0xFF7D9AE4),
-      ),
-      onPressed: () async {
-        formKey.currentState!.save(); // Always save the form data
+        onPressed: () async {
+          formKey.currentState!.save(); // Always save the form data
 
-        if (formKey.currentState!.validate()) {
-          if (isFirstName) {
-            _updateFirstName(firstName);
-          }
+          if (formKey.currentState!.validate()) {
+            if (isFirstName) {
+              _updateFirstName(firstName);
+            }
 
-          if (isLastName) {
-            _updateLastName(lastName);
-          }
+            if (isLastName) {
+              _updateLastName(lastName);
+            }
 
-          if (isNewEmail) {
-            _updateEmail(newEmail);
-          }
+            if (isNewEmail) {
+              _updateEmail(newEmail);
+            }
 
-          if (isPEmail) {
+            if (isPEmail) {
               String result = await BackendUtils.sendOTPEmail(email);
 
-            // Resolved an async + navigation issue
-            // https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html
-            if (!mounted) return;
+              // Resolved an async + navigation issue
+              // https://dart-lang.github.io/linter/lints/use_build_context_synchronously.html
+              if (!mounted) return;
 
-            if (result == "Email sent successfully") {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const OtpEntryPage()),
-              );
-            } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Container(
-                    alignment: Alignment.topCenter,
-                    height: 15.0,
-                    child: const Center(
-                      child: Text(
-                        'Please check your credentials and try again',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+              if (result == "Email sent successfully") {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const OtpEntryPage()),
+                );
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Container(
+                      alignment: Alignment.topCenter,
+                      height: 15.0,
+                      child: const Center(
+                        child: Text(
+                          'Please check your credentials and try again',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
+                    backgroundColor: const Color.fromARGB(255, 255, 55, 55),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(40.0),
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                    margin: const EdgeInsets.symmetric(
+                      horizontal: 30.0,
+                      vertical: 50,
+                    ),
                   ),
-                  backgroundColor: const Color.fromARGB(255, 255, 55, 55),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(40.0),
-                  ),
-                  behavior: SnackBarBehavior.floating,
-                  margin: const EdgeInsets.symmetric(
-                    horizontal: 30.0,
-                    vertical: 50,
-                  ),
-                ),
-              );
+                );
+              }
             }
           }
-        }
-      },
-      child: const Text(
-        'Submit',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 18,
+
+          formKey.currentState!.reset();
+        },
+        child: const Text(
+          'Submit',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+          ),
         ),
       ),
-    ),
-  );
-}
+    );
+  }
 
   //function to get user data from backend
   Future<void> _getUserData() async {
@@ -321,7 +327,8 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
   }
 
   //function to call /updateUserNameEmail from backend
-  Future<void> _updateUserNameEmail(String firstName, String lastName, String email) async {
+  Future<void> _updateUserNameEmail(
+      String firstName, String lastName, String email) async {
     //call /updateUserNameEmail from backend
     await BackendUtils.updateUserNameEmail(firstName, lastName, email);
     setState(() {
@@ -366,7 +373,9 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
           children: <Widget>[
             _buildBackBtn(),
             const Padding(
-              padding: EdgeInsets.only(top: 20, left: 70), // Adjust the top value as per your requirement
+              padding: EdgeInsets.only(
+                  top: 20,
+                  left: 70), // Adjust the top value as per your requirement
               child: Text(
                 'Account Settings',
                 style: TextStyle(
