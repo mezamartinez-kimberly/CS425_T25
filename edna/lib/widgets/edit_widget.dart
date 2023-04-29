@@ -581,7 +581,6 @@ class _EditWidgetState extends State<EditWidget> {
       iconSize: 24,
       isDense: true,
       style: const TextStyle(fontSize: 18, color: Color.fromARGB(255, 0, 0, 0)),
-      //underline: Container(height: 2),
       onChanged: (String? newValue) {
         setState(() {
           widget.pantryItem.storageLocation =
