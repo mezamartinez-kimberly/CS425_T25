@@ -94,22 +94,28 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        //change text color to black and align the text to the left
+        title: const Text('Profile',
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Roboto')),
+        leadingWidth: 0,
+        centerTitle: false,
+        // make transparent
+        backgroundColor: Colors.transparent,
+        // remove shadow
+        shadowColor: Colors.transparent,
+        elevation: 1,
+      ),
       body: SafeArea(
         child: Container(
           padding: const EdgeInsets.all(20.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Profile',
-                style: TextStyle(
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.left,
-              ),
-              const SizedBox(height: 20.0),
-
               //card for greeting
               FutureBuilder<List<String>>(
                 future: userData,
@@ -128,7 +134,7 @@ class ProfilePageState extends State<ProfilePage> {
                             Text(
                               'Hello, $firstName $lastName!',
                               style: const TextStyle(
-                                fontSize: 20.0,
+                                fontSize: 25.0,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -136,7 +142,7 @@ class ProfilePageState extends State<ProfilePage> {
                             Text(
                               email,
                               style: const TextStyle(
-                                fontSize: 16.0,
+                                fontSize: 18.0,
                                 fontWeight: FontWeight.normal,
                               ),
                             ),

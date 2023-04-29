@@ -262,10 +262,28 @@ class TreePageState extends State<TreePage> {
     }
 
     return Scaffold(
+      // add app bar
+      appBar: AppBar(
+        //change text color to black and align the text to the left
+        title: const Text('My Tree',
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Roboto')),
+        leadingWidth: 0,
+        centerTitle: false,
+        // make transparent
+        backgroundColor: Colors.transparent,
+        // remove shadow
+        shadowColor: Colors.transparent,
+        elevation: 1,
+      ),
+
       body: Stack(
         children: [
           Positioned(
-            top: 550,
+            top: MediaQuery.of(context).size.height * 0.56,
             left: 0,
             right: 0,
             bottom: 0,
@@ -275,7 +293,6 @@ class TreePageState extends State<TreePage> {
           ),
           Column(
             children: [
-              buildTitle(),
               const SizedBox(
                 height: 20,
               ),

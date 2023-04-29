@@ -123,16 +123,20 @@ class CalendarClassState extends State<CalendarClass> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        //change text color to black and align the text to the left
+        title: const Text('Calendar',
+            style: TextStyle(
+                color: Colors.black,
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Roboto')),
+        leadingWidth: 0,
+        centerTitle: false,
+        // make transparent
         backgroundColor: Colors.transparent,
-        elevation: 0,
-        automaticallyImplyLeading: false,
-        title: const Text(
-          'Calendar',
-          style: TextStyle(
-            fontSize: 30.0,
-            color: Colors.black,
-          ),
-        ),
+        // remove shadow
+        shadowColor: Colors.transparent,
+        elevation: 1,
       ),
       body: Column(
         children: [
