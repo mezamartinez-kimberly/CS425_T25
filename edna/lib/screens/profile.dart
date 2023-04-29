@@ -9,6 +9,8 @@ import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 
 class ProfilePage extends StatefulWidget {
@@ -27,7 +29,7 @@ class ProfilePageState extends State<ProfilePage> {
   String email = "";
 
   refresh() async {
-    await _getUserData();
+    _getUserData();
     setState(() {});
   }
 
@@ -35,9 +37,17 @@ class ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
+    _getUserData().then((_) {
+    });
     WidgetsFlutterBinding.ensureInitialized();
     NotificationService().initNotification();
+  }
+  //create a didChangeDependencies to check if user data has changed
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     _getUserData().then((_) {
+      setState(() {});
     });
   }
 
@@ -81,11 +91,9 @@ class ProfilePageState extends State<ProfilePage> {
   Future<void> _getUserData() async {
     //get user data from backend
     List<String> userData = await BackendUtils.getUserData();
-    setState(() {
       firstName = userData[0];
       lastName = userData[1];
       email = userData[2];
-    });
   }
 
   //function to call logout from backend
@@ -165,13 +173,14 @@ class ProfilePageState extends State<ProfilePage> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   onTap: () {
+                    Navigator.push( context, MaterialPageRoute( builder: (context) => const AccountSettingsPage()), ).then((value) => setState(() { refresh();}));
                     // Navigate to the account settings page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const AccountSettingsPage(),
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => const AccountSettingsPage(),
                       
-                      ),
-                    );
+                    //   ),
+                    // );
                   },
                 ),
               ),
@@ -251,18 +260,41 @@ class ProfilePageState extends State<ProfilePage> {
                     int notifRangeInt = int.parse(notifRange);
                     //get the current date
                     DateTime today = DateTime.now();
-                    for (final item in activePantryItems){
+
+                    for (final item in activePantryItems) {
                       print(activePantryItems.length);
                       //subtract the notification range from the expiration date
                       DateTime firstDate = item.expirationDate!.subtract(Duration(days: notifRangeInt));
                       //check if today falls in between the expiration date and the new date
-                      if (today.isAfter(firstDate) && today.isBefore(item.expirationDate!)){
+                      if (today.isAfter(firstDate) && today.isBefore(item.expirationDate!)) {
                         String name = item.name!;
                         String expirDate = DateFormat('MM/dd/yyyy').format(item.expirationDate!);
-                        String? titleContent = 'EDNA, $name is expiring soon!';
-                        String? bodyContent = 'Your $name will expire on $expirDate. Consider using it soon!';
+                        String titleContent = 'EDNA $name is expiring soon!';
+                        String bodyContent = 'Your $name will expire on $expirDate. Consider using it soon!';
+                        print(name);
+                        print(titleContent);
+                        print(bodyContent);
                         //show notification
                         NotificationService().showNotification(title: titleContent, body: bodyContent);
+                        int indexValue = notifRangeInt;
+                        int loopValue = indexValue;
+                        //loops through the index value and subtract -1 each time to schedule a notification for each day leading up to the expiration date
+                        // for (int i = 0; i < indexValue; i++) {
+                        //   //create a value for the scheduled notification date time that is a every day leading up to the expiration date
+                        //   DateTime scheduledNotificationDateTime = item.expirationDate!.subtract(Duration(days: loopValue));
+                        //   NotificationService().scheduleNotification(scheduledNotificationDateTime: scheduledNotificationDateTime);
+                        //   //delay notification by 5 seconds
+                        //   await Future.delayed(const Duration(seconds: 5));
+                        //   //subtract 1 from the index value
+                        //   loopValue = loopValue - 1;
+                        //   print('scheduled notification for $scheduledNotificationDateTime');
+                        // }
+                        // //create a value for the scheduled notification date time that is a every day leading up to the expiration date
+                        // DateTime scheduledNotificationDateTime = item.expirationDate!.subtract(Duration(days: notifRangeInt));
+                        // NotificationService().scheduleNotification(scheduledNotificationDateTime: scheduledNotificationDateTime);
+                        
+                        //delay notification by 5 seconds
+                        await Future.delayed(const Duration(seconds: 5));
                       }
                     }
                   },
@@ -336,4 +368,24 @@ class NotificationService {
     return notificationsPlugin.show(
         id, title, body, await notificationDetails());
   }
+
+  // Future scheduleNotification(
+  //     {int id = 0,
+  //     String? title,
+  //     String? body,
+  //     String? payLoad,
+  //     required DateTime scheduledNotificationDateTime}) async {
+  //   return notificationsPlugin.zonedSchedule(
+  //       id,
+  //       title,
+  //       body,
+  //       tz.TZDateTime.from(
+  //         scheduledNotificationDateTime,
+  //         tz.local,
+  //       ),
+  //       await notificationDetails(),
+  //       androidAllowWhileIdle: true,
+  //       uiLocalNotificationDateInterpretation:
+  //           UILocalNotificationDateInterpretation.absoluteTime);
+  // }
 }

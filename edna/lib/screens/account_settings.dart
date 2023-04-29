@@ -36,6 +36,11 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
     });
   }
 
+  refresh() async {
+    await _getUserData();
+    setState(() {});
+  }
+
   final formKey = GlobalKey<FormState>();
 
   // build first name field
@@ -197,30 +202,25 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
   // create a circular back button thats in the upper left corner
   Widget _buildBackBtn() {
     return Container(
-      // push the button down
-      padding: const EdgeInsets.only(top: 10),
       alignment: Alignment.topLeft,
-      // wrap in circular button
-      child: SizedBox(
-        height: 35,
-        width: 35,
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            shape: const CircleBorder(),
-            padding: const EdgeInsets.all(0),
-            backgroundColor: const Color(0xFF7D9AE4),
-          ),
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Container(
-            alignment: Alignment.center,
-            child: const Padding(
-              padding: EdgeInsets.only(left: 7),
-              child: Icon(
-                Icons.arrow_back_ios,
-                size: 20,
-              ),
+      child: Padding(
+        padding: const EdgeInsets.only(top: 20, bottom: 10),
+        child: SizedBox(
+          height: 35,
+          width: 35,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              shape: const CircleBorder(),
+              padding: EdgeInsets.zero,
+              backgroundColor: const Color(0xFF7D9AE4),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Icon(
+              Icons.arrow_back_ios,
+              size: 20,
+
             ),
           ),
         ),
@@ -244,16 +244,15 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
 
         if (formKey.currentState!.validate()) {
           if (isFirstName) {
-            //make call to backend utils function to update first name
-            await BackendUtils.updateFirstName(firstName);
+            _updateFirstName(firstName);
           }
 
           if (isLastName) {
-            await BackendUtils.updateLastName(lastName);
+            _updateLastName(lastName);
           }
 
           if (isNewEmail) {
-            await BackendUtils.updateEmail(newEmail);
+            _updateEmail(newEmail);
           }
 
           if (isPEmail) {
@@ -310,7 +309,6 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
   );
 }
 
-
   //function to get user data from backend
   Future<void> _getUserData() async {
     //get user data from backend
@@ -333,6 +331,33 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
     });
   }
 
+  //function to call updateFirstName from backend
+  Future<void> _updateFirstName(String firstName) async {
+    //call updateFirstName from backend
+    await BackendUtils.updateFirstName(firstName);
+    setState(() {
+      firstName = firstName;
+    });
+  }
+
+  //function to call updateLastName from backend
+  Future<void> _updateLastName(String lastName) async {
+    //call updateLastName from backend
+    await BackendUtils.updateLastName(lastName);
+    setState(() {
+      lastName = lastName;
+    });
+  }
+
+  //function to call updateEmail from backend
+  Future<void> _updateEmail(String email) async {
+    //call updateEmail from backend
+    await BackendUtils.updateEmail(email);
+    setState(() {
+      email = email;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -340,14 +365,17 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
         title: Stack(
           children: <Widget>[
             _buildBackBtn(),
-            const Text(
-              '        Account Settings',
-              style: TextStyle(
-                fontSize: 30.0,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+            const Padding(
+              padding: EdgeInsets.only(top: 20, left: 70), // Adjust the top value as per your requirement
+              child: Text(
+                'Account Settings',
+                style: TextStyle(
+                  fontSize: 30.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
           ],
         ),

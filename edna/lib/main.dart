@@ -16,6 +16,8 @@ import 'package:edna/dbs/pantry_db.dart'; // pantry db
 //-----------------NOTIFICATIONS-----------------
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:workmanager/workmanager.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 //create a function that calls the getUserPreferences function
 //and then checks if the notificationOn variable is set to 1
@@ -58,6 +60,7 @@ void main() async {
   //------------BELOW IS THE CODE FOR NOTIFICATIONS----------------
   // needed if you intend to initialize in the `main` function
   WidgetsFlutterBinding.ensureInitialized();
+  tz.initializeTimeZones();
   Workmanager().initialize(
       // The top level function, aka callbackDispatcher
       callbackDispatcher,

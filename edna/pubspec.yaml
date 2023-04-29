@@ -84,6 +84,7 @@ dependencies:
   #background_fetch: ^1.1.5
   flutter_local_notifications: ^8.2.0
   workmanager: ^0.5.1
+  flutter_datetime_picker: ^1.5.1
   # rxdart: ^0.27.7
 
 

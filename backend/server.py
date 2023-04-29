@@ -87,7 +87,7 @@ app.config["JWT_SECRET_KEY"] = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'edna.app123@gmail.com'
-app.config['MAIL_PASSWORD'] = 'zjmlopzqglasobnc'
+app.config['MAIL_PASSWORD'] = ''
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
@@ -1165,3 +1165,21 @@ def getIsFirstLogin():
     is_first_login = user_preference.is_first_login
 
     return jsonify({'is_first_login': is_first_login}), 200
+
+#create a route that will get the if the user wants notifications on or off
+@app.route('/getIsNotificationsOn', methods=['POST'])
+@jwt_required() # authentication Required
+def getIsNotificationsOn():
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # get the users preference id from the database
+    preference = UserPreference.query.filter_by(id=user.user_preference_id).first()
+
+    # get the is_notifications_on  from the database
+    is_notifications_on = preference.is_notifications_on
+
+    return jsonify({'is_notifications_on': is_notifications_on}), 200

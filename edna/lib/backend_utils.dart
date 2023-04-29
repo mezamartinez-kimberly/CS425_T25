@@ -642,6 +642,37 @@ class BackendUtils {
     }
   }
 
+  //create a function that gets if the user has notifications on
+  static Future<String> getIsNotificationsOn() async {
+    const String apiUrl = 'http://172.20.10.2:5000/getIsNotificationsOn';
+
+    // create a post request to the backend with the auth header
+    final http.Response response = await http.post(
+      Uri.parse(apiUrl),
+      headers: {
+        'Authorization': "Bearer $sessionToken",
+        // so connection doesn't close while retrieving data
+        "Connection": "Keep-Alive",
+      },
+    );
+
+    // check the status code for the result
+    if (response.statusCode == 200) {
+      //convert response body into a List<string> using jsonDecode
+      Map<String, dynamic> userPreferences = Map<String, dynamic>.from(jsonDecode(response.body));
+
+      //get is_notifications_on from response body
+      String isNotificationsOn = userPreferences['is_notifications_on'];
+
+      //return the list
+      return isNotificationsOn;
+    } else {
+      // return failed
+      return "Failed to obtain isNotificationsOn";
+    }
+  }
+
+
   //create funtion to update the users preferences
   static Future<String> updateUserPreferences(
       Int isNotificationsOn, Int  notificationRange) async {
@@ -736,7 +767,7 @@ class BackendUtils {
 
   //create a function to get if it is the users first login 
   static Future<String> getIsFirstLogin() async{
-    const String apiUrl = 'http://172.20.10.2:5000/getIsFirstLogin';
+    const String apiUrl = 'http://1172.20.10.2:5000/getIsFirstLogin';
 
     // create a post request to the backend with the auth header
     final http.Response response = await http.post(
@@ -764,5 +795,5 @@ class BackendUtils {
       return "Failed to obtain is first login";
     }
   }
-
+//172.20.10.2:5000 for emulator and diff for phone
 }
