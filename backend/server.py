@@ -73,8 +73,7 @@ from models import db, User, UserPreference, Person, Product, ExpirationData, Pa
 app = Flask(__name__)
 bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
-mail = Mail(app) 
-run_with_ngrok(app)
+mail = Mail(app)
 
 
 # set the token to never expire ~ this is for testing purposes
@@ -88,7 +87,7 @@ app.config["JWT_SECRET_KEY"] = "eyJhbGciOiJIUzI1NiJ9.eyJSb2xlIjoiQWRtaW4iLCJJc3N
 app.config['MAIL_SERVER']='smtp.gmail.com'
 app.config['MAIL_PORT'] = 465
 app.config['MAIL_USERNAME'] = 'edna.app123@gmail.com'
-app.config['MAIL_PASSWORD'] = 'zjmlopzqglasobnc'
+app.config['MAIL_PASSWORD'] = ''
 app.config['MAIL_USE_TLS'] = False
 app.config['MAIL_USE_SSL'] = True
 mail = Mail(app)
@@ -984,6 +983,93 @@ def updateUserNameEmail():
     return jsonify({'message': 'Users name and email updated successfully'}), 200
 
 
+#create a route that will update the users first name
+@app.route('/updateFirstName', methods=['POST'])
+@jwt_required() # authentication Required
+def updateFirstName():
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # get the user's first name and last name from the database
+    person = Person.query.filter_by(id=user.person_id).first()
+
+    # from person get the first name and last name
+    first_name = person.first_name
+    last_name = person.last_name
+
+    # from user get the email
+    email = user.email
+
+    # get the new first name from the html
+    new_first_name = request.json['first_name']
+
+    # update the first name in the database
+    person.first_name = new_first_name
+
+    return jsonify({'message': 'Users name and email updated successfully'}), 200
+
+
+#create a route that will update the users last name
+@app.route('/updateLastName', methods=['POST'])
+@jwt_required() # authentication Required
+def updateLastName():
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # get the user's first name and last name from the database
+    person = Person.query.filter_by(id=user.person_id).first()
+
+    # from person get the first name and last name
+    first_name = person.first_name
+    last_name = person.last_name
+
+    # from user get the email
+    email = user.email
+
+   # get the new last namefrom the html
+    new_last_name = request.json['last_name']
+
+    # update the last name in the database
+    person.last_name = new_last_name
+
+    return jsonify({'message': 'Users name and email updated successfully'}), 200
+
+
+#create a route that will update the users email
+@app.route('/updateEmail', methods=['POST'])
+@jwt_required() # authentication Required
+def updateEmail():
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # get the user's first name and last name from the database
+    person = Person.query.filter_by(id=user.person_id).first()
+
+    # from person get the first name and last name
+    first_name = person.first_name
+    last_name = person.last_name
+
+    # from user get the email
+    email = user.email
+
+    # get the new email from the html
+    new_email = request.json['email']
+
+    # update the email in the database
+    user.email = new_email
+
+    return jsonify({'message': 'Users name and email updated successfully'}), 200
+
+
 #create a route that will grab the users token and remove it from the database
 @app.route('/logout', methods=['POST'])
 @jwt_required() # authentication Required
@@ -1138,3 +1224,42 @@ def getPoints():
     leaderboard_points = user_preference.leaderboard_points
 
     return jsonify({'leaderboard_points': leaderboard_points}), 200
+
+# create a route that will grab the is_first_login from the user preferences table
+@app.route('/getIsFirstLogin', methods=['POST'])
+@jwt_required() # authentication Required
+def getIsFirstLogin():
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # get the user's user preferences
+    user_preference_id = user.user_preference_id
+
+    #query the user preferences table
+    user_preference = UserPreference.query.filter_by(id=user_preference_id).first()
+
+    # get the is_first_login
+    is_first_login = user_preference.is_first_login
+
+    return jsonify({'is_first_login': is_first_login}), 200
+
+#create a route that will get the if the user wants notifications on or off
+@app.route('/getIsNotificationsOn', methods=['POST'])
+@jwt_required() # authentication Required
+def getIsNotificationsOn():
+    # get the session token from thehtml authorization header
+    session_token = request.headers.get('Authorization').split()[1]
+
+    # get the user's email from the session token from the database
+    user = User.query.filter_by(session_token=session_token).first()
+
+    # get the users preference id from the database
+    preference = UserPreference.query.filter_by(id=user.user_preference_id).first()
+
+    # get the is_notifications_on  from the database
+    is_notifications_on = preference.is_notifications_on
+
+    return jsonify({'is_notifications_on': is_notifications_on}), 200
