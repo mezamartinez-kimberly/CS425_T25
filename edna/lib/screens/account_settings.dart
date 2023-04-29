@@ -248,14 +248,20 @@ class AccountSettingsPageState extends State<AccountSettingsPage> {
 
           if (formKey.currentState!.validate()) {
             if (isFirstName) {
+              // strip the whitespace from the name then update
+              firstName = firstName.trim();
               _updateFirstName(firstName);
             }
 
             if (isLastName) {
+              // strip the whitespace from the name then update
+              lastName = lastName.trim();
               _updateLastName(lastName);
             }
 
             if (isNewEmail) {
+              // strip the whitespace from the email then update
+              newEmail = newEmail.trim();
               _updateEmail(newEmail);
             }
 
