@@ -777,6 +777,7 @@ def updatePantryItem():
 # }
 
     date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
+    expiration_date = datetime.strptime(str(request.json['expiration_date']), '%Y-%m-%dT%H:%M:%S.%f')
     print(str(request.json['date_added']))
     print(date_added)
 
@@ -813,49 +814,51 @@ def updatePantryItem():
             date_added = datetime.strptime(request.json['date_added'], '%Y-%m-%dT%H:%M:%S.%f')
 
             pantry.date_added = date_added
-        if request.json['date_removed']:
-            # convert the date ISO8601 format to a datetime object
-            date_removed = datetime.strptime(request.json['date_removed'], '%Y-%m-%dT%H:%M:%S.%f')
-
-            pantry.date_removed = date_removed
-
-            # if we have date removed then we can calculate the expiration date
-            if pantry.location == 'pantry' and expiration.expiration_time_pantry != None:
-            # subtract the date removed from the date added to get the number of days the food was in the pantry
-                exp_time = date_removed - pantry.date_added
-                # add this information to the expiration table
-                expiration.expiration_time_pantry = int(exp_time.days)
-            elif pantry.location == 'fridge' and expiration.expiration_time_fridge != None:
-                # subtract the date removed from the date added to get the number of days the food was in the fridge
-                exp_time = date_removed - pantry.date_added
-                # add this information to the expiration table
-                expiration.expiration_time_fridge = int(exp_time.days)
-            elif pantry.location == 'freezer' and expiration.expiration_time_freezer != None:
-                # subtract the date removed from the date added to get the number of days the food was in the freezer
-                exp_time = date_removed - pantry.date_added
-                # add this information to the expiration table
-                expiration.expiration_time_freezer = int(exp_time.days)
 
         if request.json['location']:
-            if request.json['location'] == 1:
-                location = "1"
-            elif request.json['location'] == 2:
-                location = "2"
-            elif request.json['location'] == 3:
-                location = "3"
-            else:
-                location = "1"
 
-            pantry.location = location  
-        else:
-            pantry.location = 1
+            # convert the location to an int
+            newLocation = int(request.json['location'])
+
+            # grab the current location
+            currentLocation = int(pantry.location)
+
+
+            # subtract the current location from the new location to get the difference
+            difference = currentLocation - newLocation
+
+            # if the difference is positive then the item is being moved to a location with a longer expiration time
+            if difference > 0:
+                # if the difference is 2 we will scale the expiration date by 30%
+                if difference == 2:
+                    expiration_date = expiration_date + timedelta(days=(date_added - expiration_date).days * 0.3)
+
+                # if the difference is 1 we will scale the expiration date by 15%
+                elif difference == 1:
+                    expiration_date = expiration_date + timedelta(days=(date_added - expiration_date).days * 0.15)
+
+            # if the difference is negative then the item is being moved to a location with a shorter expiration time
+            elif difference < 0:
+                # if the difference is -2 we will scale the expiration date by 30%
+                if difference == -2:
+                    expiration_date = expiration_date - timedelta(days=(date_added - expiration_date).days * 0.3)
+
+                # if the difference is -1 we will scale the expiration date by 15%
+                elif difference == -1:
+                    expiration_date = expiration_date - timedelta(days=(date_added - expiration_date).days * 0.15)
+            elif difference == 0:
+                pass
+
+        # update the location in the pantry object
+        pantry.expiration_date = expiration_date
+
+        # update the location in the pantry object
+        pantry.location = str(newLocation)
 
         if request.json['upc']:
             product.upc = request.json['upc']
         if request.json['plu']:
             product.plu = request.json['plu']
-        if request.json['expiration_date']:
-            pantry.expiration_date = datetime.strptime(request.json['expiration_date'], '%Y-%m-%dT%H:%M:%S.%f')
         if request.json['quantity']:
             pantry.quantity = request.json['quantity']
         if request.json['is_deleted'] == 0 or request.json['is_deleted'] == 1:
