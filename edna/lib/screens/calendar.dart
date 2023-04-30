@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:edna/backend_utils.dart';
 import 'package:edna/dbs/pantry_db.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -33,10 +34,14 @@ class CalendarClassState extends State<CalendarClass> {
   late LinkedHashMap<DateTime, List<ProductWidget>> _kEvents;
 
   // ignore: non_constant_identifier_names
-  _TableEventsExampleState() {
+  _TableEventsExampleState() async {
     // get the active pantry items from the provider
-    activePantryItems =
-        Provider.of<PantryProvider>(context, listen: false).activePantryItems;
+    final allPantryItems = await BackendUtils.getAllPantry();
+
+    // only get pantry items that are visible in the pantry and arent deleted
+    final activePantryItems = allPantryItems
+        .where((item) => item.isVisibleInPantry == 1 && item.isDeleted == 0)
+        .toList();
 
     for (final pantry in activePantryItems) {
       activePantryWidgets.add(ProductWidget(
@@ -49,8 +54,10 @@ class CalendarClassState extends State<CalendarClass> {
       (_kEventSource[productWidget.pantryItem.expirationDate as DateTime] ??=
               [])
           .add(productWidget);
+
+      // print the name of the item
+      // print(productWidget.pantryItem.name);
     }
-    ;
 
     _kEvents = LinkedHashMap<DateTime, List<ProductWidget>>(
       equals: isSameDay,
@@ -61,6 +68,7 @@ class CalendarClassState extends State<CalendarClass> {
   @override
   void initState() {
     super.initState();
+
     _TableEventsExampleState();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
@@ -74,7 +82,12 @@ class CalendarClassState extends State<CalendarClass> {
 
   List<ProductWidget> _getEventsForDay(DateTime day) {
     // Implementation example
-    return _kEvents[day] ?? [];
+    return _kEventSource.entries
+        .where((entry) => isSameDay(entry.key, day))
+        .expand((entry) => entry.value)
+        .toList();
+
+    // print the selected day's events name
   }
 
   List<ProductWidget> _getEventsForRange(DateTime start, DateTime end) {

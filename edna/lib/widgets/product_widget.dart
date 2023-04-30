@@ -112,7 +112,7 @@ class ProductWidgetState extends State<ProductWidget> {
                       leading: _buildCheckBox(widget.enableCheckbox),
                       title:
                           // if name is null or empty, show "No name"
-                          Expanded(
+                          SizedBox(
                         child: widget.pantryItem.name == "" ||
                                 widget.pantryItem.name == null
                             ? const Text("No name",

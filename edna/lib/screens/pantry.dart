@@ -101,7 +101,7 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                 },
               ),
               title: const Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10),
+                padding: EdgeInsets.only(top: 20.0, bottom: 10),
                 child: Text('Shelf',
                     style: TextStyle(
                         color: Colors.black,
