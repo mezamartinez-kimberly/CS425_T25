@@ -85,6 +85,8 @@ dependencies:
   flutter_local_notifications: ^8.2.0
   workmanager: ^0.5.1
   flutter_datetime_picker: ^1.5.1
+  flutter_launcher_icons: ^0.9.2
+
   # rxdart: ^0.27.7
 
 
@@ -136,6 +138,11 @@ flutter:
   #       - asset: fonts/Roboto-Thin.ttf
   #       - asset: fonts/Roboto-ThinItalic.ttf
   #         weight: 700
+flutter_icons:
+  android: true
+  image_path: "assets/edna.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/logo_foreground2.png"
 
   assets:
     - assets/images/Stage_1.png  
@@ -152,7 +159,7 @@ flutter:
     - assets/images/tb5.png
     - assets/images/tb6.png  
   
-    - assets/logos/g-logo.png
+    #- assets/logos/g-logo.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
