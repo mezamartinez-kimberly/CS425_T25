@@ -19,6 +19,7 @@ import 'package:edna/main.dart'; // for main
 import 'package:edna/screens/all.dart'; // for pantry page
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart'; // for material design
+import 'package:flutter/services.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart'; // barcode scanner
 import 'package:edna/backend_utils.dart'; // for API calls
 import 'package:google_fonts/google_fonts.dart'; // fonts
@@ -31,6 +32,7 @@ import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
 import 'package:another_flushbar/flushbar.dart'; // error display
 import 'package:another_flushbar/flushbar_helper.dart';
 import 'package:another_flushbar/flushbar_route.dart';
+import 'package:rive/rive.dart';
 
 // ignore: must_be_immutable
 class CameraPage extends StatefulWidget {
@@ -61,11 +63,31 @@ class CameraPageState extends State<CameraPage> {
   final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
   String productName = '';
   bool _flashOn = false;
+  Map<String, Pantry> pantryMap = {}; // for duplicate resolution
 
   static bool itemAdded =
       false; // flag to check if item was just added to pantry
 
-  List<Pantry> allPantryItems = [];
+  final _listKey = GlobalKey<AnimatedListState>();
+
+  late RiveAnimationController _controller;
+
+  /// Is the animation currently playing?
+  bool _isPlaying = false;
+
+  // define an empty list of barcodes
+  List<Barcode>? barcodes = [];
+
+// initialize the barcodes list as empty when the page loads
+  @override
+  void initState() {
+    super.initState();
+    barcodes = [];
+    refresh();
+    _controller = OneShotAnimation(
+      'show',
+    );
+  }
 
   // for errors
   var errorText = const Color.fromARGB(255, 88, 15, 15);
@@ -103,30 +125,48 @@ class CameraPageState extends State<CameraPage> {
       home: DefaultTextStyle(
         style: TextStyle(
             color: Colors.black, fontFamily: GoogleFonts.roboto().fontFamily),
-        child: Column(
+        child: Stack(
           children: <Widget>[
-            // scan area
-            Expanded(flex: 4, child: _buildQrView(context)),
-            // Expanded(
-            //     flex: 1,
-            //     child: MSHCheckbox(
-            //       size: 60,
-            //       value: isChecked,
-            //       colorConfig: MSHColorConfig.fromCheckedUncheckedDisabled(
-            //         checkedColor: Colors.blue,
-            //       ),
-            //       style: MSHCheckboxStyle.stroke,
-            //       onChanged: (selected) {
-            //         setState(() {
-            //           isChecked = selected;
-            //         });
-            //       },
-            //     )),
-            // toolbar
-            Expanded(
-                flex: 1,
-                child: Container(
-                    color: Colors.black,
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.45,
+              child: _buildQrView(context),
+            ),
+
+            Positioned(
+              bottom: MediaQuery.of(context).size.height * 0.6,
+              right: MediaQuery.of(context).size.width * 0.7 -
+                  MediaQuery.of(context).size.height * 0.2,
+              child: Visibility(
+                visible: itemAdded,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.height *
+                      0.2, // Specify desired width of animation
+                  height: MediaQuery.of(context).size.height *
+                      0.2, // Specify desired height of animation
+                  child: RiveAnimation.asset(
+                    'assets/animation/checkmark_icon.riv',
+                    controllers: [_controller],
+                    onInit: (_) {
+                      // Play animation once on init
+                      _controller.isActive = true;
+                      // trigger haptics
+                      HapticFeedback.mediumImpact();
+                    },
+                  ),
+                ),
+              ),
+            ),
+
+            Column(
+              children: <Widget>[
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.4,
+                ),
+
+                // toolbar
+                Expanded(
+                    flex: 1,
+
                     // rounded corners
                     child: ClipRRect(
                         borderRadius: const BorderRadius.only(
@@ -135,95 +175,105 @@ class CameraPageState extends State<CameraPage> {
                         ),
                         child: Container(
                             decoration: const BoxDecoration(
-                              color: Color.fromARGB(255, 201, 201, 201),
+                              color: Color.fromARGB(255, 219, 219, 219),
                               // black line at bottom of toolbar
                               border: Border(
                                 bottom: BorderSide(
-                                  color: Colors.black,
+                                  color: Color.fromARGB(255, 131, 131, 131),
                                   width: 1.5,
                                 ),
                               ),
                             ),
-                            child: _buildToolbar())))),
-            // items list
-            Expanded(
-              flex: 5,
-              child: SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Column(
-                  children: <Widget>[
-                    // add items to pantry
-                    FutureBuilder(
-                      future: _addToPantry(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          isChecked = false;
-                          return AlertDialog(
-                            // make dialog red
-                            backgroundColor: errorBackground,
-                            // make text centered
-                            contentPadding: const EdgeInsets.fromLTRB(
-                                24.0, 20.0, 24.0, 24.0),
-                            // make corners rounded
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20)),
-                            // make text error text
-                            titleTextStyle: TextStyle(color: errorText),
-                            // make title larger and bold
-                            title: const Text(
-                              'Error',
-                              style: TextStyle(
-                                  fontSize: 30, fontWeight: FontWeight.bold),
-                            ),
-                            content: Text('Error: ${snapshot.error}'),
-                            actions: <Widget>[
-                              TextButton(
-                                onPressed: () {
-                                  // reload camera page
-                                  Navigator.of(context).pushReplacement(
-                                      MaterialPageRoute(
-                                          builder: (context) => CameraPage()));
-                                },
-                                // make text larger and white and bold
-                                child: const Text(
-                                  'OK',
+                            child: _buildToolbar()))),
+                // items list
+                Expanded(
+                  flex: 5,
+                  child: SingleChildScrollView(
+                    // set the edge insets
+                    physics: const BouncingScrollPhysics(),
+                    child: Column(
+                      children: <Widget>[
+                        // add items to pantry
+                        FutureBuilder(
+                          future: _addToPantry(),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasError) {
+                              isChecked = false;
+                              return AlertDialog(
+                                elevation: 3,
+                                // make dialog red
+                                backgroundColor: errorBackground,
+                                // make text centered
+                                contentPadding: const EdgeInsets.fromLTRB(
+                                    24.0, 20.0, 24.0, 24.0),
+                                // make corners rounded
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20)),
+                                // make text error text
+                                titleTextStyle: TextStyle(color: errorText),
+                                // make title larger and bold
+                                title: const Text(
+                                  'Error',
                                   style: TextStyle(
-                                      fontSize: 25,
-                                      color: Colors.white,
+                                      fontSize: 30,
                                       fontWeight: FontWeight.bold),
                                 ),
-                              ),
-                            ],
-                          );
-                        } else {
-                          isChecked = true;
-                          // wait 3 seconds
-                          Future.delayed(const Duration(seconds: 3), () {
-                            isChecked = false;
-                          });
-                          return Container();
-                        }
-                      },
+                                content: Text('Error: ${snapshot.error}'),
+                                actions: <Widget>[
+                                  TextButton(
+                                    onPressed: () {
+                                      // reload camera page
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  CameraPage()));
+                                    },
+                                    // make text larger and white and bold
+                                    child: const Text(
+                                      'OK',
+                                      style: TextStyle(
+                                          fontSize: 25,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            } else {
+                              isChecked = true;
+
+                              // wait 3 seconds
+                              Future.delayed(const Duration(seconds: 3), () {
+                                isChecked = false;
+                              });
+                              return Container();
+                            }
+                          },
+                        ),
+                        _buildItemList() // display camera page's list of items
+                      ],
                     ),
-                    _buildItemList() // display camera page's list of items
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
 
             // buttons
-            Padding(
-              padding: const EdgeInsets.only(right: 5.0, bottom: 5.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: <Widget>[
-                  _buildAddButton(),
-                  const SizedBox(width: 10), // spacing
-                  _buildSubmitButton(),
-                  const SizedBox(width: 5), // spacing
-                ],
-              ),
-            )
+            Positioned(
+                bottom: 0,
+                right: 0,
+                child: Padding(
+                  padding: const EdgeInsets.only(right: 5.0, bottom: 5.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+                      _buildAddButton(),
+                      const SizedBox(width: 10), // spacing
+                      _buildSubmitButton(),
+                      const SizedBox(width: 5), // spacing
+                    ],
+                  ),
+                )),
           ],
         ),
       ),
@@ -288,7 +338,7 @@ class CameraPageState extends State<CameraPage> {
               context: context,
               builder: (context) {
                 // wait 0.5 sec
-                Future.delayed(const Duration(milliseconds: 200), () {
+                Future.delayed(const Duration(milliseconds: 100), () {
                   // clear scanned list
                   widget.itemsToInsert!.clear();
                   // refresh page
@@ -352,7 +402,7 @@ class CameraPageState extends State<CameraPage> {
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
         ? 220.0
-        : 300.0;
+        : 270.0;
     // To ensure the Scanner view is properly sizes after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
     return QRView(
@@ -446,57 +496,71 @@ class CameraPageState extends State<CameraPage> {
   // get product name from upc code using backend
   _addToPantry() async {
     if (!itemAdded) {
-      // to inialize lastResult on first scan
-      if (lastResult == null && result != null) {
-        lastResult = result;
-      }
       // if successfully scanned
-      if (result != null && result != lastResult) {
-        // if code can be found in UPC database
-        if (result!.format == BarcodeFormat.ean13 ||
-            result!.format == BarcodeFormat.ean8 ||
-            result!.format == BarcodeFormat.upcA ||
-            result!.format == BarcodeFormat.upcE) {
-          // create a new pantry object with the scanned upc code
-          Pantry newPantryItem = Pantry(
-            dateAdded: DateTime.now(),
-            upc: result!.code,
-            isDeleted: 0,
-            isVisibleInPantry: 0,
-          );
+      if (result != null) {
+        // Check to see if the scanned item is alreadyin the barcode list
+        bool alreadyScanned = false;
+        for (Barcode barcode in barcodes!) {
+          if (barcode.code == result!.code) {
+            alreadyScanned = true;
+          }
+        }
 
-          lastResult = result;
+        // if the item is not already in the barcode list
+        if (!alreadyScanned) {
+          // add the scanned item to the barcode list
+          barcodes!.add(result!);
 
-          // add the new pantry item using the backend utils functinon addPantry
-          // capture the response of the function and get the pantry item from the json response
-          await BackendUtils.addPantry(newPantryItem).then((value) {
-            // get the json response from the backend
-            dynamic jsonResponse = json.decode(value.body);
-            Pantry pantryItem = Pantry.fromMap(jsonResponse);
-
-            ProductWidget newProductWidget = ProductWidget(
-              key: UniqueKey(),
-              pantryItem: pantryItem,
-              enableCheckbox: false,
-              // no need to refresh pantry since we're on camera page
-              refreshPantryList: () {},
-              callingWidget: widget,
+          // check to see if the scanned item is a valid upc code
+          if (result!.format == BarcodeFormat.ean13 ||
+              result!.format == BarcodeFormat.upcA ||
+              result!.format == BarcodeFormat.upcE) {
+            // create a new pantry object with the scanned upc code
+            Pantry newPantryItem = Pantry(
+              dateAdded: DateTime.now(),
+              upc: result!.code,
+              isDeleted: 0,
+              isVisibleInPantry: 0,
             );
 
-            // add to camera page's list of items
-            widget.addItem(newProductWidget);
-          });
+          // need to store upc to put in product widget later
+          // since we map the pantry item from the backend json response
+          // and pantry items in backend only have product id, not actual codes
+          var tempUPC = result!.code;
 
-          // toggle itemAdded so item doesn't duplicate
-          itemAdded = true;
+            // add the new pantry item using the backend utils functinon addPantry
+            // capture the response of the function and get the pantry item from the json response
+            await BackendUtils.addPantry(newPantryItem).then((value) {
+              // get the json response from the backend
+              dynamic jsonResponse = json.decode(value.body);
+              Pantry pantryItem = Pantry.fromMap(jsonResponse);
+            // add upc code
+            pantryItem.upc = tempUPC;
 
-          //refresh pantry list
-          refresh();
+              ProductWidget newProductWidget = ProductWidget(
+                key: UniqueKey(),
+                pantryItem: pantryItem,
+                enableCheckbox: false,
+                // no need to refresh pantry since we're on camera page
+                refreshPantryList: () {},
+                callingWidget: widget,
+              );
 
-          // wait 3 seconds before allowing another item to be added
-          await Future.delayed(const Duration(seconds: 3));
-          refresh();
-          itemAdded = false;
+              // add to camera page's list of items
+              widget.addItem(newProductWidget);
+            });
+
+            // toggle itemAdded so item doesn't duplicate
+            itemAdded = true;
+
+            //refresh pantry list
+            // refresh();
+
+            // wait 3 seconds before allowing another item to be added
+            await Future.delayed(const Duration(seconds: 2));
+            refresh();
+            itemAdded = false;
+          }
         }
       }
     }
@@ -506,16 +570,20 @@ class CameraPageState extends State<CameraPage> {
   _buildItemList() {
     // if there are items to insert, return list of items
     if (widget.itemsToInsert != null && widget.itemsToInsert!.isNotEmpty) {
-      return ListView.builder(
-        scrollDirection: Axis.vertical,
-        shrinkWrap: true,
-        itemCount: widget.itemsToInsert!.length,
-        itemBuilder: (context, index) {
-          return widget.itemsToInsert![index];
-        },
-
-        // enable scrolling on list
-        physics: const BouncingScrollPhysics(),
+      return MediaQuery.removePadding(
+        context: context,
+        removeTop: true,
+        child: ListView.builder(
+          padding: const EdgeInsets.only(top: 10),
+          scrollDirection: Axis.vertical,
+          shrinkWrap: true,
+          itemCount: widget.itemsToInsert!.length,
+          itemBuilder: (context, index) {
+            return widget.itemsToInsert![index];
+          },
+          // enable scrolling on list
+          physics: const BouncingScrollPhysics(),
+        ),
       );
     } else {
       // if no items to insert, return empty container

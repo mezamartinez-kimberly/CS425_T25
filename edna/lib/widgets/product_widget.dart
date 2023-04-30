@@ -112,25 +112,50 @@ class ProductWidgetState extends State<ProductWidget> {
                       leading: _buildCheckBox(widget.enableCheckbox),
                       title:
                           // if name is null or empty, show "No name"
-                          widget.pantryItem.name == "" ||
-                                  widget.pantryItem.name == null
-                              ? const Text("No name",
-                                  style: TextStyle(
-                                    fontStyle: FontStyle.italic,
-                                  ))
-                              // otherwise, show name
-                              : Text(
-                                  widget.pantryItem.name as String,
-                                  maxLines: 2,
-                                  style: TextStyle(
-                                      // if deleted, strikethrough text
-                                      decoration:
-                                          widget.pantryItem.isDeleted! == 1
-                                              ? TextDecoration.lineThrough
-                                              : TextDecoration.none),
-                                ),
+                          Expanded(
+                        child: widget.pantryItem.name == "" ||
+                                widget.pantryItem.name == null
+                            ? const Text("No name",
+                                style: TextStyle(
+                                  fontStyle: FontStyle.italic,
+                                ))
+                            // otherwise, show name
+                            : Text(
+                                widget.pantryItem.name as String,
+                                maxLines: 2,
+                                style: TextStyle(
+                                    // if deleted, strikethrough text
+                                    decoration:
+                                        widget.pantryItem.isDeleted! == 1
+                                            ? TextDecoration.lineThrough
+                                            : TextDecoration.none),
+                              ),
+                      ),
                       subtitle: _formatDate(),
-                      trailing: _buildEditButton(),
+                      trailing: SizedBox(
+                          width: 70,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 4,
+                                child: Text(
+                                  // show quantity
+                                  "(x${widget.pantryItem.quantity})",
+                                  // make text smaller and gray
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                              ),
+
+                              Expanded(
+                                flex: 5,
+                                child: _buildEditButton(),
+                              ),
+                              // spacer
+                            ],
+                          )),
                     );
                   },
                 ),
@@ -209,6 +234,9 @@ class ProductWidgetState extends State<ProductWidget> {
 
                   // cell function to update this in the backend
                   BackendUtils.updatePantryItem(widget.pantryItem);
+
+                  // Add expiration info to the backend
+                  BackendUtils.addExpirationData(widget.pantryItem);
 
                   // wait 0.4 sec before deleting on page
                   Future.delayed(const Duration(milliseconds: 400), () {

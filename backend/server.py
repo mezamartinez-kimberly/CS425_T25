@@ -242,8 +242,8 @@ def deleteAll():
     Pantry.query.delete()
 
     # delete user and person table
-    User.query.delete()
-    Person.query.delete()
+    # User.query.delete()
+    # Person.query.delete()
 
 
     db.session.commit()
@@ -391,6 +391,8 @@ def upc():
     if product is None:
         response_tuple = apiCall(upc)
 
+        print(response_tuple[0])
+
         # if the API call was successful, save the data to the database
         if response_tuple[1] == 200:
             product = Product(name=response_tuple[0], upc=upc, plu=None, logical_delete=False)
@@ -495,6 +497,8 @@ def addPantry():
         return jsonify({'error': 'No UPC or PLU provided'}), 400
     
 
+    
+
     # now we have to see if the name provided matches the name of the product in the database 
     # if they are different then we will create a new entry in the User's alias table
     # if an alias for the product id already exists, then we will replace the alias with the new one
@@ -584,6 +588,84 @@ def addPantry():
 
     # return the pantry object and a response code of 201
     return jsonify(pantry_dict), 201
+
+
+# create an app route to add expiration information from the user
+@app.route('/addExpirationData', methods=['POST'])
+@jwt_required() # authentication Required
+def addExpirationData():
+    # expected input json
+    # {
+    #     "upc": "123456789012",
+    #     "plu": "1234",
+    #     "location" : 1,
+    #     "date_added": "2020-04-20T00:00:00.000Z",
+    #    "date_removed": "2020-04-20T00:00:00.000Z", 
+    # }
+
+    # get the user ID from the session token
+    session_token = request.headers.get('Authorization').split()[1]
+    user_id = User.query.filter_by(session_token=session_token).first().id
+
+    # get all information from the json
+    upc = request.json['upc']
+    plu = request.json['plu']
+    location = request.json['location']
+    date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
+    expiration_date = datetime.strptime(str(request.json['date_removed']), '%Y-%m-%dT%H:%M:%S.%f')
+
+
+    # check to make sure that expiration date is after the date added
+    if expiration_date < date_added:
+        return 
+    else:
+        # subtract the expiration date from the date added to get the expiration time
+        expiration_time = expiration_date - date_added
+
+        # get rid of everything but the days
+        expiration_time = int(expiration_time.days)
+
+
+    # based on location, we will asign the correct value to the correct expiration time
+    if location == 1: # pantry
+        expiration_time_pantry = expiration_time
+        expiration_time_fridge = None
+        expiration_time_freezer = None
+    elif location == 2: # fridge
+        expiration_time_pantry = None
+        expiration_time_fridge = expiration_time
+        expiration_time_freezer = None
+    elif location == 3: # freezer
+        expiration_time_pantry = None
+        expiration_time_fridge = None
+        expiration_time_freezer = expiration_time
+
+    # query the product table to get the product id
+    if upc != None:
+        product = Product.query.filter_by(upc=upc).first()
+    else :
+        product = Product.query.filter_by(plu=plu).first()
+
+    # add the expiration data to the expiration data table
+    expiration_data = ExpirationData(user_id = user_id, product_id=product.id, expiration_time_pantry=expiration_time, expiration_time_fridge=expiration_time, expiration_time_freezer=expiration_time)
+
+    print(expiration_data)
+
+    # add the expiration data to the database
+    db.session.add(expiration_data)
+    db.session.commit()
+
+    # return a response code of 201
+    return jsonify({'message': 'Expiration data added'}), 201
+
+
+
+
+     
+
+
+
+
 
 
 @app.route('/getAllPantry', methods=['GET'])
@@ -694,6 +776,7 @@ def updatePantryItem():
 # }
 
     date_added = datetime.strptime(str(request.json['date_added']), '%Y-%m-%dT%H:%M:%S.%f')
+    expiration_date = datetime.strptime(str(request.json['expiration_date']), '%Y-%m-%dT%H:%M:%S.%f')
     print(str(request.json['date_added']))
     print(date_added)
 
@@ -730,49 +813,51 @@ def updatePantryItem():
             date_added = datetime.strptime(request.json['date_added'], '%Y-%m-%dT%H:%M:%S.%f')
 
             pantry.date_added = date_added
-        if request.json['date_removed']:
-            # convert the date ISO8601 format to a datetime object
-            date_removed = datetime.strptime(request.json['date_removed'], '%Y-%m-%dT%H:%M:%S.%f')
-
-            pantry.date_removed = date_removed
-
-            # if we have date removed then we can calculate the expiration date
-            if pantry.location == 'pantry' and expiration.expiration_time_pantry != None:
-            # subtract the date removed from the date added to get the number of days the food was in the pantry
-                exp_time = date_removed - pantry.date_added
-                # add this information to the expiration table
-                expiration.expiration_time_pantry = int(exp_time.days)
-            elif pantry.location == 'fridge' and expiration.expiration_time_fridge != None:
-                # subtract the date removed from the date added to get the number of days the food was in the fridge
-                exp_time = date_removed - pantry.date_added
-                # add this information to the expiration table
-                expiration.expiration_time_fridge = int(exp_time.days)
-            elif pantry.location == 'freezer' and expiration.expiration_time_freezer != None:
-                # subtract the date removed from the date added to get the number of days the food was in the freezer
-                exp_time = date_removed - pantry.date_added
-                # add this information to the expiration table
-                expiration.expiration_time_freezer = int(exp_time.days)
 
         if request.json['location']:
-            if request.json['location'] == 1:
-                location = "1"
-            elif request.json['location'] == 2:
-                location = "2"
-            elif request.json['location'] == 3:
-                location = "3"
-            else:
-                location = "1"
 
-            pantry.location = location  
-        else:
-            pantry.location = 1
+            # convert the location to an int
+            newLocation = int(request.json['location'])
+
+            # grab the current location
+            currentLocation = int(pantry.location)
+
+
+            # subtract the current location from the new location to get the difference
+            difference = currentLocation - newLocation
+
+            # if the difference is positive then the item is being moved to a location with a longer expiration time
+            if difference > 0:
+                # if the difference is 2 we will scale the expiration date by 30%
+                if difference == 2:
+                    expiration_date = expiration_date + timedelta(days=(date_added - expiration_date).days * 0.3)
+
+                # if the difference is 1 we will scale the expiration date by 15%
+                elif difference == 1:
+                    expiration_date = expiration_date + timedelta(days=(date_added - expiration_date).days * 0.15)
+
+            # if the difference is negative then the item is being moved to a location with a shorter expiration time
+            elif difference < 0:
+                # if the difference is -2 we will scale the expiration date by 30%
+                if difference == -2:
+                    expiration_date = expiration_date - timedelta(days=(date_added - expiration_date).days * 0.3)
+
+                # if the difference is -1 we will scale the expiration date by 15%
+                elif difference == -1:
+                    expiration_date = expiration_date - timedelta(days=(date_added - expiration_date).days * 0.15)
+            elif difference == 0:
+                pass
+
+        # update the location in the pantry object
+        pantry.expiration_date = expiration_date
+
+        # update the location in the pantry object
+        pantry.location = str(newLocation)
 
         if request.json['upc']:
             product.upc = request.json['upc']
         if request.json['plu']:
             product.plu = request.json['plu']
-        if request.json['expiration_date']:
-            pantry.expiration_date = datetime.strptime(request.json['expiration_date'], '%Y-%m-%dT%H:%M:%S.%f')
         if request.json['quantity']:
             pantry.quantity = request.json['quantity']
         if request.json['is_deleted'] == 0 or request.json['is_deleted'] == 1:
@@ -826,8 +911,6 @@ def deletePantryItem():
 
         return jsonify({'message': 'Pantry item deleted successfully'}), 201
     
-
-
 
 # create a route that will obtain the user's first name, last name, and email
 @app.route('/obtainUserNameEmail', methods=['POST'])
@@ -907,24 +990,25 @@ def updateFirstName():
     # get the session token from thehtml authorization header
     session_token = request.headers.get('Authorization').split()[1]
 
-    # get the user's email from the session token from the database
+    # get the user from the session token from the database
     user = User.query.filter_by(session_token=session_token).first()
 
-    # get the user's first name and last name from the database
-    person = Person.query.filter_by(id=user.person_id).first()
+    # get the person id from the user object
+    person_id = user.person_id
 
-    # from person get the first name and last name
-    first_name = person.first_name
-    last_name = person.last_name
-
-    # from user get the email
-    email = user.email
+    # get the person from the person id
+    person = Person.query.filter_by(id=person_id).first()
 
     # get the new first name from the html
     new_first_name = request.json['first_name']
 
     # update the first name in the database
     person.first_name = new_first_name
+
+    # commit the changed person obejct to the database
+    db.session.commit()
+    # close the db session
+    db.session.close()
 
     return jsonify({'message': 'Users name and email updated successfully'}), 200
 
@@ -936,25 +1020,25 @@ def updateLastName():
     # get the session token from thehtml authorization header
     session_token = request.headers.get('Authorization').split()[1]
 
-    # get the user's email from the session token from the database
+    # get the user from the session token from the database
     user = User.query.filter_by(session_token=session_token).first()
 
-    # get the user's first name and last name from the database
-    person = Person.query.filter_by(id=user.person_id).first()
+    # get the person id from the user object
+    person_id = user.person_id
 
-    # from person get the first name and last name
-    first_name = person.first_name
-    last_name = person.last_name
+    # get the person from the person id
+    person = Person.query.filter_by(id=person_id).first()
 
-    # from user get the email
-    email = user.email
-
-   # get the new last namefrom the html
+    # get the new last name from the html
     new_last_name = request.json['last_name']
 
     # update the last name in the database
     person.last_name = new_last_name
 
+    # commit the changed person obejct to the database
+    db.session.commit()
+    # close the db session
+    db.session.close()
     return jsonify({'message': 'Users name and email updated successfully'}), 200
 
 
@@ -965,24 +1049,19 @@ def updateEmail():
     # get the session token from thehtml authorization header
     session_token = request.headers.get('Authorization').split()[1]
 
-    # get the user's email from the session token from the database
+    # get the user from the session token from the database
     user = User.query.filter_by(session_token=session_token).first()
 
-    # get the user's first name and last name from the database
-    person = Person.query.filter_by(id=user.person_id).first()
-
-    # from person get the first name and last name
-    first_name = person.first_name
-    last_name = person.last_name
-
-    # from user get the email
-    email = user.email
-
-    # get the new email from the html
+    # get the new email from the json
     new_email = request.json['email']
 
-    # update the email in the database
+    # update the email  in the database
     user.email = new_email
+
+    # commit the changed person obejct to the database
+    db.session.commit()
+    # close the db session
+    db.session.close()
 
     return jsonify({'message': 'Users name and email updated successfully'}), 200
 
@@ -1093,9 +1172,6 @@ def obtainNotificationPreferences():
 
     return jsonify({'is_notifications_on': is_notifications_on, 'notification_range': notification_range}), 200
     
-
-
-
 # create a route that will increment the leaderboard_points by 1
 @app.route('/addPoints', methods=['POST'])
 @jwt_required() # authentication Required
