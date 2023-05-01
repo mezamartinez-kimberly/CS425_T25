@@ -157,7 +157,7 @@ flutter:
 
     - assets/animation/checkmark_icon.riv
     - assets/animation/food_loading.riv
-    
+
 flutter_icons:
   android: true
   image_path: "assets/logos/edna.png"
