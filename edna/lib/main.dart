@@ -2,9 +2,6 @@ import 'package:edna/backend_utils.dart';
 import 'package:edna/screens/register.dart';
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart'; // all screens
-import 'package:another_flushbar/flushbar.dart'; // snackbars
-import 'package:another_flushbar/flushbar_helper.dart'; // snackbars
-import 'package:another_flushbar/flushbar_route.dart'; // snackbars
 import 'package:edna/provider.dart'; // provider
 import 'package:intl/intl.dart';
 import 'package:path/path.dart'; // path
@@ -38,8 +35,7 @@ import 'package:timezone/timezone.dart' as tz;
 // Future<void> checkNotifDate() async {
 //   //get the current date
 //   DateTime today = DateTime.now();
-//   //create a flip variable to store 
-
+//   //create a flip variable to store
 
 //   // ignore: use_build_context_synchronously
 //   late List<Pantry> activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
@@ -124,49 +120,31 @@ class MyApp extends StatelessWidget {
   }
 
   createErrorMessage(context, errorMsg) {
-    var errorText = const Color.fromARGB(255, 88, 15, 15);
-    var errorBackground = const Color.fromARGB(255, 238, 37, 37);
-    print(" CONTEXT = $context");
-    // if error message is not a string, convert it to a string
-    if (errorMsg.runtimeType != String) {
-      errorMsg = errorMsg.toString();
-    }
-    Flushbar(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-      message: errorMsg,
-      messageSize: 25,
-      messageColor: Theme.of(context).brightness == Brightness.dark
-          ? Colors.white
-          : errorText,
-      duration: const Duration(seconds: 3),
-      backgroundColor: errorBackground,
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-      borderRadius: BorderRadius.circular(30.0),
-      maxWidth: MediaQuery.of(context).size.width * 0.8,
-      isDismissible: true,
-      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-    ).show(context);
-  }
-
-  createSuccessMessage(context, errorMsg) {
-    var errorText = const Color.fromARGB(255, 15, 88, 47);
-    var errorBackground = const Color.fromARGB(255, 78, 249, 36);
-
-    Flushbar(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-      message: errorMsg,
-      messageSize: 25,
-      messageColor: Theme.of(context).brightness == Brightness.dark
-          ? Colors.white
-          : errorText,
-      duration: const Duration(seconds: 3),
-      backgroundColor: errorBackground,
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-      borderRadius: BorderRadius.circular(30.0),
-    ).show(context);
+    // if not mounted, then mount
+    
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Container(
+        alignment: Alignment.topCenter,
+        height: 15.0,
+        child: Center(
+          child: Text(
+            errorMsg,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      backgroundColor: const Color.fromARGB(255, 255, 55, 55),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(40.0),
+      ),
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.symmetric(
+        horizontal: 30.0,
+        vertical: 15,
+      ),
+    ));
   }
 }

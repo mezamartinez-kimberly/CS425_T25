@@ -42,6 +42,8 @@ class CalendarClassState extends State<CalendarClass> {
     final activePantryItems = allPantryItems
         .where((item) => item.isVisibleInPantry == 1 && item.isDeleted == 0)
         .toList();
+    // activePantryItems = Provider.of<PantryProvider>(context, listen: false)
+    //     .activePantryAllLocations;
 
     for (final pantry in activePantryItems) {
       activePantryWidgets.add(ProductWidget(

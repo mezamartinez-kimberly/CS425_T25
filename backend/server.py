@@ -465,8 +465,9 @@ def addPantry():
     if parameterUPC != "None":
 
         # query the product table to see if a product with the upc exists, if yes get the product id ONLY of the first match
+        
         product = Product.query.filter_by(upc=parameterUPC).first()
-
+        
         # product doesnt currently exist in the database
         if not product:
             # call the upc route function and capture the response
@@ -474,12 +475,29 @@ def addPantry():
 
             if response_tuple[1] != 200:
                 # if the product name is not null, then we will add the product to the database
-                if name != None or name != "":
+                if name == None or name == "":
+                    # print('name is none')
+                    # # print out contents of the response tuple
+                    # print(response_tuple[0])
+                    # print(response_tuple[1])
+                    # # add null product to the database
+                    # product = Product(name="null",
+                    #                 upc=parameterUPC, plu = None, logical_delete=False)
+                    # db.session.add(product)
+                    # db.session.commit()
+                    # return error to frontend
+                 
+                    return jsonify({'error': response_tuple[0]}), response_tuple[1]
+                else:
+                    print("name is not none")
+                    print(name)
+                    # print type of name
+                    print(type(name))
                     # add the product to the database
                     product = Product(name=name,
                                     upc=parameterUPC, plu = None, logical_delete=False)
                     db.session.add(product)
-                    db.session.commit()
+                    db.session.commit()            
             else:
                 # add the product to the database
                 product = Product(name=response_tuple[0],

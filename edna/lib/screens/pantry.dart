@@ -33,6 +33,7 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
   late bool _showDeletedItems;
   List<Pantry> activePantryItems = [];
   List<Pantry> allPantryItems = [];
+  List<Pantry> activePantryAllLocations = [];
   late TabController _tabController = TabController(length: 3, vsync: this);
   int _currentTab = 0; // added variable to keep track of current tab
 
@@ -171,12 +172,17 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
     await BackendUtils.getAllPantry().then((value) {
       allPantryItems = value;
 
+      // get active pantry items
+      activePantryAllLocations = allPantryItems
+          .where((item) => item.isDeleted == 0 && item.isVisibleInPantry == 1)
+          .toList();
+      pantryProvider.setActiveAllLocation(activePantryAllLocations);
+
       // only get pantry items for current location
       allPantryItems = allPantryItems
           .where((item) =>
               item.storageLocation == location && item.isVisibleInPantry == 1)
           .toList();
-
       pantryProvider.setAllPantryItems(allPantryItems);
 
       // only get active pantry items for current location
@@ -186,7 +192,6 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
               item.isDeleted == 0 &&
               item.isVisibleInPantry == 1)
           .toList();
-
       pantryProvider.setActivePantryItems(activePantryItems);
 
       _showDeletedItems ? _listAllItems() : _listActiveItems();
@@ -263,7 +268,9 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                 context: context,
                 builder: (context) {
                   return EditWidget(
-                    pantryItem: Pantry(),
+                    pantryItem: Pantry(
+                        storageLocation:
+                            _currentTab), // default location is current tab
                     updateProductWidget: () {},
                     refreshPantryList: refresh,
                     callingWidget: widget,
