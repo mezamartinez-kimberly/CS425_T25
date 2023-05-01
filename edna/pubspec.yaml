@@ -139,11 +139,6 @@ flutter:
   #       - asset: fonts/Roboto-Thin.ttf
   #       - asset: fonts/Roboto-ThinItalic.ttf
   #         weight: 700
-flutter_icons:
-  android: true
-  image_path: "assets/logos/edna.png"
-  adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/logos/logo_foreground2.png"
 
   assets:
     - assets/images/Stage_1.png  
@@ -162,6 +157,14 @@ flutter_icons:
 
     - assets/animation/checkmark_icon.riv
     - assets/animation/food_loading.riv
+    
+flutter_icons:
+  android: true
+  image_path: "assets/logos/edna.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/logos/logo_foreground2.png"
+
+
 
 
   # To add assets to your application, add an assets section, like this:

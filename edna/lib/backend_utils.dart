@@ -14,7 +14,7 @@ class BackendUtils {
 
   static Future<String> registerUser(
       String firstName, String lastName, String email, String password) async {
-    const String apiUrl = 'http://10.0.2.2:5000/register';
+    const String apiUrl = 'http://192.168.1.135:5000/register';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -46,7 +46,7 @@ class BackendUtils {
   // create a function to log the user in
   // this will need to change the state of the app and return the user to the home screen
   static Future<String> loginUser(String email, String password) async {
-    const String apiUrl = 'http://10.0.2.2:5000/login';
+    const String apiUrl = 'http://192.168.1.135:5000/login';
     final Map<String, dynamic> message = {
       'email': email,
       'password': password,
@@ -73,7 +73,7 @@ class BackendUtils {
 
   // Create a upc get function to get the upc data
   static Future<dynamic> getUpcData(String upc) async {
-    const String apiUrl = 'http://10.0.2.2:5000/upc';
+    const String apiUrl = 'http://192.168.1.135:5000/upc';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -118,7 +118,7 @@ class BackendUtils {
 
   // Create a function that on sumbit changes the visibilty of the pantry items added in the Camera Page
   static Future<http.Response> changeVisibility() async {
-    const String apiUrl = "http://10.0.2.2:5000/changeVisibility";
+    const String apiUrl = "http://192.168.1.135:5000/changeVisibility";
 
     final http.Response response = await http.post(
       Uri.parse(apiUrl),
@@ -133,7 +133,7 @@ class BackendUtils {
 
 // create a function to sent the smail adress to the backend
   static Future<String> sendOTPEmail(String email) async {
-    const String apiUrl = 'http://10.0.2.2:5000/sendOTP';
+    const String apiUrl = 'http://192.168.1.135:5000/sendOTP';
 
     emailGlobal = email;
 
@@ -164,7 +164,7 @@ class BackendUtils {
 
 // Create a function to verify the OTP
   static Future<String> verifyOTP(String otp) async {
-    const String apiUrl = 'http://10.0.2.2:5000/verifyOTP';
+    const String apiUrl = 'http://192.168.1.135:5000/verifyOTP';
 
     final Map<String, dynamic> message = {
       'email': emailGlobal,
@@ -194,7 +194,7 @@ class BackendUtils {
   }
 
   static Future<String> changePassword(String password) async {
-    const String apiUrl = 'http://10.0.2.2:5000/changePassword';
+    const String apiUrl = 'http://192.168.1.135:5000/changePassword';
 
     final Map<String, dynamic> message = {
       'email': emailGlobal,
@@ -225,7 +225,7 @@ class BackendUtils {
 
 // Create a upc get function to get the upc data
   static Future<http.Response> addPantry(Pantry pantryItem) async {
-    const String apiUrl = 'http://10.0.2.2:5000/addPantry';
+    const String apiUrl = 'http://192.168.1.135:5000/addPantry';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -264,7 +264,7 @@ class BackendUtils {
   }
 
   static Future<List<Pantry>> getAllPantry() async {
-    const String apiUrl = 'http://10.0.2.2:5000/getAllPantry';
+    const String apiUrl = 'http://192.168.1.135:5000/getAllPantry';
 
     // create a get request to the backend with the auth header
     final http.Response response = await http.get(
@@ -302,7 +302,7 @@ class BackendUtils {
   }
 
   static Future<http.Response> updatePantryItem(Pantry pantryItem) async {
-    const String apiUrl = 'http://10.0.2.2:5000/updatePantryItem';
+    const String apiUrl = 'http://192.168.1.135:5000/updatePantryItem';
 
     // use the pantry item to create a map
     final Map<String, dynamic> pantryMap = pantryItem.toMap();
@@ -331,7 +331,7 @@ class BackendUtils {
 
 // create a function called add expiration data
   static Future<dynamic> addExpirationData(Pantry pantryItem) async {
-    const String apiUrl = 'http://10.0.2.2:5000/addExpirationData';
+    const String apiUrl = 'http://192.168.1.135:5000/addExpirationData';
 
     // from the pantry item extract the upc, plu, date added and dateRemoved and zip them into a json map
     final Map<String, dynamic> message = {
@@ -358,7 +358,7 @@ class BackendUtils {
   // delete all database items
   // for debugging
   static Future<String> deleteAll() async {
-    const String apiUrl = 'http://10.0.2.2:5000/delete_all';
+    const String apiUrl = 'http://192.168.1.135:5000/delete_all';
 
     // create a delete request to the backend with the auth header
     final http.Response response = await http.delete(
@@ -378,7 +378,7 @@ class BackendUtils {
 
 // Add points to the user
   static Future<String> addPoints() async {
-    const String apiUrl = 'http://10.0.2.2:5000/addPoints';
+    const String apiUrl = 'http://192.168.1.135:5000/addPoints';
 
     // create a post request to the backend with the auth header and JSON message
     final http.Response response = await http.post(
@@ -397,7 +397,7 @@ class BackendUtils {
 
 // retreive the points from the backend
   static Future<int> getPoints() async {
-    const String apiUrl = 'http://10.0.2.2:5000/getPoints';
+    const String apiUrl = 'http://192.168.1.135:5000/getPoints';
 
     // create a post request to the backend with the auth header and JSON message
     final http.Response response = await http.post(
@@ -422,7 +422,7 @@ class BackendUtils {
   }
 
   static Future<String> deletePantryItem(Pantry pantryItem) async {
-    const String apiUrl = 'http://10.0.2.2:5000/deletePantryItem';
+    const String apiUrl = 'http://192.168.1.135:5000/deletePantryItem';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -451,7 +451,7 @@ class BackendUtils {
 
   //create a function to decode the users first name, last name, email for the profile page and account settings
   static Future<List<String>> getUserData() async {
-    const String apiUrl = 'http://10.0.2.2:5000/obtainUserNameEmail';
+    const String apiUrl = 'http://192.168.1.135:5000/obtainUserNameEmail';
 
     // create a post request to the backend with the auth header
     final http.Response response = await http.post(
@@ -493,7 +493,7 @@ class BackendUtils {
 
   //create a function to use the logout route in the backend
   static Future<String> logoutUser() async {
-    const String apiUrl = 'http://10.0.2.2:5000/logout';
+    const String apiUrl = 'http://192.168.1.135:5000/logout';
 
     // create a post request to the backend with the auth header
     final http.Response response = await http.post(
@@ -517,7 +517,7 @@ class BackendUtils {
   //need to handle error where you click the back button and it doesnt update the name on the profile page
   static Future<String> updateUserNameEmail(
       String firstName, String lastName, String email) async {
-    const String apiUrl = 'http://10.0.2.2:5000/updateUserNameEmail';
+    const String apiUrl = 'http://192.168.1.135:5000/updateUserNameEmail';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -550,7 +550,7 @@ class BackendUtils {
 
   //create a function to update the users first name
   static Future<String> updateFirstName(String firstName) async {
-    const String apiUrl = 'http://10.0.2.2:5000/updateFirstName';
+    const String apiUrl = 'http://192.168.1.135:5000/updateFirstName';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {'first_name': firstName};
@@ -577,7 +577,7 @@ class BackendUtils {
 
   //create a function to update the users last name
   static Future<String> updateLastName(String lastName) async {
-    const String apiUrl = 'http://10.0.2.2:5000/updateLastName';
+    const String apiUrl = 'http://192.168.1.135:5000/updateLastName';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -606,7 +606,7 @@ class BackendUtils {
 
   //create a function to update the users last name
   static Future<String> updateEmail(String email) async {
-    const String apiUrl = 'http://10.0.2.2:5000/updateEmail';
+    const String apiUrl = 'http://192.168.1.135:5000/updateEmail';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -635,7 +635,8 @@ class BackendUtils {
 
   //create a function to obtain the users preferences
   static Future<List<String>> getUserPreferences() async {
-    const String apiUrl = 'http://10.0.2.2:5000/obtainNotificationPreferences';
+    const String apiUrl =
+        'http://192.168.1.135:5000/obtainNotificationPreferences';
 
     // create a post request to the backend with the auth header
     final http.Response response = await http.post(
@@ -672,7 +673,7 @@ class BackendUtils {
 
   //create a function that gets if the user has notifications on
   static Future<String> getIsNotificationsOn() async {
-    const String apiUrl = 'http://10.0.2.2:5000/getIsNotificationsOn';
+    const String apiUrl = 'http://192.168.1.135:5000/getIsNotificationsOn';
 
     // create a post request to the backend with the auth header
     final http.Response response = await http.post(
@@ -704,7 +705,7 @@ class BackendUtils {
   //create funtion to update the users preferences
   static Future<String> updateUserPreferences(
       Int isNotificationsOn, Int notificationRange) async {
-    const String apiUrl = 'http://10.0.2.2:5000/updateUserPreferences';
+    const String apiUrl = 'http://192.168.1.135:5000/updateUserPreferences';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -734,7 +735,7 @@ class BackendUtils {
 
   //create function to update the users isNotificationOn preference
   static Future<String> updateNotificationOnOff(String isNotificationOn) async {
-    const String apiUrl = 'http://10.0.2.2:5000/updateNotificationOnOff';
+    const String apiUrl = 'http://192.168.1.135:5000/updateNotificationOnOff';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -764,7 +765,7 @@ class BackendUtils {
   //create function to update the users notification range
   static Future<String> updateUserNotificationRange(
       String notificationRange) async {
-    const String apiUrl = 'http://10.0.2.2:5000/updateNotificationRange';
+    const String apiUrl = 'http://192.168.1.135:5000/updateNotificationRange';
 
     // create a map called "message" that contains the data to be sent to the backend
     final Map<String, dynamic> message = {
@@ -793,7 +794,7 @@ class BackendUtils {
 
   //create a function to get if it is the users first login
   static Future<String> getIsFirstLogin() async {
-    const String apiUrl = 'http://10.0.2.2:5000/getIsFirstLogin';
+    const String apiUrl = 'http://192.168.1.135:5000/getIsFirstLogin';
 
     // create a post request to the backend with the auth header
     final http.Response response = await http.post(
