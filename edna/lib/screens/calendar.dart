@@ -42,8 +42,6 @@ class CalendarClassState extends State<CalendarClass> {
     final activePantryItems = allPantryItems
         .where((item) => item.isVisibleInPantry == 1 && item.isDeleted == 0)
         .toList();
-    // activePantryItems = Provider.of<PantryProvider>(context, listen: false)
-    //     .activePantryAllLocations;
 
     for (final pantry in activePantryItems) {
       activePantryWidgets.add(ProductWidget(
@@ -72,7 +70,7 @@ class CalendarClassState extends State<CalendarClass> {
     super.initState();
 
     _TableEventsExampleState();
-    _selectedDay = _focusedDay;
+    _selectedDay = DateTime(2020, 5, 1);
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
   }
 
@@ -102,6 +100,7 @@ class CalendarClassState extends State<CalendarClass> {
   }
 
   void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    // if not the same day, then change the selected day
     if (!isSameDay(_selectedDay, selectedDay)) {
       setState(() {
         _selectedDay = selectedDay;
@@ -112,6 +111,14 @@ class CalendarClassState extends State<CalendarClass> {
       });
 
       _selectedEvents.value = _getEventsForDay(selectedDay);
+    } else {
+      setState(() {
+        _selectedDay = null;
+        _focusedDay = focusedDay;
+        _rangeStart = null; // Important to clean those
+        _rangeEnd = null;
+        _rangeSelectionMode = RangeSelectionMode.toggledOff;
+      });
     }
   }
 
@@ -207,9 +214,15 @@ class CalendarClassState extends State<CalendarClass> {
               ),
               //todays color circle
               todayDecoration: BoxDecoration(
-                color: Color(0xFFF7A4A2),
+                color: Color.fromRGBO(157, 157, 157, 1),
                 shape: BoxShape.circle,
               ),
+              // change the color of selected days text
+              selectedTextStyle: TextStyle(
+                fontFamily: 'Noto Serif',
+                color: Color(0xFF4A5660),
+              ),
+
               //selected color
               selectedDecoration: BoxDecoration(
                 color: Color.fromARGB(131, 247, 164, 162),
