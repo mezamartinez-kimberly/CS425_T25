@@ -20,24 +20,29 @@ class FAQsPageState extends State<FAQsPage> {
   // create a circular back button thats in the upper left corner
   Widget _buildBackBtn() {
     return Container(
-      alignment: Alignment.topLeft,
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20, bottom: 10),
-        child: SizedBox(
-          height: 35,
-          width: 35,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              shape: const CircleBorder(),
-              padding: EdgeInsets.zero,
-              backgroundColor: const Color(0xFF7D9AE4),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Icon(
-              Icons.arrow_back_ios,
-              size: 20,
+      // pushh the button down
+      padding: const EdgeInsets.only(top: 10),
+      alignment: Alignment.centerLeft,
+
+      // wrap in circular button
+      child: SizedBox(
+        height: 35,
+        width: 35,
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            shape: const CircleBorder(),
+            padding: const EdgeInsets.all(0),
+            backgroundColor: const Color(0xFF7D9AE4),
+          ),
+          onPressed: () => Navigator.pop(context),
+          child: Container(
+            alignment: Alignment.center,
+            child: const Padding(
+              padding: EdgeInsets.only(left: 7),
+              child: Icon(
+                Icons.arrow_back_ios,
+                size: 20,
+              ),
             ),
           ),
         ),
@@ -110,6 +115,9 @@ class FAQsPageState extends State<FAQsPage> {
               final answer = questions[index]['answer'];
               return ExpansionTile(
                 title: Text(question!),
+                // change the text color when expanded
+                textColor: Color.fromRGBO(79, 113, 198, 1),
+
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(8.0),

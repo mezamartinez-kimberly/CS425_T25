@@ -42,6 +42,13 @@ class _OtpEntryPageState extends State<OtpEntryPage> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                     ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(
+                        color: Color.fromRGBO(247, 164, 162, 1),
+                        width: 2,
+                      ),
+                    ),
                   ),
                   validator: (String? value) {
                     if (value == null || value.isEmpty) {
@@ -113,6 +120,7 @@ class _OtpEntryPageState extends State<OtpEntryPage> {
           style: ElevatedButton.styleFrom(
             shape: const CircleBorder(),
             padding: const EdgeInsets.all(0),
+            backgroundColor: const Color(0xFF7D9AE4),
           ),
           onPressed: () => Navigator.pop(context),
           child: Container(
@@ -139,6 +147,7 @@ class _OtpEntryPageState extends State<OtpEntryPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          backgroundColor: const Color(0xFF7D9AE4),
         ),
         onPressed: () async {
           _formKey.currentState!.save(); // Always save the form data
@@ -208,11 +217,8 @@ class _OtpEntryPageState extends State<OtpEntryPage> {
         },
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
+          child: ListView(
             children: <Widget>[
-              const SizedBox(
-                height: 25,
-              ),
               _buildBackBtn(),
               const SizedBox(
                 height: 80,

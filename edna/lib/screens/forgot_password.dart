@@ -66,6 +66,13 @@ class _ForgotPasswordState extends State<ForgotPasswordPage> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Color.fromRGBO(247, 164, 162, 1),
+              width: 2,
+            ),
+          ),
         ),
         validator: (String? value) {
           if (value!.isEmpty) {
@@ -93,6 +100,7 @@ class _ForgotPasswordState extends State<ForgotPasswordPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          backgroundColor: const Color(0xFF7D9AE4),
         ),
         onPressed: () async {
           formKey.currentState!.save(); // Always save the form data
@@ -165,6 +173,7 @@ class _ForgotPasswordState extends State<ForgotPasswordPage> {
           style: ElevatedButton.styleFrom(
             shape: const CircleBorder(),
             padding: const EdgeInsets.all(0),
+            backgroundColor: const Color(0xFF7D9AE4),
           ),
           onPressed: () => Navigator.pop(context),
           child: Container(
@@ -185,16 +194,12 @@ class _ForgotPasswordState extends State<ForgotPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Form(
-        key: formKey,
-        child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Form(
+          key: formKey,
+          child: ListView(
             children: <Widget>[
-              const SizedBox(
-                height: 25,
-              ),
               _buildBackBtn(),
               const SizedBox(
                 height: 80,

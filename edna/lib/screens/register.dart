@@ -39,7 +39,7 @@ class _RegisterPageState extends State<RegisterPage> {
     return Column(
       children: const <Widget>[
         SizedBox(
-          height: 50,
+          height: 30,
         ),
         Text(
           'Register',
@@ -81,6 +81,13 @@ class _RegisterPageState extends State<RegisterPage> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Color.fromRGBO(247, 164, 162, 1),
+              width: 2,
+            ),
+          ),
         ),
         validator: (String? value) {
           if (value!.isEmpty) {
@@ -115,6 +122,13 @@ class _RegisterPageState extends State<RegisterPage> {
           ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Color.fromRGBO(247, 164, 162, 1),
+              width: 2,
+            ),
           ),
         ),
 
@@ -161,6 +175,13 @@ class _RegisterPageState extends State<RegisterPage> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Color.fromRGBO(247, 164, 162, 1),
+              width: 2,
+            ),
+          ),
         ),
         validator: (String? value) {
           if (value!.isEmpty) {
@@ -202,6 +223,13 @@ class _RegisterPageState extends State<RegisterPage> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Color.fromRGBO(247, 164, 162, 1),
+              width: 2,
+            ),
+          ),
         ),
         validator: (String? password) {
           if (password!.isEmpty) {
@@ -242,6 +270,13 @@ class _RegisterPageState extends State<RegisterPage> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Color.fromRGBO(247, 164, 162, 1),
+              width: 2,
+            ),
+          ),
         ),
         validator: (String? confirmPassword) {
           if (confirmPassword!.isEmpty) {
@@ -274,6 +309,7 @@ class _RegisterPageState extends State<RegisterPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          backgroundColor: const Color(0xFF7D9AE4),
         ),
         onPressed: () async {
           formKey.currentState!.save();
@@ -384,6 +420,7 @@ class _RegisterPageState extends State<RegisterPage> {
           style: ElevatedButton.styleFrom(
             shape: const CircleBorder(),
             padding: const EdgeInsets.all(0),
+            backgroundColor: const Color(0xFF7D9AE4),
           ),
           onPressed: () => Navigator.pop(context),
           child: Container(

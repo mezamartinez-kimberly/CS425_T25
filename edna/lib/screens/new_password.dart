@@ -28,7 +28,7 @@ class _NewPasswordState extends State<NewPasswordPage> {
     return Column(
       children: const <Widget>[
         Text(
-          'Forgot Password',
+          'Change Password',
           style: TextStyle(
             color: Colors.black,
             fontSize: 30,
@@ -39,7 +39,7 @@ class _NewPasswordState extends State<NewPasswordPage> {
           height: 10,
         ),
         Text(
-          'Enter your email to reset your password',
+          'Enter your new password',
           style: TextStyle(
             color: Colors.black,
             fontSize: 18,
@@ -71,6 +71,13 @@ class _NewPasswordState extends State<NewPasswordPage> {
           // ),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Color.fromRGBO(247, 164, 162, 1),
+              width: 2,
+            ),
           ),
         ),
         validator: (String? value) {
@@ -112,6 +119,13 @@ class _NewPasswordState extends State<NewPasswordPage> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Color.fromRGBO(247, 164, 162, 1),
+              width: 2,
+            ),
+          ),
         ),
         validator: (String? value) {
           if (value!.isEmpty) {
@@ -142,6 +156,7 @@ class _NewPasswordState extends State<NewPasswordPage> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          backgroundColor: const Color(0xFF7D9AE4),
         ),
         onPressed: () async {
           formKey.currentState!.save();
@@ -157,6 +172,10 @@ class _NewPasswordState extends State<NewPasswordPage> {
                 context: context,
                 builder: (BuildContext context) {
                   return AlertDialog(
+                    //round the corners
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
                     title: const Text('Password Changed'),
                     content: const Text(
                         'Your password has been changed successfully'),
@@ -229,6 +248,7 @@ class _NewPasswordState extends State<NewPasswordPage> {
           style: ElevatedButton.styleFrom(
             shape: const CircleBorder(),
             padding: const EdgeInsets.all(0),
+            backgroundColor: const Color(0xFF7D9AE4),
           ),
           onPressed: () => Navigator.pop(context),
           child: Container(
@@ -249,39 +269,33 @@ class _NewPasswordState extends State<NewPasswordPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Form(
           key: formKey,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                const SizedBox(
-                  height: 25,
-                ),
-                _buildBackBtn(),
-                const SizedBox(
-                  height: 80,
-                ),
-                _buildTitle(),
-                const SizedBox(
-                  height: 30,
-                ),
-                _buildPasswordField(),
-                const SizedBox(
-                  height: 20,
-                ),
-                _buildConfirmPasswordField(),
-                const SizedBox(
-                  height: 20,
-                ),
-                _buildSubmitButton(),
-                const SizedBox(
-                  height: 20,
-                ),
-              ],
-            ),
+          child: ListView(
+            children: <Widget>[
+              _buildBackBtn(),
+              const SizedBox(
+                height: 80,
+              ),
+              _buildTitle(),
+              const SizedBox(
+                height: 30,
+              ),
+              _buildPasswordField(),
+              const SizedBox(
+                height: 20,
+              ),
+              _buildConfirmPasswordField(),
+              const SizedBox(
+                height: 20,
+              ),
+              _buildSubmitButton(),
+              const SizedBox(
+                height: 20,
+              ),
+            ],
           ),
         ),
       ),

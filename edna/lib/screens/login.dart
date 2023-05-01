@@ -80,6 +80,13 @@ class _LoginPageState extends State<LoginPage> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Color.fromRGBO(247, 164, 162, 1),
+              width: 2,
+            ),
+          ),
         ),
         validator: (String? value) {
           if (value!.isEmpty) {
@@ -120,6 +127,13 @@ class _LoginPageState extends State<LoginPage> {
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
           ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Color.fromRGBO(247, 164, 162, 1),
+              width: 2,
+            ),
+          ),
         ),
         validator: (String? value) {
           if (value!.isEmpty) {
@@ -146,6 +160,7 @@ class _LoginPageState extends State<LoginPage> {
       // padding: const EdgeInsets.symmetric(vertical: 25),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
+          backgroundColor: const Color(0xFF7D9AE4),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(15),
           ),
