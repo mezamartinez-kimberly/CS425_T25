@@ -29,9 +29,6 @@ import 'package:msh_checkbox/msh_checkbox.dart'; // checkbox animation
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // product widget
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
-import 'package:another_flushbar/flushbar.dart'; // error display
-import 'package:another_flushbar/flushbar_helper.dart';
-import 'package:another_flushbar/flushbar_route.dart';
 import 'package:rive/rive.dart';
 
 // ignore: must_be_immutable
@@ -67,10 +64,11 @@ class CameraPageState extends State<CameraPage> {
 
   static bool itemAdded =
       false; // flag to check if item was just added to pantry
+  static bool itemFound = false;
 
   final _listKey = GlobalKey<AnimatedListState>();
 
-  late RiveAnimationController _controller;
+  late RiveAnimationController _animController;
 
   /// Is the animation currently playing?
   bool _isPlaying = false;
@@ -84,7 +82,7 @@ class CameraPageState extends State<CameraPage> {
     super.initState();
     barcodes = [];
     refresh();
-    _controller = OneShotAnimation(
+    _animController = OneShotAnimation(
       'show',
     );
   }
@@ -92,9 +90,6 @@ class CameraPageState extends State<CameraPage> {
   // for errors
   var errorText = const Color.fromARGB(255, 88, 15, 15);
   var errorBackground = const Color.fromARGB(255, 238, 37, 37);
-
-  // checkbox animation
-  bool isChecked = false;
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -113,7 +108,6 @@ class CameraPageState extends State<CameraPage> {
 
   @override
   Widget build(BuildContext context) {
-    //BackendUtils.deleteAll(); // debugging
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
@@ -137,7 +131,7 @@ class CameraPageState extends State<CameraPage> {
               right: MediaQuery.of(context).size.width * 0.7 -
                   MediaQuery.of(context).size.height * 0.2,
               child: Visibility(
-                visible: itemAdded,
+                visible: itemFound,
                 child: SizedBox(
                   width: MediaQuery.of(context).size.height *
                       0.2, // Specify desired width of animation
@@ -145,10 +139,10 @@ class CameraPageState extends State<CameraPage> {
                       0.2, // Specify desired height of animation
                   child: RiveAnimation.asset(
                     'assets/animation/checkmark_icon.riv',
-                    controllers: [_controller],
+                    controllers: [_animController],
                     onInit: (_) {
                       // Play animation once on init
-                      _controller.isActive = true;
+                      _animController.isActive = true;
                       // trigger haptics
                       HapticFeedback.mediumImpact();
                     },
@@ -198,7 +192,6 @@ class CameraPageState extends State<CameraPage> {
                           future: _addToPantry(),
                           builder: (context, snapshot) {
                             if (snapshot.hasError) {
-                              isChecked = false;
                               return AlertDialog(
                                 elevation: 3,
                                 // make dialog red
@@ -222,6 +215,9 @@ class CameraPageState extends State<CameraPage> {
                                 actions: <Widget>[
                                   TextButton(
                                     onPressed: () {
+                                      // pop alert dialog
+                                      //Navigator.of(context).pop();
+
                                       // reload camera page
                                       Navigator.of(context).pushReplacement(
                                           MaterialPageRoute(
@@ -240,12 +236,6 @@ class CameraPageState extends State<CameraPage> {
                                 ],
                               );
                             } else {
-                              isChecked = true;
-
-                              // wait 3 seconds
-                              Future.delayed(const Duration(seconds: 3), () {
-                                isChecked = false;
-                              });
                               return Container();
                             }
                           },
@@ -510,7 +500,6 @@ class CameraPageState extends State<CameraPage> {
         if (!alreadyScanned) {
           // add the scanned item to the barcode list
           barcodes!.add(result!);
-
           // check to see if the scanned item is a valid upc code
           if (result!.format == BarcodeFormat.ean13 ||
               result!.format == BarcodeFormat.upcA ||
@@ -523,43 +512,53 @@ class CameraPageState extends State<CameraPage> {
               isVisibleInPantry: 0,
             );
 
-          // need to store upc to put in product widget later
-          // since we map the pantry item from the backend json response
-          // and pantry items in backend only have product id, not actual codes
-          var tempUPC = result!.code;
+            // need to store upc to put in product widget later
+            // since we map the pantry item from the backend json response
+            // and pantry items in backend only have product id, not actual codes
+            var tempUPC = result!.code;
 
             // add the new pantry item using the backend utils functinon addPantry
             // capture the response of the function and get the pantry item from the json response
             await BackendUtils.addPantry(newPantryItem).then((value) {
-              // get the json response from the backend
-              dynamic jsonResponse = json.decode(value.body);
-              Pantry pantryItem = Pantry.fromMap(jsonResponse);
-            // add upc code
-            pantryItem.upc = tempUPC;
+              if (value.statusCode != 200 && value.statusCode != 201) {
+                if (value.statusCode == 400) {
+                  const MyApp().createErrorMessage(
+                      context, "Error ${value.statusCode}: Item not found.");
+                } else {
+                  const MyApp().createErrorMessage(context,
+                      "Error ${value.statusCode}: ${value.reasonPhrase}");
+                }
+              } else {
+                // itemFound triggers checkmark animation
+                itemFound = true;
+                // get the json response from the backend
+                dynamic jsonResponse = json.decode(value.body);
+                Pantry pantryItem = Pantry.fromMap(jsonResponse);
+                // add upc code
+                pantryItem.upc = tempUPC;
 
-              ProductWidget newProductWidget = ProductWidget(
-                key: UniqueKey(),
-                pantryItem: pantryItem,
-                enableCheckbox: false,
-                // no need to refresh pantry since we're on camera page
-                refreshPantryList: () {},
-                callingWidget: widget,
-              );
+                ProductWidget newProductWidget = ProductWidget(
+                  key: UniqueKey(),
+                  pantryItem: pantryItem,
+                  enableCheckbox: false,
+                  // no need to refresh pantry since we're on camera page
+                  refreshPantryList: () {},
+                  callingWidget: widget,
+                );
 
-              // add to camera page's list of items
-              widget.addItem(newProductWidget);
+                // add to camera page's list of items
+                widget.addItem(newProductWidget);
+              }
             });
 
             // toggle itemAdded so item doesn't duplicate
             itemAdded = true;
 
-            //refresh pantry list
-            // refresh();
-
             // wait 3 seconds before allowing another item to be added
             await Future.delayed(const Duration(seconds: 2));
             refresh();
             itemAdded = false;
+            itemFound = false;
           }
         }
       }
