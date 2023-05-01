@@ -16,8 +16,7 @@ class FAQsPage extends StatefulWidget {
   FAQsPageState createState() => FAQsPageState();
 }
 
-class FAQsPageState extends State<FAQsPage>{
-
+class FAQsPageState extends State<FAQsPage> {
   // create a circular back button thats in the upper left corner
   Widget _buildBackBtn() {
     return Container(
@@ -47,37 +46,44 @@ class FAQsPageState extends State<FAQsPage>{
   }
 
   final questions = [
-  {
-    'question': 'What is the purpose of EDNA?',
-    'answer': 'EDNA strives to help you decrease your food waste and save money while doing so. With our notifications and tree growing capabilities we try to remind and encourage you to eat your food before it goes bad!'
-  },
-  {
-    'question': 'How do I add a PLU code?',
-    'answer': 'You can add a PLU code when you go into the Camera Page or the Pantry Page and click on the + sign. You can then fill in the fields including the PLU codes.'
-  },
-  {
-    'question': 'How do I find items in the Calendar?',
-    'answer': 'To find events in the Calendar, you flip through the weeks or months until you see a dot under a date indicating an item is going to expire on that date.'
-  },
-  {
-    'question': 'How do I grow my tree?',
-    'answer': 'Your tree grows when you click on an item to mark as consumed and when prompted if the item is expired, you click on the no button. This is because the tree is a fun incentive for not wasting food and eating it before it expires!'
-  },
-  {
-    'question': 'How do I reset my password?',
-    'answer': 'To change your password simply go into the Profile Page, click on Account Settings, then fill in your email under the Change Password field. This will send an email verification code that you can enter when prompted. After which if it is correct, it will allow you to go onto the next page where you can change your password.'
-  },
-];
+    {
+      'question': 'What is the purpose of EDNA?',
+      'answer':
+          'EDNA strives to help you decrease your food waste and save money while doing so. With our notifications and tree growing capabilities, we try to remind and encourage you to eat your food before it goes bad!'
+    },
+    {
+      'question': 'How do I add a PLU code?',
+      'answer':
+          'You can add a PLU code when you go into the Camera Page or the Shelf Page and click on the "+" sign. You can then fill in the fields including the PLU codes.'
+    },
+    {
+      'question': 'How do I find items in the Calendar?',
+      'answer':
+          'To find items in the Calendar,  flip through weeks or months until you see a dot, indicating an item is going to expire on that date. You can then tap on the date, and the area below will show all the food items expiring that day.'
+    },
+    {
+      'question': 'How do I grow my tree?',
+      'answer':
+          'Your tree grows when you click on an item to mark it as consumed and, when prompted if the item is expired, click on the "No" button. This is because the tree is a fun incentive for not wasting food and eating it before it expires!'
+    },
+    {
+      'question': 'How do I reset my password?',
+      'answer':
+          'To change your password, simply go to the Profile Page, click "Account Settings", locate the "Change Password" field, and type in your email. You will then be emailed a verification code. Type in the code when prompted, and you will be able to change your password.'
+    },
+  ];
 
-@override
-Widget build(BuildContext context) {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Stack(
           children: <Widget>[
             _buildBackBtn(),
             const Padding(
-              padding: EdgeInsets.only(top: 20, left: 150), // Adjust the top value as per your requirement
+              padding: EdgeInsets.only(
+                  top: 20,
+                  left: 150), // Adjust the top value as per your requirement
               child: Text(
                 'FAQs',
                 style: TextStyle(
@@ -94,7 +100,6 @@ Widget build(BuildContext context) {
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
-
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),

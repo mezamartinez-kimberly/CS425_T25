@@ -323,7 +323,9 @@ class _EditWidgetState extends State<EditWidget> {
 
           // if user is editing a product widget on camera page
           // save changes to backend
-          if (productWidgetParent.runtimeType == CameraPage) {
+
+          if (productWidgetParent.runtimeType == CameraPage ||
+              productWidgetParent.runtimeType == EditWidget) {
             // update local pantry item with new values
             await BackendUtils.updatePantryItem(widget.pantryItem);
 
@@ -334,7 +336,6 @@ class _EditWidgetState extends State<EditWidget> {
           // if user is editing a product widget on shelf or calendar
           // then the item is already in the database
           // so update the item in the databaseelse
-
           else if (productWidgetParent.runtimeType == PantryPage ||
               productWidgetParent.runtimeType == CalendarClass) {
             // update pantry item in db with new values
