@@ -105,7 +105,7 @@ class NotificationsPageState extends State<NotificationsPage> {
     return Container(
       alignment: Alignment.topLeft,
       child: Padding(
-        padding: const EdgeInsets.only(top: 20, bottom: 10, right: 10),
+        padding: const EdgeInsets.only(top: 20, bottom: 10),
         child: SizedBox(
           height: 35,
           width: 35,
@@ -133,20 +133,25 @@ class NotificationsPageState extends State<NotificationsPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        //back button
-        leading: _buildBackBtn(),
-        title: const Padding(
-          padding: EdgeInsets.only(top: 20), // Adjust the bottom value as per your requirement
-          child: Text(
-            'Notification Settings',
-            style: TextStyle(
-              fontSize: 30.0,
-              color: Colors.black,
-              fontWeight: FontWeight.bold,
+        title: Stack(
+          children: <Widget>[
+            _buildBackBtn(),
+            const Padding(
+              padding: EdgeInsets.only(
+                  top: 20,
+                  left: 70), // Adjust the top value as per your requirement
+              child: Text(
+                'Notification Settings',
+                style: TextStyle(
+                  fontSize: 30.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
-          ),
+          ],
         ),
-        centerTitle: true,
         automaticallyImplyLeading: false,
         backgroundColor: Colors.transparent,
         elevation: 0,
