@@ -141,9 +141,9 @@ flutter:
   #         weight: 700
 flutter_icons:
   android: true
-  image_path: "assets/edna.png"
+  image_path: "assets/logos/edna.png"
   adaptive_icon_background: "#FFFFFF"
-  adaptive_icon_foreground: "assets/logo_foreground2.png"
+  adaptive_icon_foreground: "assets/logos/logo_foreground2.png"
 
   assets:
     - assets/images/Stage_1.png  
@@ -159,8 +159,6 @@ flutter_icons:
     - assets/images/tb4.png  
     - assets/images/tb5.png
     - assets/images/tb6.png  
-  
-    #- assets/logos/g-logo.png
 
     - assets/animation/checkmark_icon.riv
     - assets/animation/food_loading.riv

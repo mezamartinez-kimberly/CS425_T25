@@ -689,6 +689,7 @@ def getAllPantry():
 
         # loop through each pantry item
         for item in pantry:
+            print(item)
             # get the product details
             product = Product.query.filter_by(id=item.product_id).first()
 

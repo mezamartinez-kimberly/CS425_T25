@@ -105,7 +105,7 @@ class NotificationsPageState extends State<NotificationsPage> {
     return Container(
       alignment: Alignment.topLeft,
       child: Padding(
-        padding: const EdgeInsets.only(top: 20, bottom: 10),
+        padding: const EdgeInsets.only(top: 20, bottom: 10, right: 10),
         child: SizedBox(
           height: 35,
           width: 35,
@@ -121,13 +121,13 @@ class NotificationsPageState extends State<NotificationsPage> {
             child: const Icon(
               Icons.arrow_back_ios,
               size: 20,
-
             ),
           ),
         ),
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {
