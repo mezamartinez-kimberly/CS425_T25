@@ -2,9 +2,6 @@ import 'package:edna/backend_utils.dart';
 import 'package:edna/screens/register.dart';
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart'; // all screens
-import 'package:another_flushbar/flushbar.dart'; // snackbars
-import 'package:another_flushbar/flushbar_helper.dart'; // snackbars
-import 'package:another_flushbar/flushbar_route.dart'; // snackbars
 import 'package:edna/provider.dart'; // provider
 import 'package:intl/intl.dart';
 import 'package:path/path.dart'; // path
@@ -38,8 +35,7 @@ import 'package:timezone/timezone.dart' as tz;
 // Future<void> checkNotifDate() async {
 //   //get the current date
 //   DateTime today = DateTime.now();
-//   //create a flip variable to store 
-
+//   //create a flip variable to store
 
 //   // ignore: use_build_context_synchronously
 //   late List<Pantry> activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
@@ -66,8 +62,7 @@ void main() async {
       callbackDispatcher,
       // If enabled it will post a notification whenever
       // the task is running. Handy for debugging tasks
-      isInDebugMode: false
-  );
+      isInDebugMode: false);
   // Periodic task registration
   Workmanager().registerPeriodicTask(
     "2",
@@ -116,7 +111,7 @@ void callbackDispatcher() {
 late String notificationOn;
 late String notifRange;
 
-//example code 
+//example code
 // Future showNotificationWithDefaultSound(flip) async {
 // print(' in _showNotificationWithDefaultSound function in edna app');
 
@@ -147,14 +142,12 @@ late String notifRange;
 
 // }
 
-
- 
 Future showNotificationWithDefaultSound(flip) async {
   print('in showNotificationWithDefaultSound for function with pantry stuff');
 
   List<String> userPrefs = const MyApp().getUserPreferences() as List<String>;
-  notificationOn = userPrefs[0];  //output is 'true' or 'false' in string
-  notifRange = userPrefs[1];    //ouptut is '3 days' etc in string
+  notificationOn = userPrefs[0]; //output is 'true' or 'false' in string
+  notifRange = userPrefs[1]; //ouptut is '3 days' etc in string
   print('reg notifRange is $notifRange');
 
   //extract the numbers in notifRange value and change to int
@@ -170,7 +163,6 @@ Future showNotificationWithDefaultSound(flip) async {
     //get the current date
     DateTime today = DateTime.now();
 
-
     //get the active pantry items
     // ignore: use_build_context_synchronously
     //late List<Pantry> activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
@@ -178,47 +170,46 @@ Future showNotificationWithDefaultSound(flip) async {
     //call function from MyApp to get activePantryItems
     //call backend utils getAllPantry function to get active pantry items
     //List<Pantry> activePantryItems = await BackendUtils.getAllPantry();
-    List<Pantry> activePantryItems = const MyApp().getActivePantryItems as List<Pantry>;
+    List<Pantry> activePantryItems =
+        const MyApp().getActivePantryItems as List<Pantry>;
 
-    for (final item in activePantryItems){
+    for (final item in activePantryItems) {
       print('in showNotificationWithDefaultSound for loop');
       //subtract the notification range from the expiration date
-          DateTime firstDate = item.expirationDate!.subtract(Duration(days: notifRangeInt));
-          //check if today falls in between the expiration date and the new date
-          if (today.isAfter(firstDate) && today.isBefore(item.expirationDate!)){
-            //if it does then create and send a notification containing the item name and expiration date
-            // Show a notification after every 15 minute with the first
-            // appearance happening a minute after invoking the method
-            var androidPlatformChannelSpecifics =  const AndroidNotificationDetails(
-                'channel id',
-                'channel name',
-                'channel description',
-                importance: Importance.max,
-                priority: Priority.high
-            );
-            // initialise channel platform for both Android and iOS device.
-            var platformChannelSpecifics = NotificationDetails(
-                android: androidPlatformChannelSpecifics
-            );
-            String name = item.name!;
-            String date = DateFormat('MM/dd/yyyy').format(item.expirationDate!);
-            String flipTitle = '$name is expiring soon!';
-            String flipBody = 'It expires on $date. Remember to use it before it expires to grow your tree and save the planet!';
-            print(flip);
-            await flip.show(flipTitle,flipBody, platformChannelSpecifics, payload: 'Default_Sound'
-            );
-        }
-     }
+      DateTime firstDate =
+          item.expirationDate!.subtract(Duration(days: notifRangeInt));
+      //check if today falls in between the expiration date and the new date
+      if (today.isAfter(firstDate) && today.isBefore(item.expirationDate!)) {
+        //if it does then create and send a notification containing the item name and expiration date
+        // Show a notification after every 15 minute with the first
+        // appearance happening a minute after invoking the method
+        var androidPlatformChannelSpecifics = const AndroidNotificationDetails(
+            'channel id', 'channel name', 'channel description',
+            importance: Importance.max, priority: Priority.high);
+        // initialise channel platform for both Android and iOS device.
+        var platformChannelSpecifics =
+            NotificationDetails(android: androidPlatformChannelSpecifics);
+        String name = item.name!;
+        String date = DateFormat('MM/dd/yyyy').format(item.expirationDate!);
+        String flipTitle = '$name is expiring soon!';
+        String flipBody =
+            'It expires on $date. Remember to use it before it expires to grow your tree and save the planet!';
+        print(flip);
+        await flip.show(flipTitle, flipBody, platformChannelSpecifics,
+            payload: 'Default_Sound');
+      }
+    }
   }
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  //create function to get active pantry items 
+  //create function to get active pantry items
   Future<List<Pantry>> getActivePantryItems(BuildContext context) async {
     //use provider class to get active pantry items
-    late List<Pantry> activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
+    late List<Pantry> activePantryItems =
+        Provider.of<PantryProvider>(context, listen: false).activePantryItems;
     return activePantryItems;
   }
 
@@ -241,49 +232,31 @@ class MyApp extends StatelessWidget {
   }
 
   createErrorMessage(context, errorMsg) {
-    var errorText = const Color.fromARGB(255, 88, 15, 15);
-    var errorBackground = const Color.fromARGB(255, 238, 37, 37);
-    print(" CONTEXT = $context");
-    // if error message is not a string, convert it to a string
-    if (errorMsg.runtimeType != String) {
-      errorMsg = errorMsg.toString();
-    }
-    Flushbar(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-      message: errorMsg,
-      messageSize: 25,
-      messageColor: Theme.of(context).brightness == Brightness.dark
-          ? Colors.white
-          : errorText,
-      duration: const Duration(seconds: 3),
-      backgroundColor: errorBackground,
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-      borderRadius: BorderRadius.circular(30.0),
-      maxWidth: MediaQuery.of(context).size.width * 0.8,
-      isDismissible: true,
-      dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-    ).show(context);
-  }
-
-  createSuccessMessage(context, errorMsg) {
-    var errorText = const Color.fromARGB(255, 15, 88, 47);
-    var errorBackground = const Color.fromARGB(255, 78, 249, 36);
-
-    Flushbar(
-      padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-      message: errorMsg,
-      messageSize: 25,
-      messageColor: Theme.of(context).brightness == Brightness.dark
-          ? Colors.white
-          : errorText,
-      duration: const Duration(seconds: 3),
-      backgroundColor: errorBackground,
-      flushbarPosition: FlushbarPosition.BOTTOM,
-      flushbarStyle: FlushbarStyle.FLOATING,
-      margin: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-      borderRadius: BorderRadius.circular(30.0),
-    ).show(context);
+    // if not mounted, then mount
+    
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      content: Container(
+        alignment: Alignment.topCenter,
+        height: 15.0,
+        child: Center(
+          child: Text(
+            errorMsg,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+      ),
+      backgroundColor: const Color.fromARGB(255, 255, 55, 55),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(40.0),
+      ),
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.symmetric(
+        horizontal: 30.0,
+        vertical: 15,
+      ),
+    ));
   }
 }

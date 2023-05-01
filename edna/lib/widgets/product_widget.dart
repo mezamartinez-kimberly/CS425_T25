@@ -112,25 +112,23 @@ class ProductWidgetState extends State<ProductWidget> {
                       leading: _buildCheckBox(widget.enableCheckbox),
                       title:
                           // if name is null or empty, show "No name"
-                          Expanded(
-                        child: widget.pantryItem.name == "" ||
-                                widget.pantryItem.name == null
-                            ? const Text("No name",
-                                style: TextStyle(
-                                  fontStyle: FontStyle.italic,
-                                ))
-                            // otherwise, show name
-                            : Text(
-                                widget.pantryItem.name as String,
-                                maxLines: 2,
-                                style: TextStyle(
-                                    // if deleted, strikethrough text
-                                    decoration:
-                                        widget.pantryItem.isDeleted! == 1
-                                            ? TextDecoration.lineThrough
-                                            : TextDecoration.none),
-                              ),
-                      ),
+                          widget.pantryItem.name == "" ||
+                                  widget.pantryItem.name == null
+                              ? const Text("No name",
+                                  style: TextStyle(
+                                    fontStyle: FontStyle.italic,
+                                  ))
+                              // otherwise, show name
+                              : Text(
+                                  widget.pantryItem.name as String,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                      // if deleted, strikethrough text
+                                      decoration:
+                                          widget.pantryItem.isDeleted! == 1
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none),
+                                ),
                       subtitle: _formatDate(),
                       trailing: SizedBox(
                           width: 70,

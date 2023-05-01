@@ -15,13 +15,9 @@ import 'package:edna/screens/all.dart';
 import 'package:edna/widgets/product_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart'; // material design
-import 'package:flutter/scheduler.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert'; // json
-import 'package:another_flushbar/flushbar.dart'; // error display
-import 'package:another_flushbar/flushbar_helper.dart';
-import 'package:another_flushbar/flushbar_route.dart';
 
 class EditWidget extends StatefulWidget {
   @override
@@ -243,30 +239,6 @@ class _EditWidgetState extends State<EditWidget> {
         if (!mounted) {
           return;
         }
-        // close dialog
-        Navigator.of(context).pop();
-
-        // if no upc/plu code, show error
-        if (widget.pantryItem.upc == null && widget.pantryItem.plu == null) {
-          const MyApp().createErrorMessage(context, "Please enter a code.");
-          return;
-        }
-
-        // if upc is not 12 digits, show error
-        if (widget.pantryItem.upc != null &&
-            widget.pantryItem.upc!.length != 12) {
-          const MyApp()
-              .createErrorMessage(context, "UPC code must be 12 digits.");
-          return;
-        }
-
-        // if plu is not 4 digits, show error
-        if (widget.pantryItem.plu != null &&
-            widget.pantryItem.plu!.length != 4) {
-          const MyApp()
-              .createErrorMessage(context, "PLU code must be 4 digits.");
-          return;
-        }
 
         // if user creating item on camera page, add to camera's list
         if (widget.callingWidget.runtimeType == CameraPage) {
@@ -293,65 +265,52 @@ class _EditWidgetState extends State<EditWidget> {
           await BackendUtils.addPantry(newPantryItem).then((value) async {
             // error check
             if (value.statusCode != 200 && value.statusCode != 201) {
-              Flushbar(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
-                message: "Error: ${value.statusCode} ${value.reasonPhrase}",
-                messageSize: 25,
-                messageColor: Theme.of(context).brightness == Brightness.dark
-                    ? Colors.white
-                    : errorText,
-                duration: const Duration(seconds: 3),
-                backgroundColor: errorBackground,
-                flushbarPosition: FlushbarPosition.BOTTOM,
-                flushbarStyle: FlushbarStyle.FLOATING,
-                margin:
-                    const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                borderRadius: BorderRadius.circular(30.0),
-                maxWidth: MediaQuery.of(context).size.width * 0.8,
-                isDismissible: true,
-                dismissDirection: FlushbarDismissDirection.HORIZONTAL,
-              ).show(context);
+              checkErrors(value, context);
+            } else {
+              // get the json response from the backend
+              dynamic jsonResponse = json.decode(value.body);
+              Pantry pantryItem = Pantry.fromMap(jsonResponse);
+              pantryItem.upc = tempCodes[0];
+              pantryItem.plu = tempCodes[1];
+
+              //  create product widget with new pantry item
+              ProductWidget newProductWidget = ProductWidget(
+                pantryItem: pantryItem,
+                enableCheckbox: false,
+                // no need to refresh pantry since we're still on camera page
+                refreshPantryList: () {},
+                callingWidget: widget,
+              );
+
+              // add to camera page's list of items
+              cameraPage.addItem(newProductWidget);
+              // refresh camera page
+              widget.refreshCameraPage!();
             }
-
-            // get the json response from the backend
-            dynamic jsonResponse = json.decode(value.body);
-            print("JSON RESPONSE: $jsonResponse");
-            Pantry pantryItem = Pantry.fromMap(jsonResponse);
-            pantryItem.upc = tempCodes[0];
-            pantryItem.plu = tempCodes[1];
-
-            //  create product widget with new pantry item
-            ProductWidget newProductWidget = ProductWidget(
-              pantryItem: pantryItem,
-              enableCheckbox: false,
-              // no need to refresh pantry since we're still on camera page
-              refreshPantryList: () {},
-              callingWidget: widget,
-            );
-
-            // add to camera page's list of items
-            cameraPage.addItem(newProductWidget);
-            // refresh camera page
-            widget.refreshCameraPage!();
-          });
+          }).onError((error, stackTrace) => const MyApp().createErrorMessage(
+              context, "Error adding item to pantry: $error"));
         }
 
         // if user is creating widget on pantry page, add product to pantry
-        else if (widget.callingWidget.runtimeType == PantryPage) {
+        if (widget.callingWidget.runtimeType == PantryPage) {
           // add to pantry
-          await BackendUtils.addPantry(
-            Pantry(
-              name: widget.pantryItem.name,
-              expirationDate: widget.pantryItem.expirationDate,
-              quantity: widget.pantryItem.quantity,
-              dateAdded: DateTime.now(),
-              upc: widget.pantryItem.upc,
-              plu: widget.pantryItem.plu,
-              isDeleted: 0,
-              isVisibleInPantry: 1,
-            ),
-          );
+          await BackendUtils.addPantry(Pantry(
+            name: widget.pantryItem.name,
+            expirationDate: widget.pantryItem.expirationDate,
+            quantity: widget.pantryItem.quantity,
+            dateAdded: DateTime.now(),
+            upc: widget.pantryItem.upc,
+            plu: widget.pantryItem.plu,
+            isDeleted: 0,
+            isVisibleInPantry: 1,
+          )).then((value) async {
+            // error check
+            if (value.statusCode != 200 && value.statusCode != 201) {
+              checkErrors(value, context);
+            }
+          }).onError((error, stackTrace) => const MyApp().createErrorMessage(
+              context, "Error adding item to pantry: $error"));
+
           // refresh pantry list
           widget.refreshPantryList!();
         }
@@ -377,7 +336,14 @@ class _EditWidgetState extends State<EditWidget> {
           // so update the item in the databaseelse
           else if (productWidgetParent.runtimeType == PantryPage) {
             // update pantry item in db with new values
-            await BackendUtils.updatePantryItem(widget.pantryItem);
+            await BackendUtils.updatePantryItem(widget.pantryItem)
+                .then((value) async {
+              // error check
+              if (value.statusCode != 200 && value.statusCode != 201) {
+                checkErrors(value, context);
+              }
+            }).onError((error, stackTrace) =>
+                    const MyApp().createErrorMessage(context, "Error: $error"));
             // update product widget
             widget.updateProductWidget!();
             // refresh pantry list
@@ -386,8 +352,42 @@ class _EditWidgetState extends State<EditWidget> {
         } else {
           print("Error in EditWidget._buildSaveButton");
         }
+
+        // close dialog
+        // ignore: use_build_context_synchronously
+        Navigator.of(context).pop();
       },
     );
+  }
+
+  checkErrors(value, context) {
+    // if no upc/plu code, show error
+    if (widget.pantryItem.upc == null && widget.pantryItem.plu == null) {
+      const MyApp()
+          .createErrorMessage(context, "Please enter a UPC or PLU code.");
+      return;
+    }
+    // if upc is not 12 digits, show error
+    else if (widget.pantryItem.upc != null &&
+        widget.pantryItem.upc!.length != 12) {
+      const MyApp().createErrorMessage(context, "UPC code must be 12 digits.");
+      return;
+    }
+
+    // if plu is not 4 digits, show error
+    else if (widget.pantryItem.plu != null &&
+        widget.pantryItem.plu!.length != 4) {
+      const MyApp().createErrorMessage(context, "PLU code must be 4 digits.");
+      return;
+    } else if (value.statusCode == 400 || value.statusCode == 404) {
+      const MyApp().createErrorMessage(
+          context, "Error ${value.statusCode}: Item not found.");
+      return;
+    } else {
+      // general error
+      const MyApp().createErrorMessage(
+          context, "Error ${value.statusCode}: ${value.reasonPhrase}");
+    }
   }
 
   Widget _buildQuantityPicker() {
