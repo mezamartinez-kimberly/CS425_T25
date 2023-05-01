@@ -1008,24 +1008,25 @@ def updateFirstName():
     # get the session token from thehtml authorization header
     session_token = request.headers.get('Authorization').split()[1]
 
-    # get the user's email from the session token from the database
+    # get the user from the session token from the database
     user = User.query.filter_by(session_token=session_token).first()
 
-    # get the user's first name and last name from the database
-    person = Person.query.filter_by(id=user.person_id).first()
+    # get the person id from the user object
+    person_id = user.person_id
 
-    # from person get the first name and last name
-    first_name = person.first_name
-    last_name = person.last_name
-
-    # from user get the email
-    email = user.email
+    # get the person from the person id
+    person = Person.query.filter_by(id=person_id).first()
 
     # get the new first name from the html
     new_first_name = request.json['first_name']
 
     # update the first name in the database
     person.first_name = new_first_name
+
+    # commit the changed person obejct to the database
+    db.session.commit()
+    # close the db session
+    db.session.close()
 
     return jsonify({'message': 'Users name and email updated successfully'}), 200
 
@@ -1037,25 +1038,25 @@ def updateLastName():
     # get the session token from thehtml authorization header
     session_token = request.headers.get('Authorization').split()[1]
 
-    # get the user's email from the session token from the database
+    # get the user from the session token from the database
     user = User.query.filter_by(session_token=session_token).first()
 
-    # get the user's first name and last name from the database
-    person = Person.query.filter_by(id=user.person_id).first()
+    # get the person id from the user object
+    person_id = user.person_id
 
-    # from person get the first name and last name
-    first_name = person.first_name
-    last_name = person.last_name
+    # get the person from the person id
+    person = Person.query.filter_by(id=person_id).first()
 
-    # from user get the email
-    email = user.email
-
-   # get the new last namefrom the html
+    # get the new last name from the html
     new_last_name = request.json['last_name']
 
     # update the last name in the database
     person.last_name = new_last_name
 
+    # commit the changed person obejct to the database
+    db.session.commit()
+    # close the db session
+    db.session.close()
     return jsonify({'message': 'Users name and email updated successfully'}), 200
 
 
@@ -1066,24 +1067,19 @@ def updateEmail():
     # get the session token from thehtml authorization header
     session_token = request.headers.get('Authorization').split()[1]
 
-    # get the user's email from the session token from the database
+    # get the user from the session token from the database
     user = User.query.filter_by(session_token=session_token).first()
 
-    # get the user's first name and last name from the database
-    person = Person.query.filter_by(id=user.person_id).first()
-
-    # from person get the first name and last name
-    first_name = person.first_name
-    last_name = person.last_name
-
-    # from user get the email
-    email = user.email
-
-    # get the new email from the html
+    # get the new email from the json
     new_email = request.json['email']
 
-    # update the email in the database
+    # update the email  in the database
     user.email = new_email
+
+    # commit the changed person obejct to the database
+    db.session.commit()
+    # close the db session
+    db.session.close()
 
     return jsonify({'message': 'Users name and email updated successfully'}), 200
 

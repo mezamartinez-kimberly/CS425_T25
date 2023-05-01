@@ -793,7 +793,7 @@ class BackendUtils {
 
   //create a function to get if it is the users first login
   static Future<String> getIsFirstLogin() async {
-    const String apiUrl = 'http://110.0.2.2:5000/getIsFirstLogin';
+    const String apiUrl = 'http://10.0.2.2:5000/getIsFirstLogin';
 
     // create a post request to the backend with the auth header
     final http.Response response = await http.post(
