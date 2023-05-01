@@ -36,6 +36,7 @@ class ProfilePageState extends State<ProfilePage> {
     _getUserData().then((_) {});
     WidgetsFlutterBinding.ensureInitialized();
     NotificationService().initNotification();
+    tz.initializeTimeZones();
   }
 
   Widget _buildLogOutButton() {
@@ -258,52 +259,7 @@ class ProfilePageState extends State<ProfilePage> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   onTap: () async {
-                    //call backend utils getAllPantry to get all pantry items
-                    //List<Pantry> activePantryItems = await BackendUtils.getAllPantry();
-                    late List<Pantry> activePantryItems =
-                        Provider.of<PantryProvider>(context, listen: false)
-                            .activePantryItems;
-                    List<String> userPrefs =
-                        await BackendUtils.getUserPreferences();
-                    String notificationOn =
-                        userPrefs[0]; //output is 'true' or 'false' in string
-                    String notifRange =
-                        userPrefs[1]; //ouptut is '3 days' etc in string\
-
-                    //extract the numbers in notifRange value and change to int
-                    notifRange = notifRange.replaceAll(RegExp(r'[^0-9]'), '');
-                    //convert notifRange to int
-                    int notifRangeInt = int.parse(notifRange);
-                    //get the current date
-                    DateTime today = DateTime.now();
-
-                    for (final item in activePantryItems) {
-                      print(activePantryItems.length);
-                      //subtract the notification range from the expiration date
-                      DateTime firstDate = item.expirationDate!
-                          .subtract(Duration(days: notifRangeInt));
-                      //check if today falls in between the expiration date and the new date
-                      if (today.isAfter(firstDate) &&
-                          today.isBefore(item.expirationDate!)) {
-                        String name = item.name!;
-                        String expirDate = DateFormat('MM/dd/yyyy')
-                            .format(item.expirationDate!);
-                        String titleContent = 'EDNA $name is expiring soon!';
-                        String bodyContent =
-                            'Your $name will expire on $expirDate. Consider using it soon!';
-                        print(name);
-                        print(titleContent);
-                        print(bodyContent);
-                        //show notification
-                        NotificationService().showNotification(
-                            title: titleContent, body: bodyContent);
-                        int indexValue = notifRangeInt;
-                        int loopValue = indexValue;
-
-                        //delay notification by 5 seconds
-                        await Future.delayed(const Duration(seconds: 5));
-                      }
-                    }
+                    NotificationService().makeNotifications();
                   },
                 ),
               ),
@@ -360,7 +316,7 @@ class NotificationService {
 
   Future<void> initNotification() async {
     AndroidInitializationSettings initializationSettingsAndroid =
-        const AndroidInitializationSettings('@mipmap/ic_launcher');
+        const AndroidInitializationSettings('logo_foreground2');
 
     var initializationSettings =
         InitializationSettings(android: initializationSettingsAndroid);
@@ -377,5 +333,80 @@ class NotificationService {
   Future showNotification({int id = 0, String? title, String? body}) async {
     return notificationsPlugin.show(
         id, title, body, await notificationDetails());
+  }
+
+  Future scheduleNotification(
+      {int id = 0,
+      String? title,
+      String? body,
+      required DateTime scheduledNotificationDateTime}) async {
+    return notificationsPlugin.zonedSchedule(
+        id,
+        title,
+        body,
+        tz.TZDateTime.from(
+          scheduledNotificationDateTime,
+          tz.local,
+        ),
+        await notificationDetails(),
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation:
+            UILocalNotificationDateInterpretation.absoluteTime);
+  }
+
+  //create a function that creates the notifications
+  Future makeNotifications() async {
+    //call backend utils getAllPantry to get all pantry items
+    List<Pantry> activePantryItems = await BackendUtils.getAllPantry();
+    //late List<Pantry> activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
+    List<String> userPrefs =
+        await BackendUtils.getUserPreferences();
+    String notificationOn = userPrefs[0]; //output is 'true' or 'false' in string
+    String notifRange = userPrefs[1]; //ouptut is '3 days' etc in string\
+
+    //extract the numbers in notifRange value and change to int
+    notifRange = notifRange.replaceAll(RegExp(r'[^0-9]'), '');
+    //convert notifRange to int
+    int notifRangeInt = int.parse(notifRange);
+    //get the current date
+    DateTime today = DateTime.now();
+
+    for (final item in activePantryItems) {
+      //subtract the notification range from the expiration date
+      DateTime firstDate = item.expirationDate!.subtract(Duration(days: notifRangeInt));
+      //check if today falls in between the expiration date and the new date
+      if (today.isAfter(firstDate) && today.isBefore(item.expirationDate!)) {
+        String name = item.name!;
+        String expirDate = DateFormat('MM/dd/yyyy').format(item.expirationDate!);
+        String titleContent = 'EDNA $name is expiring soon!';
+        String bodyContent = 'Your $name will expire on $expirDate. Consider using it soon!';
+        print(titleContent);
+        print(bodyContent);
+        //show notification
+        NotificationService().showNotification(title: titleContent, body: bodyContent);
+
+        int indexValue = notifRangeInt;
+        int loopValue = indexValue - 1 ;
+
+        //delay notification by 5 seconds
+        await Future.delayed(const Duration(seconds: 5));
+        
+        //create a variable that takes the days between now and the expiration date
+        int daysBetween = item.expirationDate!.difference(today).inDays;
+
+        for (int i = 0; i < daysBetween; i++) {
+          //get tomorrows date and add loop value to it with the time being 5pm
+          DateTime newDate = DateTime.now().add(Duration(days: i + 1));
+
+          //schedule notification
+          NotificationService().scheduleNotification(
+              title: titleContent,
+              body: bodyContent,
+              scheduledNotificationDateTime: newDate);
+
+          print('new notification scheduled for $newDate');
+        }
+      }
+    }
   }
 }

@@ -305,54 +305,54 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-// build the Social Media Login Button based on the image asset
-  Widget _buildSocialBtn() {
-    return Row(
-      children: <Widget>[
-        Expanded(
-          child: GestureDetector(
-            onTap: () => {},
-            child: Container(
-              height: 60,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.all(
-                  Radius.circular(10),
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black26,
-                    offset: Offset(0, 2),
-                    blurRadius: 6,
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: const <Widget>[
-                  Image(
-                    image: AssetImage('assets/logos/g-logo.png'),
-                    height: 30,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    'Log in with Google',
-                    style: TextStyle(
-                      fontFamily: 'Roboto-Medium',
-                      color: Color.fromARGB(255, 108, 108, 108),
-                      fontSize: 18,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
+// // build the Social Media Login Button based on the image asset
+//   Widget _buildSocialBtn() {
+//     return Row(
+//       children: <Widget>[
+//         Expanded(
+//           child: GestureDetector(
+//             onTap: () => {},
+//             child: Container(
+//               height: 60,
+//               decoration: const BoxDecoration(
+//                 color: Colors.white,
+//                 borderRadius: BorderRadius.all(
+//                   Radius.circular(10),
+//                 ),
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: Colors.black26,
+//                     offset: Offset(0, 2),
+//                     blurRadius: 6,
+//                   ),
+//                 ],
+//               ),
+//               child: Row(
+//                 mainAxisAlignment: MainAxisAlignment.center,
+//                 children: const <Widget>[
+//                   Image(
+//                     image: AssetImage('assets/logos/g-logo.png'),
+//                     height: 30,
+//                   ),
+//                   SizedBox(
+//                     width: 10,
+//                   ),
+//                   Text(
+//                     'Log in with Google',
+//                     style: TextStyle(
+//                       fontFamily: 'Roboto-Medium',
+//                       color: Color.fromARGB(255, 108, 108, 108),
+//                       fontSize: 18,
+//                     ),
+//                   ),
+//                 ],
+//               ),
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
 
   @override
   Widget build(BuildContext context) {
@@ -403,7 +403,7 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(
                       height: 20,
                     ),
-                    _buildSocialBtn(),
+                    //_buildSocialBtn(),
                     const SizedBox(
                       height: 20,
                     ),

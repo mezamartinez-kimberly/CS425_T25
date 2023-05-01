@@ -86,6 +86,8 @@ dependencies:
   workmanager: ^0.5.1
   rive: ^0.10.4
   flutter_datetime_picker: ^1.5.1
+  flutter_launcher_icons: ^0.9.2
+
   # rxdart: ^0.27.7
 
 
@@ -137,6 +139,11 @@ flutter:
   #       - asset: fonts/Roboto-Thin.ttf
   #       - asset: fonts/Roboto-ThinItalic.ttf
   #         weight: 700
+flutter_icons:
+  android: true
+  image_path: "assets/logos/edna.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/logos/logo_foreground2.png"
 
   assets:
     - assets/images/Stage_1.png  
@@ -152,8 +159,6 @@ flutter:
     - assets/images/tb4.png  
     - assets/images/tb5.png
     - assets/images/tb6.png  
-  
-    - assets/logos/g-logo.png
 
     - assets/animation/checkmark_icon.riv
     - assets/animation/food_loading.riv
