@@ -35,8 +35,8 @@ class CalendarClassState extends State<CalendarClass> {
   // ignore: non_constant_identifier_names
   _TableEventsExampleState() {
     // get the active pantry items from the provider
-    activePantryItems =
-        Provider.of<PantryProvider>(context, listen: false).activePantryItems;
+    activePantryItems = Provider.of<PantryProvider>(context, listen: false)
+        .activePantryAllLocations;
 
     for (final pantry in activePantryItems) {
       activePantryWidgets.add(ProductWidget(

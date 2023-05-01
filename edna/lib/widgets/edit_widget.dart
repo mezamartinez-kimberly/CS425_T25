@@ -331,10 +331,12 @@ class _EditWidgetState extends State<EditWidget> {
             widget.updateProductWidget!();
           }
 
-          // if user is editing a product widget on pantry page
+          // if user is editing a product widget on shelf or calendar
           // then the item is already in the database
           // so update the item in the databaseelse
-          else if (productWidgetParent.runtimeType == PantryPage) {
+
+          else if (productWidgetParent.runtimeType == PantryPage ||
+              productWidgetParent.runtimeType == CalendarClass) {
             // update pantry item in db with new values
             await BackendUtils.updatePantryItem(widget.pantryItem)
                 .then((value) async {
@@ -346,8 +348,11 @@ class _EditWidgetState extends State<EditWidget> {
                     const MyApp().createErrorMessage(context, "Error: $error"));
             // update product widget
             widget.updateProductWidget!();
-            // refresh pantry list
-            widget.refreshPantryList!();
+
+            if (productWidgetParent.runtimeType == PantryPage) {
+              // refresh pantry list
+              widget.refreshPantryList!();
+            }
           }
         } else {
           print("Error in EditWidget._buildSaveButton");
