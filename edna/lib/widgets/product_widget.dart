@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // DateFormat
 import 'package:edna/backend_utils.dart';
 import 'package:edna/screens/camera.dart';
+import 'package:edna/dbs/storage_location_db.dart';
 
 class ProductWidget extends StatefulWidget {
   @override
@@ -94,7 +95,7 @@ class ProductWidgetState extends State<ProductWidget> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(15.0),
                 side: const BorderSide(
-                  color: Colors.black,
+                  color: Color.fromARGB(255, 131, 131, 131),
                   width: 1.0,
                 ),
               ),
@@ -109,7 +110,7 @@ class ProductWidgetState extends State<ProductWidget> {
                   itemCount: 1,
                   itemBuilder: (context, index) {
                     return ListTile(
-                      leading: _buildCheckBox(widget.enableCheckbox),
+                      leading: _buildLeadingWidget(widget.enableCheckbox),
                       title:
                           // if name is null or empty, show "No name"
                           SizedBox(
@@ -165,7 +166,10 @@ class ProductWidgetState extends State<ProductWidget> {
 
   Widget _buildEditButton() {
     return IconButton(
-      icon: const Icon(Icons.edit),
+      icon: const Icon(
+        Icons.edit,
+        color: Color.fromRGBO(96, 103, 121, 1),
+      ),
       onPressed: () {
         showDialog(
             context: context,
@@ -181,7 +185,7 @@ class ProductWidgetState extends State<ProductWidget> {
     );
   }
 
-  Widget _buildCheckBox(bool enableCheckbox) {
+  Widget _buildLeadingWidget(bool enableCheckbox) {
     // if pantry item is deleted, keep box checked
     widget.pantryItem.isDeleted == 1 ? _isChecked = true : _isChecked = false;
     return enableCheckbox
@@ -209,8 +213,18 @@ class ProductWidgetState extends State<ProductWidget> {
                     setState(() {});
                   },
           )
-        : // if checkmark disabled, return empty container
-        const SizedBox();
+        : // if checkmark disabled, show icon for location
+        // display the location icon
+        SizedBox(
+            width: 10,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8.0),
+              child: Align(
+                  alignment: Alignment.center,
+                  child: StorageLocation.iconFromId(
+                      widget.pantryItem.storageLocation as int)),
+            ),
+          );
   }
 
   _showIsExpiredDialog() {

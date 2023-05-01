@@ -83,16 +83,37 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
               bottom: TabBar(
                 controller: _tabController,
                 indicatorColor: MyTheme().pinkColor,
-                tabs: const [
+                tabs: [
                   Tab(
-                      child: Text('Pantry',
-                          style: TextStyle(color: Colors.black))),
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      StorageLocation.iconFromId(1),
+                      const SizedBox(width: 8),
+                      const Text('Pantry',
+                          style: TextStyle(color: Colors.black)),
+                    ],
+                  )),
                   Tab(
-                      child: Text('Fridge',
-                          style: TextStyle(color: Colors.black))),
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      StorageLocation.iconFromId(2),
+                      const SizedBox(width: 8),
+                      const Text('Fridge',
+                          style: TextStyle(color: Colors.black)),
+                    ],
+                  )),
                   Tab(
-                      child: Text('Freezer',
-                          style: TextStyle(color: Colors.black))),
+                      child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      StorageLocation.iconFromId(3),
+                      const SizedBox(width: 8),
+                      const Text('Freezer',
+                          style: TextStyle(color: Colors.black)),
+                    ],
+                  )),
                 ],
                 onTap: (index) {
                   setState(() {
@@ -260,30 +281,66 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
         padding: const EdgeInsets.only(right: 15),
         alignment: Alignment.bottomRight,
         child: FloatingActionButton(
-          elevation: 3,
+          heroTag: "add", // need unique tag for each button
           backgroundColor: MyTheme().blueColor,
+          // rounded corners
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(23.0),
+          ),
           onPressed: () {
             // show edit widget
             showDialog(
                 context: context,
                 builder: (context) {
                   return EditWidget(
-                    pantryItem: Pantry(
-                        storageLocation:
-                            _currentTab), // default location is current tab
+                    pantryItem: Pantry(),
                     updateProductWidget: () {},
-                    refreshPantryList: refresh,
+                    refreshPantryList: () {},
+                    refreshCameraPage: refresh,
                     callingWidget: widget,
                   );
                 });
           },
+          elevation: 3,
           child: const Icon(
             Icons.add,
-            size: 35.0,
+            size: 40.0,
             color: Colors.black,
           ),
         ),
       ),
     );
+    // return Expanded(
+    //   flex: 1,
+
+    //   child: Container(
+    //     padding: const EdgeInsets.only(right: 15),
+    //     alignment: Alignment.bottomRight,
+    //     child: FloatingActionButton(
+    //       elevation: 3,
+    //       backgroundColor: MyTheme().blueColor,
+    //       onPressed: () {
+    //         // show edit widget
+    //         showDialog(
+    //             context: context,
+    //             builder: (context) {
+    //               return EditWidget(
+    //                 pantryItem: Pantry(
+    //                     storageLocation:
+    //                         _currentTab), // default location is current tab
+    //                 updateProductWidget: () {},
+    //                 refreshPantryList: refresh,
+    //                 callingWidget: widget,
+    //               );
+    //             });
+    //       },
+    //       child: const Icon(
+    //         Icons.add,
+    //         size: 35.0,
+    //         color: Colors.black,
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 }

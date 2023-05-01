@@ -253,9 +253,10 @@ class CameraPageState extends State<CameraPage> {
                 bottom: 0,
                 right: 0,
                 child: Padding(
-                  padding: const EdgeInsets.only(right: 5.0, bottom: 5.0),
+                  padding: const EdgeInsets.only(
+                    right: 5.0,
+                  ),
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[
                       _buildAddButton(),
                       const SizedBox(width: 10), // spacing
@@ -271,83 +272,73 @@ class CameraPageState extends State<CameraPage> {
   }
 
   Widget _buildAddButton() {
-    return SizedBox(
-      width: 60,
-      height: 60,
-      child: FittedBox(
-        child: FloatingActionButton(
-          heroTag: "add", // need unique tag for each button
-          backgroundColor: MyTheme().pinkColor,
-          // rounded corners
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(23.0),
-          ),
-          onPressed: () {
-            // show edit widget
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return EditWidget(
-                    pantryItem: Pantry(),
-                    updateProductWidget: () {},
-                    refreshPantryList: () {},
-                    refreshCameraPage: refresh,
-                    callingWidget: widget,
-                  );
-                });
-          },
-          elevation: 3,
-          child: const Icon(
-            Icons.add,
-            size: 40.0,
-            color: Colors.black,
-          ),
-        ),
+    return FloatingActionButton(
+      heroTag: "add", // need unique tag for each button
+      backgroundColor: MyTheme().pinkColor,
+      // rounded corners
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(23.0),
+      ),
+      onPressed: () {
+        // show edit widget
+        showDialog(
+            context: context,
+            builder: (context) {
+              return EditWidget(
+                pantryItem: Pantry(),
+                updateProductWidget: () {},
+                refreshPantryList: () {},
+                refreshCameraPage: refresh,
+                callingWidget: widget,
+              );
+            });
+      },
+      elevation: 3,
+      child: const Icon(
+        Icons.add,
+        size: 40.0,
+        color: Colors.black,
       ),
     );
   }
 
   Widget _buildSubmitButton() {
-    return SizedBox(
-      width: 60,
-      height: 60,
-      child: FloatingActionButton(
-        heroTag: "submit", // need unique tag for each button
-        backgroundColor: MyTheme().pinkColor,
-        // rounded corners
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(23.0),
-        ),
+    return FloatingActionButton(
+      heroTag: "submit", // need unique tag for each button
+      backgroundColor: MyTheme().pinkColor,
+      // rounded corners
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(23.0),
+      ),
 
-        onPressed: () async {
-          await BackendUtils.changeVisibility();
+      onPressed: () async {
+        await BackendUtils.changeVisibility();
 
-          if (!mounted) return;
+        if (!mounted) return;
 
-          showDialog(
-              context: context,
-              builder: (context) {
-                // wait 0.5 sec
-                Future.delayed(const Duration(milliseconds: 100), () {
-                  // clear scanned list
-                  widget.itemsToInsert!.clear();
-                  // refresh page
-                  refresh(); // resets state
-                  // close dialog
-                  Navigator.of(context).pop(true);
-                });
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+        showDialog(
+            context: context,
+            builder: (context) {
+              // wait 0.5 sec
+              Future.delayed(const Duration(milliseconds: 100), () {
+                // clear scanned list
+                widget.itemsToInsert!.clear();
+                // refresh page
+                refresh(); // resets state
+                // close dialog
+                Navigator.of(context).pop(true);
               });
-          // insert scanned items into pantry database
-        },
-        elevation: 3,
-        child: const Icon(
-          Icons.check,
-          size: 40.0,
-          color: Colors.black,
-        ),
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            });
+        // insert scanned items into pantry database
+      },
+      elevation: 3,
+      child: const Icon(
+        Icons.check,
+        size: 40.0,
+        color: Colors.black,
       ),
     );
   }
