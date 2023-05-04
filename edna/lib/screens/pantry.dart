@@ -90,8 +90,11 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                     children: [
                       StorageLocation.iconFromId(1),
                       const SizedBox(width: 8),
-                      const Text('Pantry',
-                          style: TextStyle(color: Colors.black)),
+                      Text('Pantry',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.03)),
                     ],
                   )),
                   Tab(
@@ -100,8 +103,11 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                     children: [
                       StorageLocation.iconFromId(2),
                       const SizedBox(width: 8),
-                      const Text('Fridge',
-                          style: TextStyle(color: Colors.black)),
+                      Text('Fridge',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.03)),
                     ],
                   )),
                   Tab(
@@ -110,8 +116,11 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                     children: [
                       StorageLocation.iconFromId(3),
                       const SizedBox(width: 8),
-                      const Text('Freezer',
-                          style: TextStyle(color: Colors.black)),
+                      Text('Freezer',
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.03)),
                     ],
                   )),
                 ],
@@ -159,25 +168,30 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
         // eye icon
         Padding(
           padding: const EdgeInsets.only(top: 8, right: 10),
-          child: CircleAvatar(
-            radius: 28,
-            backgroundColor: MyTheme().pinkColor,
-            child: IconButton(
-              icon: _showDeletedItems
-                  ? const Icon(Icons.remove_red_eye_outlined,
-                      size: 32, color: Colors.black)
-                  : const Icon(Icons.visibility_off_outlined,
-                      size: 32, color: Colors.black),
-              onPressed: () {
-                // refresh list
-                refresh();
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height * 0.1,
+            child: FittedBox(
+              child: CircleAvatar(
+                radius: 28,
+                backgroundColor: MyTheme().pinkColor,
+                child: IconButton(
+                  icon: _showDeletedItems
+                      ? const Icon(Icons.remove_red_eye_outlined,
+                          size: 32, color: Colors.black)
+                      : const Icon(Icons.visibility_off_outlined,
+                          size: 32, color: Colors.black),
+                  onPressed: () {
+                    // refresh list
+                    refresh();
 
-                setState(() {
-                  _showDeletedItems = !_showDeletedItems;
-                });
+                    setState(() {
+                      _showDeletedItems = !_showDeletedItems;
+                    });
 
-                _loadPantryItems(_currentTab);
-              },
+                    _loadPantryItems(_currentTab);
+                  },
+                ),
+              ),
             ),
           ),
         ),
@@ -280,34 +294,39 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
       child: Container(
         padding: const EdgeInsets.only(right: 15),
         alignment: Alignment.bottomRight,
-        child: FloatingActionButton(
-          heroTag: "add", // need unique tag for each button
-          backgroundColor: MyTheme().blueColor,
-          // rounded corners
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(23.0),
-          ),
-          onPressed: () {
-            // show edit widget
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return EditWidget(
-                    pantryItem: Pantry(storageLocation: _currentTab),
-                    updateProductWidget: () {},
-                    refreshPantryList: () {
-                      refresh();
-                    },
-                    refreshCameraPage: refresh,
-                    callingWidget: widget,
-                  );
-                });
-          },
-          elevation: 3,
-          child: const Icon(
-            Icons.add,
-            size: 40.0,
-            color: Colors.black,
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height * 0.09,
+          child: FittedBox(
+            child: FloatingActionButton(
+              heroTag: "add", // need unique tag for each button
+              backgroundColor: MyTheme().blueColor,
+              // rounded corners
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(23.0),
+              ),
+              onPressed: () {
+                // show edit widget
+                showDialog(
+                    context: context,
+                    builder: (context) {
+                      return EditWidget(
+                        pantryItem: Pantry(storageLocation: _currentTab),
+                        updateProductWidget: () {},
+                        refreshPantryList: () {
+                          refresh();
+                        },
+                        refreshCameraPage: refresh,
+                        callingWidget: widget,
+                      );
+                    });
+              },
+              elevation: 3,
+              child: const Icon(
+                Icons.add,
+                size: 40.0,
+                color: Colors.black,
+              ),
+            ),
           ),
         ),
       ),

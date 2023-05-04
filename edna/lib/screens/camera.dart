@@ -271,71 +271,81 @@ class CameraPageState extends State<CameraPage> {
   }
 
   Widget _buildAddButton() {
-    return FloatingActionButton(
-      heroTag: "add", // need unique tag for each button
-      backgroundColor: MyTheme().pinkColor,
-      // rounded corners
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(23.0),
-      ),
-      onPressed: () {
-        // show edit widget
-        showDialog(
-            context: context,
-            builder: (context) {
-              return EditWidget(
-                pantryItem: Pantry(),
-                refreshCameraPage: refresh,
-                callingWidget: widget,
-              );
-            });
-      },
-      elevation: 3,
-      child: const Icon(
-        Icons.add,
-        size: 40.0,
-        color: Colors.black,
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.09,
+      child: FittedBox(
+        child: FloatingActionButton(
+          heroTag: "add", // need unique tag for each button
+          backgroundColor: MyTheme().pinkColor,
+          // rounded corners
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(23.0),
+          ),
+          onPressed: () {
+            // show edit widget
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return EditWidget(
+                    pantryItem: Pantry(),
+                    refreshCameraPage: refresh,
+                    callingWidget: widget,
+                  );
+                });
+          },
+          elevation: 3,
+          child: Icon(
+            Icons.add,
+            size: MediaQuery.of(context).size.height * 0.04,
+            color: Colors.black,
+          ),
+        ),
       ),
     );
   }
 
   Widget _buildSubmitButton() {
-    return FloatingActionButton(
-      heroTag: "submit", // need unique tag for each button
-      backgroundColor: MyTheme().pinkColor,
-      // rounded corners
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(23.0),
-      ),
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.09,
+      child: FittedBox(
+        child: FloatingActionButton(
+          heroTag: "submit", // need unique tag for each button
+          backgroundColor: MyTheme().pinkColor,
+          // rounded corners
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(23.0),
+          ),
 
-      onPressed: () async {
-        await BackendUtils.changeVisibility();
+          onPressed: () async {
+            await BackendUtils.changeVisibility();
 
-        if (!mounted) return;
+            if (!mounted) return;
 
-        showDialog(
-            context: context,
-            builder: (context) {
-              // wait 0.5 sec
-              Future.delayed(const Duration(milliseconds: 100), () {
-                // clear scanned list
-                widget.itemsToInsert!.clear();
-                // refresh page
-                refresh(); // resets state
-                // close dialog
-                Navigator.of(context).pop(true);
-              });
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            });
-        // insert scanned items into pantry database
-      },
-      elevation: 3,
-      child: const Icon(
-        Icons.check,
-        size: 40.0,
-        color: Colors.black,
+            showDialog(
+                context: context,
+                builder: (context) {
+                  // wait 0.5 sec
+                  Future.delayed(const Duration(milliseconds: 100), () {
+                    // clear scanned list
+                    widget.itemsToInsert!.clear();
+                    // refresh page
+                    refresh(); // resets state
+                    // close dialog
+                    Navigator.of(context).pop(true);
+                  });
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                });
+            // insert scanned items into pantry database
+          },
+          elevation: 3,
+          child: Icon(
+            Icons.check,
+            size: MediaQuery.of(context).size.height * 0.04,
+            color: Colors.black,
+          ),
+        ),
       ),
     );
   }

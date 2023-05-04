@@ -60,7 +60,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildEmailField() {
     return SizedBox(
       height: 80,
-      width: 350,
+      width: MediaQuery.of(context).size.width * 0.8,
       child: TextFormField(
         keyboardType: TextInputType.emailAddress,
         decoration: InputDecoration(
@@ -109,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildPasswordField() {
     return SizedBox(
       height: 70,
-      width: 350,
+      width: MediaQuery.of(context).size.width * 0.8,
       child: TextFormField(
         decoration: InputDecoration(
           labelText: 'Password',
@@ -156,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget _buildLoginBtn() {
     return SizedBox(
       height: 60,
-      width: 350,
+      width: MediaQuery.of(context).size.width * 0.8,
       // padding: const EdgeInsets.symmetric(vertical: 25),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
