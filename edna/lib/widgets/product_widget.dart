@@ -14,6 +14,7 @@ class ProductWidget extends StatefulWidget {
   final Pantry pantryItem;
   bool enableCheckbox;
   final Function()? refreshPantryList;
+  final Function()? refreshCalendar;
   Widget callingWidget;
 
   // constructor
@@ -22,6 +23,7 @@ class ProductWidget extends StatefulWidget {
     required this.pantryItem,
     this.enableCheckbox = false, // enabled by default
     this.refreshPantryList,
+    this.refreshCalendar,
     required this.callingWidget,
   }) : super(key: key);
 }
@@ -103,7 +105,9 @@ class ProductWidgetState extends State<ProductWidget> {
               // size of product widgets
               child: SizedBox(
                 height: 70,
-                width: 400,
+                // width: 400,
+                // size of screen
+                width: MediaQuery.of(context).size.width * 0.9,
                 child: ListView.builder(
                   physics:
                       const NeverScrollableScrollPhysics(), // disable scroll within individual cards
@@ -179,6 +183,7 @@ class ProductWidgetState extends State<ProductWidget> {
                 callingWidget: widget,
                 updateProductWidget: refresh,
                 refreshPantryList: widget.refreshPantryList,
+                refreshCalendarPage: widget.refreshCalendar,
               );
             });
       },

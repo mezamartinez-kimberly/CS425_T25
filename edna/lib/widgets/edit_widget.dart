@@ -30,6 +30,7 @@ class EditWidget extends StatefulWidget {
   final Function()? updateProductWidget;
   final Function()? refreshPantryList;
   final Function()? refreshCameraPage;
+  final Function()? refreshCalendarPage;
 
   // constructor
   EditWidget({
@@ -40,6 +41,7 @@ class EditWidget extends StatefulWidget {
     this.updateProductWidget,
     this.refreshPantryList,
     this.refreshCameraPage,
+    this.refreshCalendarPage,
   }) : super(key: key);
 }
 
@@ -68,7 +70,9 @@ class _EditWidgetState extends State<EditWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(child: createEditDialog());
+    return SizedBox(
+        width: MediaQuery.of(context).size.width * 0.9,
+        child: createEditDialog());
   }
 
   createEditDialog() {
@@ -278,7 +282,6 @@ class _EditWidgetState extends State<EditWidget> {
                 pantryItem: pantryItem,
                 enableCheckbox: false,
                 // no need to refresh pantry since we're still on camera page
-                refreshPantryList: () {},
                 callingWidget: widget,
               );
 
@@ -303,6 +306,7 @@ class _EditWidgetState extends State<EditWidget> {
             plu: widget.pantryItem.plu,
             isDeleted: 0,
             isVisibleInPantry: 1,
+            storageLocation: widget.pantryItem.storageLocation,
           )).then((value) async {
             // error check
             if (value.statusCode != 200 && value.statusCode != 201) {
@@ -323,7 +327,6 @@ class _EditWidgetState extends State<EditWidget> {
 
           // if user is editing a product widget on camera page
           // save changes to backend
-
           if (productWidgetParent.runtimeType == CameraPage ||
               productWidgetParent.runtimeType == EditWidget) {
             // update local pantry item with new values
@@ -353,6 +356,10 @@ class _EditWidgetState extends State<EditWidget> {
             if (productWidgetParent.runtimeType == PantryPage) {
               // refresh pantry list
               widget.refreshPantryList!();
+            }
+            if (productWidgetParent.runtimeType == CalendarClass) {
+              // refresh calendar page
+              widget.refreshCalendarPage!();
             }
           }
         } else {

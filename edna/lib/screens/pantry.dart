@@ -293,9 +293,11 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
                 context: context,
                 builder: (context) {
                   return EditWidget(
-                    pantryItem: Pantry(),
+                    pantryItem: Pantry(storageLocation: _currentTab),
                     updateProductWidget: () {},
-                    refreshPantryList: () {},
+                    refreshPantryList: () {
+                      refresh();
+                    },
                     refreshCameraPage: refresh,
                     callingWidget: widget,
                   );
@@ -310,37 +312,5 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
         ),
       ),
     );
-    // return Expanded(
-    //   flex: 1,
-
-    //   child: Container(
-    //     padding: const EdgeInsets.only(right: 15),
-    //     alignment: Alignment.bottomRight,
-    //     child: FloatingActionButton(
-    //       elevation: 3,
-    //       backgroundColor: MyTheme().blueColor,
-    //       onPressed: () {
-    //         // show edit widget
-    //         showDialog(
-    //             context: context,
-    //             builder: (context) {
-    //               return EditWidget(
-    //                 pantryItem: Pantry(
-    //                     storageLocation:
-    //                         _currentTab), // default location is current tab
-    //                 updateProductWidget: () {},
-    //                 refreshPantryList: refresh,
-    //                 callingWidget: widget,
-    //               );
-    //             });
-    //       },
-    //       child: const Icon(
-    //         Icons.add,
-    //         size: 35.0,
-    //         color: Colors.black,
-    //       ),
-    //     ),
-    //   ),
-    // );
   }
 }

@@ -33,20 +33,21 @@ class CalendarClassState extends State<CalendarClass> {
 
   late LinkedHashMap<DateTime, List<ProductWidget>> _kEvents;
 
+  refresh() {
+    setState(() {});
+  }
+
   // ignore: non_constant_identifier_names
   _TableEventsExampleState() async {
     // get the active pantry items from the provider
-    final allPantryItems = await BackendUtils.getAllPantry();
-
-    // only get pantry items that are visible in the pantry and arent deleted
-    final activePantryItems = allPantryItems
-        .where((item) => item.isVisibleInPantry == 1 && item.isDeleted == 0)
-        .toList();
+    activePantryItems = Provider.of<PantryProvider>(context, listen: false)
+        .activePantryAllLocations;
 
     for (final pantry in activePantryItems) {
       activePantryWidgets.add(ProductWidget(
         pantryItem: pantry,
         callingWidget: widget,
+        refreshCalendar: refresh,
       ));
     }
 
@@ -54,9 +55,6 @@ class CalendarClassState extends State<CalendarClass> {
       (_kEventSource[productWidget.pantryItem.expirationDate as DateTime] ??=
               [])
           .add(productWidget);
-
-      // print the name of the item
-      // print(productWidget.pantryItem.name);
     }
 
     _kEvents = LinkedHashMap<DateTime, List<ProductWidget>>(
@@ -86,8 +84,6 @@ class CalendarClassState extends State<CalendarClass> {
         .where((entry) => isSameDay(entry.key, day))
         .expand((entry) => entry.value)
         .toList();
-
-    // print the selected day's events name
   }
 
   List<ProductWidget> _getEventsForRange(DateTime start, DateTime end) {
@@ -251,7 +247,6 @@ class CalendarClassState extends State<CalendarClass> {
                 return ListView.builder(
                   itemCount: value.length,
                   itemBuilder: (context, index) {
-                    //  print(value[index]);
                     return value[index];
                   },
                 );
@@ -263,5 +258,3 @@ class CalendarClassState extends State<CalendarClass> {
     );
   }
 }
-
-//----------------------

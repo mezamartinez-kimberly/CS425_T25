@@ -160,7 +160,6 @@ class CameraPageState extends State<CameraPage> {
                 // toolbar
                 Expanded(
                     flex: 1,
-
                     // rounded corners
                     child: ClipRRect(
                         borderRadius: const BorderRadius.only(
@@ -286,8 +285,6 @@ class CameraPageState extends State<CameraPage> {
             builder: (context) {
               return EditWidget(
                 pantryItem: Pantry(),
-                updateProductWidget: () {},
-                refreshPantryList: () {},
                 refreshCameraPage: refresh,
                 callingWidget: widget,
               );
@@ -344,28 +341,32 @@ class CameraPageState extends State<CameraPage> {
   }
 
   Widget _buildToolbar() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: <Widget>[
-        const Spacer(
-          flex: 10,
-        ),
-        const Text(
-          'Add items',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+    return SizedBox(
+      width: MediaQuery.of(context).size.width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: <Widget>[
+          // spacer
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.35,
           ),
-        ),
-        const Spacer(
-          flex: 2,
-        ),
-        _buildFlashButton(),
-        _buildCameraToggleButton(),
-        const Spacer(
-          flex: 1,
-        ),
-      ],
+          const Text(
+            'Add items',
+            style: TextStyle(
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          // spacer
+          SizedBox(
+            width: MediaQuery.of(context).size.width * 0.1,
+          ),
+          _buildFlashButton(),
+
+          _buildCameraToggleButton(),
+          // spacer
+        ],
+      ),
     );
   }
 
@@ -382,8 +383,8 @@ class CameraPageState extends State<CameraPage> {
     // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
     var scanArea = (MediaQuery.of(context).size.width < 400 ||
             MediaQuery.of(context).size.height < 400)
-        ? 220.0
-        : 270.0;
+        ? 350.0
+        : MediaQuery.of(context).size.height * 0.325;
     // To ensure the Scanner view is properly sizes after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
     return QRView(
