@@ -42,9 +42,8 @@ class ProfilePageState extends State<ProfilePage> {
   Widget _buildLogOutButton() {
     return SizedBox(
       //center align
-
+      width: MediaQuery.of(context).size.width,
       height: 50,
-      width: MediaQuery.of(context).size.width * 0.885,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           shape: RoundedRectangleBorder(
@@ -359,9 +358,9 @@ class NotificationService {
     //call backend utils getAllPantry to get all pantry items
     List<Pantry> activePantryItems = await BackendUtils.getAllPantry();
     //late List<Pantry> activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
-    List<String> userPrefs =
-        await BackendUtils.getUserPreferences();
-    String notificationOn = userPrefs[0]; //output is 'true' or 'false' in string
+    List<String> userPrefs = await BackendUtils.getUserPreferences();
+    String notificationOn =
+        userPrefs[0]; //output is 'true' or 'false' in string
     String notifRange = userPrefs[1]; //ouptut is '3 days' etc in string\
 
     //extract the numbers in notifRange value and change to int
@@ -373,24 +372,28 @@ class NotificationService {
 
     for (final item in activePantryItems) {
       //subtract the notification range from the expiration date
-      DateTime firstDate = item.expirationDate!.subtract(Duration(days: notifRangeInt));
+      DateTime firstDate =
+          item.expirationDate!.subtract(Duration(days: notifRangeInt));
       //check if today falls in between the expiration date and the new date
       if (today.isAfter(firstDate) && today.isBefore(item.expirationDate!)) {
         String name = item.name!;
-        String expirDate = DateFormat('MM/dd/yyyy').format(item.expirationDate!);
+        String expirDate =
+            DateFormat('MM/dd/yyyy').format(item.expirationDate!);
         String titleContent = 'EDNA $name is expiring soon!';
-        String bodyContent = 'Your $name will expire on $expirDate. Consider using it soon!';
+        String bodyContent =
+            'Your $name will expire on $expirDate. Consider using it soon!';
         print(titleContent);
         print(bodyContent);
         //show notification
-        NotificationService().showNotification(title: titleContent, body: bodyContent);
+        NotificationService()
+            .showNotification(title: titleContent, body: bodyContent);
 
         int indexValue = notifRangeInt;
-        int loopValue = indexValue - 1 ;
+        int loopValue = indexValue - 1;
 
         //delay notification by 5 seconds
         await Future.delayed(const Duration(seconds: 5));
-        
+
         //create a variable that takes the days between now and the expiration date
         int daysBetween = item.expirationDate!.difference(today).inDays;
 

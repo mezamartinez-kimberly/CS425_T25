@@ -1,4 +1,5 @@
 import 'package:edna/dbs/pantry_db.dart';
+import 'package:edna/screens/all.dart';
 import 'package:edna/widgets/edit_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // DateFormat
@@ -155,9 +156,11 @@ class ProductWidgetState extends State<ProductWidget> {
                               ),
 
                               Expanded(
-                                flex: 5,
-                                child: _buildEditButton(),
-                              ),
+                                  flex: 5,
+                                  child: widget.callingWidget.runtimeType ==
+                                          CalendarClass
+                                      ? Container()
+                                      : _buildEditButton()),
                               // spacer
                             ],
                           )),
