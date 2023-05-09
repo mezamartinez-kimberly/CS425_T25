@@ -1,15 +1,14 @@
-// /*
-// ==============================
-// *    Title: camera.dart
-// *    Author: Julian Fliegler
-// *    Date: Dec 2022
-// ==============================
-// */
+/*
+==============================
+*    Title: camera.dart
+*    Author: Julian Fliegler
+*    Date: Dec 2022
+==============================
+*/
 
-// /* Referenced code:
-//  - https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter
+/* Referenced code:
 // - https://stackoverflow.com/questions/65992435/how-to-open-barcode-scanner-in-a-custom-widget
-// */
+*/
 
 import 'dart:developer'; // for debugPrint
 import 'dart:io'; // for Platform
@@ -23,9 +22,6 @@ import 'package:flutter/services.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart'; // barcode scanner
 import 'package:edna/backend_utils.dart'; // for API calls
 import 'package:google_fonts/google_fonts.dart'; // fonts
-import 'package:loader_overlay/loader_overlay.dart'; // loading wheel
-import 'package:msh_checkbox/msh_checkbox.dart'; // checkbox animation
-
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // product widget
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
@@ -66,12 +62,7 @@ class CameraPageState extends State<CameraPage> {
       false; // flag to check if item was just added to pantry
   static bool itemFound = false;
 
-  final _listKey = GlobalKey<AnimatedListState>();
-
   late RiveAnimationController _animController;
-
-  /// Is the animation currently playing?
-  bool _isPlaying = false;
 
   // define an empty list of barcodes
   List<Barcode>? barcodes = [];

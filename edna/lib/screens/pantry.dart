@@ -2,19 +2,14 @@
 ==============================
 *    Title: pantry.dart
 *    Author: Julian Fliegler
-*    Date: Dec 2022
+*    Date: May 2023
 ==============================
-*/
-
-/* Referenced code:
-* https://api.flutter.dev/flutter/widgets/ListView-class.html
 */
 
 import 'package:edna/backend_utils.dart';
 import 'package:edna/dbs/storage_location_db.dart';
 import 'package:flutter/material.dart';
 import 'package:edna/screens/all.dart';
-import 'package:google_fonts/google_fonts.dart'; // fonts
 import 'package:edna/dbs/pantry_db.dart'; // pantry db
 import 'package:edna/widgets/product_widget.dart'; // pantry item widget
 import 'package:edna/widgets/edit_widget.dart'; // edit dialog widget
@@ -41,15 +36,6 @@ class PantryPageState extends State<PantryPage> with TickerProviderStateMixin {
     await _loadPantryItems(_currentTab)
         .then((value) => setState(() {}), onError: (e) => print("error: $e"));
   }
-
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _tabController = TabController(length: 3, vsync: this);
-  //   _currentTab = _tabController.index + 1;
-  //   _showDeletedItems = false;
-  //   _loadPantryItems(_currentTab);
-  // }
 
   @override
   void didChangeDependencies() {

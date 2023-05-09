@@ -1,4 +1,10 @@
-// StorageLocation is used in the pantry_db.dart file to store the storage location of a pantry item.
+/* 
+==============================
+*    Title: storage_location.dart
+*    Author: Julian Fliegler
+*    Date: May 2023
+==============================
+*/
 
 import 'package:edna/screens/all.dart';
 import 'package:flutter/material.dart';

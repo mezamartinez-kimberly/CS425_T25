@@ -56,20 +56,15 @@ dependencies:
   http: ^0.13.5
   # States
   provider: ^6.0.5
-  # show errors over dialog box
-  another_flushbar: ^1.12.29
   # progress bar for the app
   milestone_progress: ^0.0.4
   # for unit tests
   test: 
-  # loading wheel
-  loader_overlay: ^2.1.0
   #sets val in memory so data doesnt get lost
   shared_preferences: ^2.0.18
   timelines: ^0.1.0
   flutter_rounded_progress_bar: ^0.2.0
   confetti: ^0.7.0
-  msh_checkbox: ^2.0.1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

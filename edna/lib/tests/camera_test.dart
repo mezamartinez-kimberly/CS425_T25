@@ -1,3 +1,11 @@
+/* 
+==============================
+*    Title: camera_test.dart
+*    Author: Julian Fliegler
+*    Date: Feb 2023
+==============================
+*/
+
 // import 'package:test/test.dart';                        // test package
 // import 'package:edna/screens/camera.dart';              // camera page
 // import 'package:qr_code_scanner/qr_code_scanner.dart';  // barcode scanner

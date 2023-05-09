@@ -94,7 +94,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // //create function to get active pantry items 
+  // //create function to get active pantry items
   // Future<List<Pantry>> getActivePantryItems(BuildContext context) async {
   //   //use provider class to get active pantry items
   //   late List<Pantry> activePantryItems = Provider.of<PantryProvider>(context, listen: false).activePantryItems;
@@ -120,8 +120,6 @@ class MyApp extends StatelessWidget {
   }
 
   createErrorMessage(context, errorMsg) {
-    // if not mounted, then mount
-    
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Container(
         alignment: Alignment.topCenter,

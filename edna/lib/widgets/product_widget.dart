@@ -1,3 +1,11 @@
+/* 
+==============================
+*    Title: product_widget.dart
+*    Author: Julian Fliegler
+*    Date: May 2023
+==============================
+*/
+
 import 'package:edna/dbs/pantry_db.dart';
 import 'package:edna/screens/all.dart';
 import 'package:edna/widgets/edit_widget.dart';
@@ -106,7 +114,6 @@ class ProductWidgetState extends State<ProductWidget> {
               // size of product widgets
               child: SizedBox(
                 height: 70,
-                // width: 400,
                 // size of screen
                 width: MediaQuery.of(context).size.width * 0.9,
                 child: ListView.builder(
@@ -291,11 +298,6 @@ class ProductWidgetState extends State<ProductWidget> {
     if (date != null) {
       return Text("Expires: ${DateFormat.MMMEd().format(date)}");
     } else {
-      // return const Text("No expiration date",
-      //     style: TextStyle(
-      //       fontStyle: FontStyle.italic,
-      //     ));
-      // default expiration date is 7 days from current day
       return Text(
           "Expires: ${DateFormat.MMMEd().format(DateTime.now().add(const Duration(days: 7)))}");
     }

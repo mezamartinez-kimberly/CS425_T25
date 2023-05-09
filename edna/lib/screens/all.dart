@@ -8,15 +8,16 @@ export 'new_password.dart';
 export 'change_password.dart';
 export 'register.dart';
 
+// other pages
 export 'calendar.dart';
 export 'camera.dart';
 export 'homepage.dart';
 export 'pantry.dart';
 export 'profile.dart';
 export 'tree.dart';
-export 'theme.dart';
-
 export 'account_settings.dart';
 export 'faqs.dart';
 export 'notifications.dart';
-export 'notifications.dart';
+
+// misc
+export 'theme.dart';

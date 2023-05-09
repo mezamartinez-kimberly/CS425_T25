@@ -1,9 +1,19 @@
+/* 
+==============================
+*    Title: pantry_db.dart
+*    Author: Julian Fliegler
+*    Date: Feb 2023
+==============================
+*/
+
 // ref: https://www.youtube.com/watch?v=noi6aYsP7Go
+
+
 import 'dart:io'; // Directory
 import 'dart:async';
 import 'package:sqflite/sqflite.dart'; // sqlflite
 import 'package:path/path.dart'; // join
-import 'package:path_provider/path_provider.dart'; // commonly used paths, // getApplicationDocumentsDirectory
+import 'package:path_provider/path_provider.dart'; // commonly used paths getApplicationDocumentsDirectory
 import 'package:intl/intl.dart';
 
 class Pantry {
@@ -133,12 +143,6 @@ isDeleted INTEGER
     Database db = await instance.database;
     return await db.insert("pantry", pantry.toMap());
   }
-
-  // delete pantry item
-  // Future<int> delete(int id) async {
-  //   Database db = await instance.database;
-  //   return await db.delete("pantry", where: "id = ?", whereArgs: [id]);
-  // }
 
   // set isDeleted to true
   Future<int> delete(int id) async {

@@ -1,3 +1,11 @@
+/* 
+==============================
+*    Title: edit_widget.dart
+*    Author: Julian Fliegler
+*    Date: May 2023
+==============================
+*/
+
 //ref:
 // https://levelup.gitconnected.com/date-picker-in-flutter-ec6080f3508a
 // https://stackoverflow.com/questions/59455869/how-to-make-fullscreen-alertdialog-in-flutter
@@ -142,9 +150,6 @@ class _EditWidgetState extends State<EditWidget> {
           contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 15),
           labelText: "Food Name",
           suffixIcon: Icon(Icons.shopping_cart),
-          // icon: const Icon(Icons.shopping_cart),
-          // only show hint text if name null
-          // hintText: widget.pantryItem.name == "" ? "Enter Name" : ""
         ),
         onChanged: (value) {
           if (value != "") {
@@ -211,17 +216,6 @@ class _EditWidgetState extends State<EditWidget> {
             widget.pantryItem.expirationDate = pickedDate;
           }
         });
-  }
-
-  Widget _buildNotesField() {
-    return TextField(
-      //controller: TextEditingController()..text = widget.notes ?? "Notes",
-      decoration: const InputDecoration(
-          icon: Icon(Icons.notes), hintText: "Enter Notes"),
-      onChanged: (value) {
-        widget.notes = value;
-      },
-    );
   }
 
   Widget _buildCancelButton() {
