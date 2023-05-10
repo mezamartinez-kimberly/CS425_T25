@@ -1,3 +1,11 @@
+/* 
+==============================
+*    Title: tree.dart
+*    Author: John Watson
+*    Date: March 2023
+==============================
+*/
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';

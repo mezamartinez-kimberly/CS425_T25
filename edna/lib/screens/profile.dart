@@ -1,3 +1,11 @@
+/* 
+==============================
+*    Title: profile.dart
+*    Author: Kimberly Meza Martinez
+*    Date: March 2023
+==============================
+*/
+
 import 'package:edna/provider.dart';
 import 'package:edna/screens/all.dart';
 import 'package:flutter/material.dart';

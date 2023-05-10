@@ -1,3 +1,11 @@
+/* 
+==============================
+*    Title: otp_entry.dart
+*    Author: John Watson
+*    Date: Dec 2022
+==============================
+*/
+
 import 'package:edna/screens/all.dart';
 import 'package:flutter/material.dart';
 import 'package:edna/backend_utils.dart';

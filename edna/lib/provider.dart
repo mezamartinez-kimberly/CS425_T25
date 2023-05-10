@@ -1,3 +1,11 @@
+/* 
+==============================
+*    Title: provider.dart
+*    Author: John Watson
+*    Date: March 2023
+==============================
+*/
+
 import 'package:flutter/material.dart';
 import 'package:edna/dbs/pantry_db.dart';
 

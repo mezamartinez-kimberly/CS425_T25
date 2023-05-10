@@ -1,3 +1,11 @@
+/* 
+==============================
+*    Title: backend_utils.dart
+*    Author: All
+*    Date: March 2023
+==============================
+*/
+
 import 'dart:convert';
 import 'dart:ffi';
 import 'package:edna/dbs/pantry_db.dart';

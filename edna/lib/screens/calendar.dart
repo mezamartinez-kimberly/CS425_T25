@@ -1,3 +1,11 @@
+/* 
+==============================
+*    Title: calendar.dart
+*    Author: Kimberly Meza Martinez
+*    Date: March 2023
+==============================
+*/
+
 import 'dart:collection';
 import 'package:edna/backend_utils.dart';
 import 'package:edna/dbs/pantry_db.dart';
